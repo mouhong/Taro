@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Taro Book Store";
+}
+
+<h2>Best Sold Books</h2>
+<div>
+    <ul>
+        @foreach (var book in ViewBag.BestSoldBooks)
+        {
+            <li>@book.Title (Total Sold: @book.TotalSoldCount)</li>
+        }
+    </ul>
+</div>

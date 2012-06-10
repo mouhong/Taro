@@ -1,0 +1,31 @@
+﻿@model BookStore.Domain.User
+
+@{
+    ViewBag.Title = "My Account";
+}
+
+<h2>My Account</h2>
+
+<fieldset>
+    <legend>Account Information</legend>
+
+    <div class="display-label">Email</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Email)
+    </div>
+
+    <div class="display-label">Nick Name</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.NickName)
+    </div>
+
+    <div class="display-label">Register Time</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CreatedTime)
+    </div>
+
+    <div class="display-label">Account Balance</div>
+    <div class="display-field" style="color:Green; font-weight: bold">
+        @Model.Account.Balance.ToString("c")
+    </div>
+</fieldset>

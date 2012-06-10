@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Taro</RootNamespace>
+    <AssemblyName>Taro</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Event.cs" />
+    <Compile Include="Events\Buses\DefaultEventBus.cs" />
+    <Compile Include="Events\Buses\EventHandlerFinderUtil.cs" />
+    <Compile Include="Events\Buses\EventHandlerInvoker.cs" />
+    <Compile Include="Events\Buses\IEventBus.cs" />
+    <Compile Include="Events\Buses\IOnCommitEventHandlerFinder.cs" />
+    <Compile Include="Events\ImmediateHandlerRegistry.cs" />
+    <Compile Include="Events\Storage\DefaultEventTypeResolver.cs" />
+    <Compile Include="Events\Storage\IEventIdGenerator.cs" />
+    <Compile Include="Events\Storage\IEventStore.cs" />
+    <Compile Include="Events\Storage\IEventTypeResolver.cs" />
+    <Compile Include="Events\Storage\Rdbms\ISqlStatementProvider.cs" />
+    <Compile Include="Events\Storage\Rdbms\RdbmsEventStore.cs" />
+    <Compile Include="Events\Storage\Rdbms\SqlServerSqlStatementProvider.cs" />
+    <Compile Include="Events\Storage\Rdbms\SqlStatement.cs" />
+    <Compile Include="Events\UncommittedEventStream.cs" />
+    <Compile Include="Serialization\DefaultJsonSerializer.cs" />
+    <Compile Include="Serialization\ISerializer.cs" />
+    <Compile Include="Serialization\Serializers.cs" />
+    <Compile Include="TaroEnvironment.cs" />
+    <Compile Include="Commands\ExecuteCommand.cs" />
+    <Compile Include="Data\ThreadStaticUnitOfWorkContext.cs" />
+    <Compile Include="Commands\Buses\DefaultCommandBus.cs" />
+    <Compile Include="Commands\Buses\DefaultCommandExecutorFinder.cs" />
+    <Compile Include="Commands\Buses\ICommandBus.cs" />
+    <Compile Include="Commands\Buses\ICommandExecutorFinder.cs" />
+    <Compile Include="Data\UnitOfWorkFactory.cs" />
+    <Compile Include="DomainEvent.cs" />
+    <Compile Include="Events\HandleEventImmediately.cs" />
+    <Compile Include="Events\HandleEventOnCommit.cs" />
+    <Compile Include="Events\Buses\DefaultOnCommitEventHandlerFinder.cs" />
+    <Compile Include="Events\Buses\DefaultImmediateEventHandlerFinder.cs" />
+    <Compile Include="Data\AbstractUnitOfWork.cs" />
+    <Compile Include="Events\Buses\IImmediateEventHandlerFinder.cs" />
+    <Compile Include="Events\IHandleEventOnCommit.cs" />
+    <Compile Include="ICommand.cs" />
+    <Compile Include="Commands\IExecuteCommand.cs" />
+    <Compile Include="IEvent.cs" />
+    <Compile Include="Events\IHandleEventImmediately.cs" />
+    <Compile Include="Data\IUnitOfWork.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Require.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
