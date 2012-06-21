@@ -1,5 +1,5 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Extensions", "2.Extensions", "{21587D2A-0140-40FA-B548-21FA810E5AC3}"
 EndProject
@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{DF
 		database\unit-tests.sql = database\unit-tests.sql
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data Access", "Data Access", "{6BED4B73-0C51-4AFC-A5BF-F849E1C8B830}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro", "Taro\Taro.csproj", "{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro.NHibernate", "Extensions\Taro.NHibernate\Taro.NHibernate.csproj", "{9E66283F-59A0-4276-97EB-699A17706FEA}"
@@ -47,8 +49,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro.TestUtils", "Taro.TestUtils\Taro.TestUtils.csproj", "{0749DD64-5236-4B5E-8670-72DD1A2D2697}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro.Events.Storage.RavenDB", "Extensions\Taro.Events.Storage.RavenDB\Taro.Events.Storage.RavenDB.csproj", "{7DAC6772-4F80-4767-A829-9B1C53CDD246}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data Access", "Data Access", "{6BED4B73-0C51-4AFC-A5BF-F849E1C8B830}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
