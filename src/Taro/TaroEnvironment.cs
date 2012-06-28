@@ -32,12 +32,22 @@ namespace Taro
             ImmediateHandlerRegistry = new ImmediateHandlerRegistry();
         }
 
+        public TaroEnvironment RegisterImmediateHandlers(params Assembly[] assembliesToScan)
+        {
+            return RegisterImmediateHandlers(assembliesToScan as IEnumerable<Assembly>);
+        }
+
         public TaroEnvironment RegisterImmediateHandlers(IEnumerable<Assembly> assembliesToScan)
         {
             Require.NotNull(assembliesToScan, "assembliesToScan");
 
             ImmediateHandlerRegistry.RegisterHandlers(assembliesToScan);
             return this;
+        }
+
+        public TaroEnvironment UseDefaultEventBus(params Assembly[] handlerAssemblies)
+        {
+            return UseDefaultEventBus(handlerAssemblies as IEnumerable<Assembly>);
         }
 
         public TaroEnvironment UseDefaultEventBus(IEnumerable<Assembly> handlerAssemblies)
@@ -52,6 +62,11 @@ namespace Taro
             EventBus = bus;
 
             return this;
+        }
+
+        public TaroEnvironment UseDefaultCommandBus(params Assembly[] executorAssemblies)
+        {
+            return UseDefaultCommandBus(executorAssemblies as IEnumerable<Assembly>);
         }
 
         public TaroEnvironment UseDefaultCommandBus(IEnumerable<Assembly> executorAssemblies)

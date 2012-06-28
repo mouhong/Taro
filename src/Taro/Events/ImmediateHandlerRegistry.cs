@@ -76,5 +76,6 @@ namespace Taro.Events
         public void Clear()
         {
             _handlerTypes.Clear();
-        }    }
+        }
+    }
 }

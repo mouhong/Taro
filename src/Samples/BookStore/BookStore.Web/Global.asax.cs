@@ -71,9 +71,9 @@ namespace BookStore.Web
             SessionManager.Current.Initailize(config);
 
             TaroEnvironment.Instance
-                        .RegisterImmediateHandlers(AppDomain.CurrentDomain.GetAssemblies())
-                        .UseDefaultCommandBus(AppDomain.CurrentDomain.GetAssemblies())
-                        .UseDefaultEventBus(AppDomain.CurrentDomain.GetAssemblies())
+                        .RegisterImmediateHandlers(Assembly.Load("BookStore.Events.Handlers"))
+                        .UseDefaultCommandBus(Assembly.Load("BookStore.Commands.Executors"))
+                        .UseDefaultEventBus(Assembly.Load("BookStore.Events.Handlers"))
                         .UseUnitOfWorkFactory(() => new UnitOfWork(SessionManager.Current.OpenSession()));
         }
     }
