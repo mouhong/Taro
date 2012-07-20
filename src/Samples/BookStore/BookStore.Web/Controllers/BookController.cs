@@ -5,8 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 
 using BookStore.Domain;
-using BookStore.Commands;
 using BookStore.Domain.Services;
+using BookStore.Web.Models;
 
 namespace BookStore.Web.Controllers
 {
@@ -43,12 +43,12 @@ namespace BookStore.Web.Controllers
         }
 
         [HttpPost, RequireAdmin]
-        public ActionResult Create(AddBookCommand command)
+        public ActionResult Create(AddBookModel model)
         {
             var service = new RegistrationService(CurrentUnitOfWork.Session);
             var creator = CurrentUnitOfWork.Session.Get<BookStore.Domain.User>(User.Identity.Name);
 
-            var book = Book.Create(command.ISBN, command.Title, command.Author, command.PublishedDate, command.Price, command.Stock, creator.Id);
+            var book = Book.Create(model.ISBN, model.Title, model.Author, model.PublishedDate, model.Price, model.Stock, creator.Id);
             CurrentUnitOfWork.Save(book);
 
             return RedirectToAction("All", new { message = "Book created!" });

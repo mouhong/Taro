@@ -6,9 +6,9 @@ using System.Text;
 using Taro;
 using BookStore.Domain;
 
-namespace BookStore.Commands
+namespace BookStore.Web.Models
 {
-    public class RegisterCommand
+    public class RegistrationModel
     {
         public string Email { get; set; }
 
@@ -20,7 +20,7 @@ namespace BookStore.Commands
 
         public Gender Gender { get; set; }
 
-        public RegisterCommand()
+        public RegistrationModel()
         {
         }
     }

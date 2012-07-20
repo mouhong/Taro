@@ -8,7 +8,6 @@ using System.Web.Security;
 using NHibernate.Linq;
 using BookStore.Web.Models;
 using BookStore.Domain.Services;
-using BookStore.Commands;
 using BookStore.Domain;
 
 namespace BookStore.Web.Controllers
@@ -63,7 +62,7 @@ namespace BookStore.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(RegisterCommand command)
+        public ActionResult Register(RegistrationModel command)
         {
             var service = new RegistrationService(CurrentUnitOfWork.Session);
             service.Register(command.Email, command.NickName, command.Password, command.Gender);

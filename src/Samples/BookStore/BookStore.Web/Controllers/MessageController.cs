@@ -8,7 +8,6 @@ using NHibernate.Linq;
 
 using BookStore.Domain;
 using BookStore.Domain.Services;
-using BookStore.Commands;
 
 namespace BookStore.Web.Controllers
 {

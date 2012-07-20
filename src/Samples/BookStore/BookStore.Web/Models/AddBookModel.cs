@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 using Taro;
 
-namespace BookStore.Commands
+namespace BookStore.Web.Models
 {
-    public class AddBookCommand
+    public class AddBookModel
     {
         [Required]
         public string ISBN { get; set; }
@@ -31,7 +31,7 @@ namespace BookStore.Commands
 
         public string CreatorId { get; set; }
 
-        public AddBookCommand()
+        public AddBookModel()
         {
         }
     }
