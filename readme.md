@@ -1,6 +1,6 @@
 # Taro Framework
 
-## A lightweight application Framework written in C#
+## A lightweight .NET application Framework
 
 ## Directory structure:
 
