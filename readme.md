@@ -1,6 +1,6 @@
 # Taro Framework
 
-## A simple CQRS Framework
+## A lightweight application Framework written in C#
 
 ## Directory structure:
 
