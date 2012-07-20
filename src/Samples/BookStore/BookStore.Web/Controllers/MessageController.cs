@@ -6,8 +6,7 @@ using System.Web.Mvc;
 
 using NHibernate.Linq;
 
-using BookStore.Domain;
-using BookStore.Domain.Services;
+using BookStore.Services;
 
 namespace BookStore.Web.Controllers
 {

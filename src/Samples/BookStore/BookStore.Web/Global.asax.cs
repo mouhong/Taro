@@ -15,6 +15,7 @@ using Taro;
 using Taro.Data;
 using Taro.Events;
 using Taro.Events.Storage.Rdbms;
+using BookStore.Data;
 
 namespace BookStore.Web
 {
@@ -63,16 +64,16 @@ namespace BookStore.Web
             });
 
             var mapper = new ModelMapper();
-            mapper.AddMappings(Assembly.Load("BookStore.Data.Mapping").GetTypes());
+            mapper.AddMappings(Assembly.Load("BookStore.Core").GetTypes());
 
             config.AddMapping(mapper.CompileMappingForAllExplicitlyAddedEntities());
 
             SessionManager.Current.Initailize(config);
 
             TaroEnvironment.Instance
-                        .RegisterImmediateHandlers(Assembly.Load("BookStore.Events.Handlers"))
-                        .UseDefaultEventBus(Assembly.Load("BookStore.Events.Handlers"))
-                        .UseUnitOfWorkFactory(() => new UnitOfWork(SessionManager.Current.OpenSession()));
+                        .RegisterImmediateHandlers(Assembly.Load("BookStore.Core"))
+                        .UseDefaultEventBus(Assembly.Load("BookStore.Core"))
+                        .UseUnitOfWorkFactory(() => new NhUnitOfWork(SessionManager.Current.OpenSession()));
         }
     }
 }

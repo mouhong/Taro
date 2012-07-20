@@ -7,8 +7,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using NHibernate.Linq;
 using BookStore.Web.Models;
-using BookStore.Domain.Services;
-using BookStore.Domain;
+using BookStore.Services;
 
 namespace BookStore.Web.Controllers
 {
@@ -17,7 +16,7 @@ namespace BookStore.Web.Controllers
         [Authorize]
         public ActionResult My()
         {
-            var user = Query<BookStore.Domain.User>().Find(User.Identity.Name);
+            var user = Query<User>().Find(User.Identity.Name);
             return View(user);
         }
 
@@ -86,7 +85,7 @@ namespace BookStore.Web.Controllers
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordModel model)
         {
-            var user = Query<BookStore.Domain.User>().Find(User.Identity.Name);
+            var user = Query<User>().Find(User.Identity.Name);
             user.ChangePassword(model.NewPassword);
 
             return RedirectToAction("ChangePasswordSuccess");

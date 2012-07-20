@@ -9,6 +9,7 @@ using NHibernate.Linq;
 
 using Taro;
 using Taro.Data;
+using BookStore.Data;
 
 namespace BookStore.Web.Controllers
 {
@@ -16,7 +17,7 @@ namespace BookStore.Web.Controllers
     {
         protected NhUnitOfWorkScope CurrentUnitOfWorkScope { get; private set; }
 
-        protected UnitOfWork CurrentUnitOfWork { get; private set; }
+        protected NhUnitOfWork CurrentUnitOfWork { get; private set; }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {

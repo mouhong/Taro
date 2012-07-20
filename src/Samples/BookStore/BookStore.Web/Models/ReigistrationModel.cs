@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Taro;
-using BookStore.Domain;
-
 namespace BookStore.Web.Models
 {
     public class RegistrationModel

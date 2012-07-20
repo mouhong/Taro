@@ -181,29 +181,17 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BookStore.Core\BookStore.Core.csproj">
+      <Project>{4410A7A6-13D9-4586-AAE6-293B0B05D7F2}</Project>
+      <Name>BookStore.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Extensions\Taro.Events.Storage.RavenDB\Taro.Events.Storage.RavenDB.csproj">
       <Project>{7DAC6772-4F80-4767-A829-9B1C53CDD246}</Project>
       <Name>Taro.Events.Storage.RavenDB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BookStore.Data.Mapping\BookStore.Data.Mapping.csproj">
-      <Project>{6911B06E-5060-47B3-AE43-199CBBCF2743}</Project>
-      <Name>BookStore.Data.Mapping</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BookStore.Domain\BookStore.Domain.csproj">
-      <Project>{647570F8-B67C-4BD2-B8D3-6F54BAD9AD5C}</Project>
-      <Name>BookStore.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Extensions\Taro.NHibernate\Taro.NHibernate.csproj">
-      <Project>{9E66283F-59A0-4276-97EB-699A17706FEA}</Project>
-      <Name>Taro.NHibernate</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Taro\Taro.csproj">
       <Project>{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}</Project>
       <Name>Taro</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BookStore.Events.Handlers\BookStore.Events.Handlers.csproj">
-      <Project>{E5D499F6-7224-47FA-AF52-56BCCFB3B29F}</Project>
-      <Name>BookStore.Events.Handlers</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
