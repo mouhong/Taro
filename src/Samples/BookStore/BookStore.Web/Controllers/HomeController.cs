@@ -24,7 +24,7 @@ namespace BookStore.Web.Controllers
 
         public ActionResult Stat()
         {
-            var service = new WebsiteInfoService(NhSession);
+            var service = new WebsiteInfoService(CurrentUnitOfWork.Session);
 
             ViewBag.TotalBooks = service.GetValue(WebsiteInfoKeys.TotalBooks, "0");
             ViewBag.TotalUsers = service.GetValue(WebsiteInfoKeys.TotalUsers, "0");

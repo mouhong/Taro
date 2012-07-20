@@ -7,8 +7,6 @@ using System.Reflection;
 using Taro.Data;
 using Taro.Events;
 using Taro.Events.Buses;
-using Taro.Commands;
-using Taro.Commands.Buses;
 using Taro.Events.Storage;
 using Taro.Events.Storage.Rdbms;
 using Taro.Utils;
@@ -24,8 +22,6 @@ namespace Taro
         public IEventBus EventBus { get; set; }
 
         public IEventStore EventStore { get; set; }
-
-        public ICommandBus CommandBus { get; set; }
 
         private TaroEnvironment()
         {
@@ -60,23 +56,6 @@ namespace Taro
             var bus = new DefaultEventBus(handlerFinder);
 
             EventBus = bus;
-
-            return this;
-        }
-
-        public TaroEnvironment UseDefaultCommandBus(params Assembly[] executorAssemblies)
-        {
-            return UseDefaultCommandBus(executorAssemblies as IEnumerable<Assembly>);
-        }
-
-        public TaroEnvironment UseDefaultCommandBus(IEnumerable<Assembly> executorAssemblies)
-        {
-            Require.NotNull(executorAssemblies, "executorAssemblies");
-
-            var executorFinder = new DefaultCommandExecutorFinder();
-            executorFinder.RegisterExecutors(executorAssemblies);
-
-            CommandBus = new DefaultCommandBus(executorFinder);
 
             return this;
         }

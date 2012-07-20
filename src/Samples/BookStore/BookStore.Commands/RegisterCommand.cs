@@ -8,7 +8,7 @@ using BookStore.Domain;
 
 namespace BookStore.Commands
 {
-    public class RegisterCommand : ICommand
+    public class RegisterCommand
     {
         public string Email { get; set; }
 

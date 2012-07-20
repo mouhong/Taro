@@ -45,11 +45,11 @@ namespace BookStore.Web.Controllers
         [HttpPost, RequireAdmin]
         public ActionResult Create(AddBookCommand command)
         {
-            var service = new UserService(NhSession);
-            var creatorId = service.GetUserIdByEmail(User.Identity.Name);
-            command.CreatorId = creatorId;
+            var service = new RegistrationService(CurrentUnitOfWork.Session);
+            var creator = CurrentUnitOfWork.Session.Get<BookStore.Domain.User>(User.Identity.Name);
 
-            CommandBus.Send(command);
+            var book = Book.Create(command.ISBN, command.Title, command.Author, command.PublishedDate, command.Price, command.Stock, creator.Id);
+            CurrentUnitOfWork.Save(book);
 
             return RedirectToAction("All", new { message = "Book created!" });
         }
@@ -57,17 +57,12 @@ namespace BookStore.Web.Controllers
         [Authorize]
         public ActionResult Buy(string isbn)
         {
-            var cmd = new BuyBookCommand(User.Identity.Name, isbn);
+            var user = Query<User>().First(it => it.Email == User.Identity.Name);
+            var book = CurrentUnitOfWork.Get<Book>(isbn);
 
-            try
-            {
-                CommandBus.Send(cmd);
-                return RedirectToAction("All", new { message = "Buyed one book" });
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("All", new { message = ex.Message, isError = true });
-            }
+            user.BuyBook(book);
+
+            return RedirectToAction("All", new { message = "Buyed one book" });
         }
     }
 }

@@ -10,33 +10,18 @@ using BookStore.Domain.Events;
 
 namespace BookStore.Domain.Services
 {
-    public class UserService
+    public class RegistrationService
     {
         public ISession Session { get; private set; }
 
-        public UserService(ISession session)
+        public RegistrationService(ISession session)
         {
             Session = session;
         }
 
-        public User GetUserByEmail(string email)
-        {
-            return Session.Query<User>().FirstOrDefault(it => it.Email == email);
-        }
-
-        public string GetUserIdByEmail(string email)
-        {
-            return Session.Query<User>().Where(it => it.Email == email).Select(it => it.Id).FirstOrDefault();
-        }
-
-        public bool Authenticate(string email, string password)
-        {
-            return Session.Query<User>().Any(it => it.Email == email && it.Password == password);
-        }
-
         public void Register(string email, string nickName, string password, Gender gender)
         {
-            if (IsEmailUsed(email))
+            if (Session.Query<User>().ExistsEmail(email))
                 throw new InvalidOperationException("Registration failed. Email was used.");
 
             var account = new Account();
@@ -58,11 +43,6 @@ namespace BookStore.Domain.Services
                 UserEmail = user.Email,
                 UserNickName = user.NickName
             });
-        }
-
-        public bool IsEmailUsed(string email)
-        {
-            return Session.Query<User>().Any(it => it.Email == email);
         }
     }
 }

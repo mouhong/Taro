@@ -9,7 +9,7 @@ using Taro;
 
 namespace BookStore.Commands
 {
-    public class AddBookCommand : ICommand
+    public class AddBookCommand
     {
         [Required]
         public string ISBN { get; set; }

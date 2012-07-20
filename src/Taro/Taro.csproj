@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\UnitOfWorkScope.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Events\Buses\DefaultEventBus.cs" />
     <Compile Include="Events\Buses\EventHandlerFinderUtil.cs" />
@@ -79,12 +80,7 @@
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Serialization\Serializers.cs" />
     <Compile Include="TaroEnvironment.cs" />
-    <Compile Include="Commands\ExecuteCommand.cs" />
     <Compile Include="Data\ThreadStaticUnitOfWorkContext.cs" />
-    <Compile Include="Commands\Buses\DefaultCommandBus.cs" />
-    <Compile Include="Commands\Buses\DefaultCommandExecutorFinder.cs" />
-    <Compile Include="Commands\Buses\ICommandBus.cs" />
-    <Compile Include="Commands\Buses\ICommandExecutorFinder.cs" />
     <Compile Include="Data\UnitOfWorkFactory.cs" />
     <Compile Include="DomainEvent.cs" />
     <Compile Include="Events\HandleEventImmediately.cs" />
@@ -94,8 +90,6 @@
     <Compile Include="Data\AbstractUnitOfWork.cs" />
     <Compile Include="Events\Buses\IImmediateEventHandlerFinder.cs" />
     <Compile Include="Events\IHandleEventOnCommit.cs" />
-    <Compile Include="ICommand.cs" />
-    <Compile Include="Commands\IExecuteCommand.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="Events\IHandleEventImmediately.cs" />
     <Compile Include="Data\IUnitOfWork.cs" />

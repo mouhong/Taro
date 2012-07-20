@@ -6,7 +6,7 @@ using Taro;
 
 namespace BookStore.Commands
 {
-    public class ChangePasswordCommand : ICommand
+    public class ChangePasswordCommand
     {
         public string UserId { get; private set; }
 

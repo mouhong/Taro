@@ -183,10 +183,6 @@
       <Project>{7DAC6772-4F80-4767-A829-9B1C53CDD246}</Project>
       <Name>Taro.Events.Storage.RavenDB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BookStore.Commands.Executors\BookStore.Commands.Executors.csproj">
-      <Project>{B5D34D3A-7680-4D12-B89E-707CD23A4A07}</Project>
-      <Name>BookStore.Commands.Executors</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BookStore.Commands\BookStore.Commands.csproj">
       <Project>{A6D57F8C-3CB8-4636-BA3B-CF07ADA49BD4}</Project>
       <Name>BookStore.Commands</Name>

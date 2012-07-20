@@ -14,7 +14,6 @@ using NHibernate.Mapping.ByCode;
 using Taro;
 using Taro.Data;
 using Taro.Events;
-using Taro.Commands;
 using Taro.Events.Storage.Rdbms;
 
 namespace BookStore.Web
@@ -72,7 +71,6 @@ namespace BookStore.Web
 
             TaroEnvironment.Instance
                         .RegisterImmediateHandlers(Assembly.Load("BookStore.Events.Handlers"))
-                        .UseDefaultCommandBus(Assembly.Load("BookStore.Commands.Executors"))
                         .UseDefaultEventBus(Assembly.Load("BookStore.Events.Handlers"))
                         .UseUnitOfWorkFactory(() => new UnitOfWork(SessionManager.Current.OpenSession()));
         }

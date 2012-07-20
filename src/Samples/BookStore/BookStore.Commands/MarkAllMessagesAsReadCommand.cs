@@ -7,7 +7,7 @@ using Taro;
 
 namespace BookStore.Commands
 {
-    public class MarkAllMessagesAsReadCommand : ICommand
+    public class MarkAllMessagesAsReadCommand
     {
         public string UserEmail { get; private set; }
 

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+using NHibernate.Linq;
+
 using BookStore.Domain;
 using BookStore.Domain.Services;
 using BookStore.Commands;
@@ -15,14 +17,14 @@ namespace BookStore.Web.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            CommandBus.Send(new MarkAllMessagesAsReadCommand(User.Identity.Name));
+            var user = CurrentUnitOfWork.Session.Query<User>().Find(User.Identity.Name);
 
-            var service = new UserService(NhSession);
-            var userId = service.GetUserIdByEmail(User.Identity.Name);
-            var messages = Query<Message>()
-                           .Where(it => it.UserId == userId)
-                           .OrderByDescending(it => it.SentTime)
-                           .ToList();
+            var service = new MessageService(CurrentUnitOfWork.Session);
+            service.MarkAllMessagesAsRead(user.Id);
+
+            var messages = service.QueryMessages(user.Id)
+                                  .OrderByDescending(it => it.SentTime)
+                                  .ToList();
 
             return View(messages);
         }
@@ -31,11 +33,10 @@ namespace BookStore.Web.Controllers
         {
             if (Request.IsAuthenticated)
             {
-                var userService = new UserService(NhSession);
-                var userId = userService.GetUserIdByEmail(User.Identity.Name);
+                var user = Query<User>().Find(User.Identity.Name);
 
-                var messageService = new MessageService(NhSession);
-                var messageCount = messageService.GetTotalUnReadMessageCount(userId);
+                var messageService = new MessageService(CurrentUnitOfWork.Session);
+                var messageCount = messageService.GetTotalUnReadMessageCount(user.Id);
 
                 if (messageCount > 0)
                 {

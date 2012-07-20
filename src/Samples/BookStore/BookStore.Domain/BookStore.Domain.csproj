@@ -67,6 +67,7 @@
     <Compile Include="Account.cs" />
     <Compile Include="AccountLog.cs" />
     <Compile Include="AccountNotificationSettings.cs" />
+    <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Book.cs" />
     <Compile Include="BookSalesCounter.cs" />
     <Compile Include="BuyedBook.cs" />
@@ -76,12 +77,13 @@
     <Compile Include="Events\MessageSentEvent.cs" />
     <Compile Include="Events\NewUserRegisteredEvent.cs" />
     <Compile Include="Events\PasswordChangedEvent.cs" />
+    <Compile Include="Extensions\UserQueryableExtensions.cs" />
     <Compile Include="Gender.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageBoxInfo.cs" />
     <Compile Include="Services\ISBNValidator.cs" />
     <Compile Include="Services\MessageService.cs" />
-    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\RegistrationService.cs" />
     <Compile Include="Services\WebsiteInfoService.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

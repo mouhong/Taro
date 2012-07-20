@@ -63,7 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\Executes.cs" />
+    <Compile Include="Data\NhUnitOfWorkScope.cs" />
     <Compile Include="Data\SessionManager.cs" />
     <Compile Include="Data\UnitOfWork.cs" />
     <Compile Include="Events\HandlesImmediately.cs" />

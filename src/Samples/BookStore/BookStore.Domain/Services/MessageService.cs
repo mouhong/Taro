@@ -21,6 +21,11 @@ namespace BookStore.Domain.Services
             _session = session;
         }
 
+        public IQueryable<Message> QueryMessages(string userId)
+        {
+            return _session.Query<Message>().Where(it => it.UserId == userId);
+        }
+
         public int GetTotalUnReadMessageCount(string userId)
         {
             if (String.IsNullOrEmpty(userId))
@@ -37,6 +42,19 @@ namespace BookStore.Domain.Services
 
             var box = _session.Get<MessageBoxInfo>(userId);
             return box == null ? 0 : box.TotalMessages;
+        }
+
+        public void MarkAllMessagesAsRead(string userId)
+        {
+            var messages = QueryMessages(userId).Where(it => !it.IsRead).ToList();
+
+            foreach (var message in messages)
+            {
+                message.IsRead = true;
+            }
+
+            var box = _session.Get<MessageBoxInfo>(userId);
+            box.UnReadMessages = 0;
         }
 
         public void Send(string receiverId, string content)

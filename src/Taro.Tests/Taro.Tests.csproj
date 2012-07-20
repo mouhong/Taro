@@ -67,7 +67,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AbstractCommandExecutorFacts.cs" />
     <Compile Include="Data\AbstractUnitOfWorkFacts.cs" />
     <Compile Include="Data\ThreadStaticUnitOfWorkContextFacts.cs" />
     <Compile Include="DomainEventFacts.cs" />

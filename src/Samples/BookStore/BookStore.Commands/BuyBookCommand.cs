@@ -7,7 +7,7 @@ using Taro;
 
 namespace BookStore.Commands
 {
-    public class BuyBookCommand : ICommand
+    public class BuyBookCommand
     {
         public string UserEmail { get; private set; }
 

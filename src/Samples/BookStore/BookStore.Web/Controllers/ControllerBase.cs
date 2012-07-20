@@ -9,55 +9,37 @@ using NHibernate.Linq;
 
 using Taro;
 using Taro.Data;
-using Taro.Commands;
-using Taro.Commands.Buses;
 
 namespace BookStore.Web.Controllers
 {
     public class ControllerBase : Controller
     {
-        protected Func<ISession> GetNhSession { get; private set; }
+        protected NhUnitOfWorkScope CurrentUnitOfWorkScope { get; private set; }
 
-        private ISession _currentSession;
+        protected UnitOfWork CurrentUnitOfWork { get; private set; }
 
-        protected ISession NhSession
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            get
+            base.OnActionExecuting(filterContext);
+
+            CurrentUnitOfWorkScope = new NhUnitOfWorkScope();
+            CurrentUnitOfWork = CurrentUnitOfWorkScope.UnitOfWork;
+        }
+
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            base.OnActionExecuted(filterContext);
+
+            if (filterContext.Exception == null)
             {
-                if (_currentSession == null)
-                {
-                    _currentSession = GetNhSession();
-                }
-                return _currentSession;
+                CurrentUnitOfWorkScope.Complete();
+                CurrentUnitOfWorkScope.Dispose();
             }
-        }
-
-        protected ICommandBus CommandBus { get; private set; }
-
-        protected ControllerBase()
-            : this(TaroEnvironment.Instance.CommandBus, () => SessionManager.Current.OpenSession())
-        {
-        }
-
-        protected ControllerBase(ICommandBus commandBus, Func<ISession> getNhSession)
-        {
-            CommandBus = commandBus;
-            GetNhSession = getNhSession;
         }
 
         protected IQueryable<T> Query<T>()
         {
-            return NhSession.Query<T>();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _currentSession != null)
-            {
-                _currentSession.Dispose();
-            }
-
-            base.Dispose(disposing);
+            return CurrentUnitOfWork.Query<T>();
         }
     }
 }

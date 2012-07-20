@@ -5,9 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using NHibernate.Linq;
 using BookStore.Web.Models;
 using BookStore.Domain.Services;
 using BookStore.Commands;
+using BookStore.Domain;
 
 namespace BookStore.Web.Controllers
 {
@@ -16,9 +18,7 @@ namespace BookStore.Web.Controllers
         [Authorize]
         public ActionResult My()
         {
-            var service = new UserService(NhSession);
-            var user = service.GetUserByEmail(User.Identity.Name);
-
+            var user = Query<BookStore.Domain.User>().Find(User.Identity.Name);
             return View(user);
         }
 
@@ -32,7 +32,7 @@ namespace BookStore.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var service = new UserService(NhSession);
+                var service = new AuthenticationService(CurrentUnitOfWork.Session);
 
                 if (service.Authenticate(model.Email, model.Password))
                 {
@@ -65,23 +65,10 @@ namespace BookStore.Web.Controllers
         [HttpPost]
         public ActionResult Register(RegisterCommand command)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    CommandBus.Send(command);
-                    FormsAuthentication.SetAuthCookie(command.Email, false);
+            var service = new RegistrationService(CurrentUnitOfWork.Session);
+            service.Register(command.Email, command.NickName, command.Password, command.Gender);
 
-                    return RedirectToAction("Index", "Home");
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("Error", ex);
-                }
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(command);
+            return RedirectToAction("Index", "Home");
         }
 
         //
@@ -100,34 +87,10 @@ namespace BookStore.Web.Controllers
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordModel model)
         {
-            if (ModelState.IsValid)
-            {
+            var user = Query<BookStore.Domain.User>().Find(User.Identity.Name);
+            user.ChangePassword(model.NewPassword);
 
-                // ChangePassword will throw an exception rather
-                // than return false in certain failure scenarios.
-                bool changePasswordSucceeded;
-                try
-                {
-                    MembershipUser currentUser = Membership.GetUser(User.Identity.Name, true /* userIsOnline */);
-                    changePasswordSucceeded = currentUser.ChangePassword(model.OldPassword, model.NewPassword);
-                }
-                catch (Exception)
-                {
-                    changePasswordSucceeded = false;
-                }
-
-                if (changePasswordSucceeded)
-                {
-                    return RedirectToAction("ChangePasswordSuccess");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
-                }
-            }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            return RedirectToAction("ChangePasswordSuccess");
         }
 
         //
@@ -137,45 +100,5 @@ namespace BookStore.Web.Controllers
         {
             return View();
         }
-
-        #region Status Codes
-        private static string ErrorCodeToString(MembershipCreateStatus createStatus)
-        {
-            // See http://go.microsoft.com/fwlink/?LinkID=177550 for
-            // a full list of status codes.
-            switch (createStatus)
-            {
-                case MembershipCreateStatus.DuplicateUserName:
-                    return "User name already exists. Please enter a different user name.";
-
-                case MembershipCreateStatus.DuplicateEmail:
-                    return "A user name for that e-mail address already exists. Please enter a different e-mail address.";
-
-                case MembershipCreateStatus.InvalidPassword:
-                    return "The password provided is invalid. Please enter a valid password value.";
-
-                case MembershipCreateStatus.InvalidEmail:
-                    return "The e-mail address provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidAnswer:
-                    return "The password retrieval answer provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidQuestion:
-                    return "The password retrieval question provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidUserName:
-                    return "The user name provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.ProviderError:
-                    return "The authentication provider returned an error. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                case MembershipCreateStatus.UserRejected:
-                    return "The user creation request has been canceled. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                default:
-                    return "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-            }
-        }
-        #endregion
     }
 }
