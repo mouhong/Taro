@@ -8,7 +8,7 @@ using BookStore.Data;
 
 namespace Taro.Events
 {
-    public abstract class HandlesImmediately<TEvent> : HandleEventImmediately<TEvent>
+    public abstract class PostCommitEventHandler<TEvent> : AbstractPostCommitEventHandler<TEvent>
         where TEvent : IEvent
     {
         protected new NhUnitOfWork UnitOfWork
@@ -19,7 +19,7 @@ namespace Taro.Events
             }
         }
 
-        protected HandlesImmediately()
+        protected PostCommitEventHandler()
         {
         }
     }

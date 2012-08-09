@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Taro.Events
 {
-    public interface IHandleEventImmediately<in TEvent>
+    public interface IImmediatelyEventHandler<in TEvent>
         where TEvent : IEvent
     {
         void Handle(TEvent evnt);

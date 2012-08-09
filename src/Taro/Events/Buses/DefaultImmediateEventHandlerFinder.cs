@@ -39,7 +39,7 @@ namespace Taro.Events.Buses
 
             if (!handlerType.IsClass || handlerType.IsAbstract || handlerType.IsGenericType) return false;
 
-            var eventType = EventHandlerFinderUtil.TryFindEventTypeOfImplementedHandlerInterface(handlerType, typeof(IHandleEventImmediately<>));
+            var eventType = EventHandlerFinderUtil.TryFindEventTypeOfImplementedHandlerInterface(handlerType, typeof(IImmediatelyEventHandler<>));
 
             if (eventType != null)
             {

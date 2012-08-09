@@ -49,22 +49,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AsyncCtpLibrary">
-      <HintPath>..\lib\RavenDB\AsyncCtpLibrary.dll</HintPath>
+      <HintPath>..\..\lib\RavenDB\AsyncCtpLibrary.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\lib\RavenDB\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\lib\RavenDB\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
-      <HintPath>..\lib\RavenDB\NLog.dll</HintPath>
+      <HintPath>..\..\lib\RavenDB\NLog.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Abstractions">
-      <HintPath>..\lib\RavenDB\Raven.Abstractions.dll</HintPath>
+      <HintPath>..\..\lib\RavenDB\Raven.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Client.Debug">
-      <HintPath>..\lib\RavenDB\Raven.Client.Debug.dll</HintPath>
+      <HintPath>..\..\lib\RavenDB\Raven.Client.Debug.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Client.Lightweight">
-      <HintPath>..\lib\RavenDB\Raven.Client.Lightweight.dll</HintPath>
+      <HintPath>..\..\lib\RavenDB\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />

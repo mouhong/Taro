@@ -9,12 +9,12 @@ using Taro.Utils;
 
 namespace Taro.Events.Buses
 {
-    public class DefaultOnCommitEventHandlerFinder : IOnCommitEventHandlerFinder
+    public class DefaultPostCommitEventHandlerFinder : IPostCommitEventHandlerFinder
     {
         // Key: Event Type, Value: Handler Type
         private Dictionary<Type, List<Type>> _handlerTypes = new Dictionary<Type, List<Type>>();
 
-        public DefaultOnCommitEventHandlerFinder()
+        public DefaultPostCommitEventHandlerFinder()
         {
         }
 
@@ -39,7 +39,7 @@ namespace Taro.Events.Buses
 
             if (!handlerType.IsClass || handlerType.IsAbstract || handlerType.IsGenericType) return false;
 
-            var eventType = EventHandlerFinderUtil.TryFindEventTypeOfImplementedHandlerInterface(handlerType, typeof(IHandleEventOnCommit<>));
+            var eventType = EventHandlerFinderUtil.TryFindEventTypeOfImplementedHandlerInterface(handlerType, typeof(IPostCommitEventHandler<>));
 
             if (eventType != null)
             {

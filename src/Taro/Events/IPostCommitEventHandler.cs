@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Taro.Events
 {
-    public interface IHandleEventOnCommit<in TEvent>
+    public interface IPostCommitEventHandler<in TEvent>
         where TEvent : IEvent
     {
         void Handle(TEvent evnt);

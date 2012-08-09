@@ -50,7 +50,7 @@ namespace Taro
         {
             Require.NotNull(handlerAssemblies, "handlerAssemblies");
 
-            var handlerFinder = new DefaultOnCommitEventHandlerFinder();
+            var handlerFinder = new DefaultPostCommitEventHandlerFinder();
             handlerFinder.RegisterHandlers(handlerAssemblies);
 
             var bus = new DefaultEventBus(handlerFinder);

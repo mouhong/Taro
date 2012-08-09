@@ -8,7 +8,7 @@ using Taro.Events;
 
 namespace BookStore.Events.Handlers
 {
-    public class OnMessageSent : HandlesImmediately<MessageSentEvent>
+    public class OnMessageSent : ImmediatelyEventHandler<MessageSentEvent>
     {
         public override void Handle(MessageSentEvent evnt)
         {

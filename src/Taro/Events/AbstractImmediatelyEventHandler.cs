@@ -7,17 +7,17 @@ using Taro.Data;
 
 namespace Taro.Events
 {
-    public abstract class HandleEventOnCommit<TEvent> : IHandleEventOnCommit<TEvent>
+    public abstract class AbstractImmediatelyEventHandler<TEvent> : IImmediatelyEventHandler<TEvent>
         where TEvent : IEvent
     {
         protected IUnitOfWork UnitOfWork { get; private set; }
 
-        protected HandleEventOnCommit()
+        protected AbstractImmediatelyEventHandler()
             : this(ThreadStaticUnitOfWorkContext.Current)
         {
         }
 
-        protected HandleEventOnCommit(IUnitOfWork unitOfWork)
+        protected AbstractImmediatelyEventHandler(IUnitOfWork unitOfWork)
         {
             UnitOfWork = unitOfWork;
         }

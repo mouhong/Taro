@@ -71,21 +71,21 @@ namespace Taro.Tests.Events.Buses
         {
         }
 
-        public class Event1Handler1 : IHandleEventImmediately<Event1>
+        public class Event1Handler1 : IImmediatelyEventHandler<Event1>
         {
             public void Handle(Event1 evnt)
             {
             }
         }
 
-        public class Event1Handler2 : IHandleEventImmediately<Event1>
+        public class Event1Handler2 : IImmediatelyEventHandler<Event1>
         {
             public void Handle(Event1 evnt)
             {
             }
         }
 
-        public class Event2Handler1 : IHandleEventImmediately<Event2>
+        public class Event2Handler1 : IImmediatelyEventHandler<Event2>
         {
             public void Handle(Event2 evnt)
             {

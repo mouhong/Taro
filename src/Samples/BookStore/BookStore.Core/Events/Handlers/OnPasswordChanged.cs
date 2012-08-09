@@ -11,7 +11,7 @@ using BookStore.Events;
 
 namespace BookStore.Events.Handlers
 {
-    class OnPasswordChanged : HandlesOnCommit<PasswordChangedEvent>
+    class OnPasswordChanged : PostCommitEventHandler<PasswordChangedEvent>
     {
         public override void Handle(PasswordChangedEvent evnt)
         {

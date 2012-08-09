@@ -8,7 +8,7 @@ using Taro.Events;
 
 namespace BookStore.Events.Handlers
 {
-    class OnBookBuyed : HandlesImmediately<BookBuyedEvent>
+    class OnBookBuyed : ImmediatelyEventHandler<BookBuyedEvent>
     {
         public override void Handle(BookBuyedEvent evnt)
         {

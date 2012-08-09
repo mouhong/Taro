@@ -11,7 +11,7 @@ using BookStore.Services;
 
 namespace BookStore.Events.Handlers
 {
-    class OnNewUserRegistered_SendEmail : IHandleEventOnCommit<NewUserRegisteredEvent>
+    class OnNewUserRegistered_SendEmail : IPostCommitEventHandler<NewUserRegisteredEvent>
     {
         public void Handle(NewUserRegisteredEvent evnt)
         {
@@ -19,7 +19,7 @@ namespace BookStore.Events.Handlers
         }
     }
 
-    class OnNewUserRegistered_UpdateStatistics : HandlesImmediately<NewUserRegisteredEvent>
+    class OnNewUserRegistered_UpdateStatistics : ImmediatelyEventHandler<NewUserRegisteredEvent>
     {
         public override void Handle(NewUserRegisteredEvent evnt)
         {

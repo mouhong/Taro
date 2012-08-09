@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Taro.Events.Buses
 {
-    public interface IOnCommitEventHandlerFinder
+    public interface IPostCommitEventHandlerFinder
     {
         IEnumerable FindHandlers(IEvent evnt);
     }

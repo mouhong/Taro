@@ -12,7 +12,7 @@ using BookStore.Services;
 
 namespace BookStore.Events.Handlers
 {
-    class OnBookAdded_SendMessage : HandlesImmediately<BookAddedEvent>
+    class OnBookAdded_SendMessage : ImmediatelyEventHandler<BookAddedEvent>
     {
         public override void Handle(BookAddedEvent evnt)
         {
@@ -36,7 +36,7 @@ namespace BookStore.Events.Handlers
         }
     }
 
-    class OnBookAdded_UpdateStatistics : HandlesImmediately<BookAddedEvent>
+    class OnBookAdded_UpdateStatistics : ImmediatelyEventHandler<BookAddedEvent>
     {
         public override void Handle(BookAddedEvent evnt)
         {

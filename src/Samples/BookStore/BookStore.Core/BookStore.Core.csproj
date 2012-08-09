@@ -74,8 +74,8 @@
     <Compile Include="Events\Handlers\OnMessageSent.cs" />
     <Compile Include="Events\Handlers\OnNewUserRegistered.cs" />
     <Compile Include="Events\Handlers\OnPasswordChanged.cs" />
-    <Compile Include="Events\HandlesImmediately.cs" />
-    <Compile Include="Events\HandlesOnCommit.cs" />
+    <Compile Include="Events\ImmediatelyEventHandler.cs" />
+    <Compile Include="Events\PostCommitEventHandler.cs" />
     <Compile Include="Events\MessageSentEvent.cs" />
     <Compile Include="Events\NewUserRegisteredEvent.cs" />
     <Compile Include="Events\PasswordChangedEvent.cs" />

@@ -10,10 +10,10 @@ namespace Taro.Events.Buses
 {
     public class DefaultEventBus : IEventBus
     {
-        private IOnCommitEventHandlerFinder _handlerFinder;
+        private IPostCommitEventHandlerFinder _handlerFinder;
         private List<IEvent> _uncommittedEvents = new List<IEvent>();
 
-        public DefaultEventBus(IOnCommitEventHandlerFinder handlerFinder)
+        public DefaultEventBus(IPostCommitEventHandlerFinder handlerFinder)
         {
             _handlerFinder = handlerFinder;
         }

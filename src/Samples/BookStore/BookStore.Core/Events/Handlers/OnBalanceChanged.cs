@@ -9,7 +9,7 @@ using Taro.Events;
 
 namespace BookStore.Events.Handlers
 {
-    class OnBalanceChanged : HandlesImmediately<BalanceChangedEvent>
+    class OnBalanceChanged : ImmediatelyEventHandler<BalanceChangedEvent>
     {
         public override void Handle(BalanceChangedEvent evnt)
         {

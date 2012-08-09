@@ -60,7 +60,7 @@ namespace Taro.Tests
                 Assert.False(invoked);
             }
 
-            public class Handler1 : HandleEventImmediately<SomeEvent>
+            public class Handler1 : AbstractImmediatelyEventHandler<SomeEvent>
             {
                 public override void Handle(SomeEvent evnt)
                 {
