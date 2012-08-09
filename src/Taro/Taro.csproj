@@ -76,6 +76,7 @@
     <Compile Include="Events\Storage\Rdbms\SqlServerSqlStatementProvider.cs" />
     <Compile Include="Events\Storage\Rdbms\SqlStatement.cs" />
     <Compile Include="Events\UncommittedEventStream.cs" />
+    <Compile Include="PostCommitActions.cs" />
     <Compile Include="Serialization\DefaultJsonSerializer.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Serialization\Serializers.cs" />

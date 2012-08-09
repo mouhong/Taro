@@ -69,7 +69,7 @@ namespace Taro.Data
             if (_disposed)
                 throw new ObjectDisposedException(null, "Cannot commit a disposed unit of work.");
 
-            if (UncommittedEvents.Count == 0)
+            if (UncommittedEvents.Count == 0 && PostCommitActions.Count() == 0)
             {
                 CommitChanges();
             }
@@ -89,11 +89,17 @@ namespace Taro.Data
                         EventBus.Publish(evnt);
                     }
 
+                    foreach (var action in PostCommitActions.GetQueuedActions())
+                    {
+                        action();
+                    }
+
                     scope.Complete();
                 }
             }
 
             UncommittedEvents.Clear();
+            PostCommitActions.Clear();
         }
 
         protected abstract void CommitChanges();
