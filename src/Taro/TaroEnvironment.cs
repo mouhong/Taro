@@ -23,6 +23,8 @@ namespace Taro
 
         public IEventStore EventStore { get; set; }
 
+        public Func<IUnitOfWork> UnitOfWorkFactory { get; set; }
+
         private TaroEnvironment()
         {
             ImmediateHandlerRegistry = new ImmediateHandlerRegistry();
@@ -63,7 +65,7 @@ namespace Taro
         public TaroEnvironment UseUnitOfWorkFactory(Func<IUnitOfWork> factory)
         {
             Require.NotNull(factory, "factory");
-            UnitOfWorkFactory.Get = factory;
+            UnitOfWorkFactory = factory;
             return this;
         }
 

@@ -11,7 +11,7 @@ namespace Taro.Data
         public IUnitOfWork UnitOfWork { get; private set; }
 
         public UnitOfWorkScope()
-            : this(UnitOfWorkFactory.Get())
+            : this(TaroEnvironment.Instance.UnitOfWorkFactory())
         {
         }
 

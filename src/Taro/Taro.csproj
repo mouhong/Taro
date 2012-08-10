@@ -82,7 +82,6 @@
     <Compile Include="Serialization\Serializers.cs" />
     <Compile Include="TaroEnvironment.cs" />
     <Compile Include="Data\ThreadStaticUnitOfWorkContext.cs" />
-    <Compile Include="Data\UnitOfWorkFactory.cs" />
     <Compile Include="DomainEvent.cs" />
     <Compile Include="Events\AbstractImmediatelyEventHandler.cs" />
     <Compile Include="Events\AbstractPostCommitEventHandler.cs" />
