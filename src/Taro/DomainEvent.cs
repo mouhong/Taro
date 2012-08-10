@@ -20,13 +20,12 @@ namespace Taro
         {
             Require.NotNull(evnt, "evnt");
 
-            if (ThreadStaticUnitOfWorkContext.Current == null)
-                throw new InvalidOperationException("Events cannot be applied within a UnitOfWorkScope. Ensure this code is wrapped with a UnitOfWorkScope.");
+            var bus = TaroEnvironment.Instance.ImmediateEventBus;
 
-            foreach (var handler in TaroEnvironment.Instance.ImmediateHandlerRegistry.GetHandlers(evnt))
-            {
-                EventHandlerInvoker.Invoke(handler, evnt);
-            }
+            if (bus == null)
+                throw new InvalidOperationException("Immediate event bus is not registered to the TaroEnvironment.");
+
+            bus.Publish<TEvent>(evnt);
 
             _uncommittedEvents.Value.Append(evnt);
         }

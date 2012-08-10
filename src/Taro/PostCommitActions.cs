@@ -15,10 +15,6 @@ namespace Taro
         public static void Enqueue(Action action)
         {
             Require.NotNull(action, "action");
-
-            if (ThreadStaticUnitOfWorkContext.Current == null)
-                throw new InvalidOperationException("Cannot enqueue post commit actions outside a UnitOfWorkScope. Ensure this code is wrapped in a UnitOfWorkScope.");
-
             _actions.Value.Add(action);
         }
 

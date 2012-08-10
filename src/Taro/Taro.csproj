@@ -61,12 +61,14 @@
   <ItemGroup>
     <Compile Include="Data\UnitOfWorkScope.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="Events\Buses\AbstractEventHandlerRegistry.cs" />
     <Compile Include="Events\Buses\DefaultEventBus.cs" />
+    <Compile Include="Events\Buses\ImmediateEventHandlerRegistry.cs" />
+    <Compile Include="Events\Buses\PostCommitEventHandlerRegistry.cs" />
     <Compile Include="Events\Buses\EventHandlerFinderUtil.cs" />
     <Compile Include="Events\Buses\EventHandlerInvoker.cs" />
     <Compile Include="Events\Buses\IEventBus.cs" />
-    <Compile Include="Events\Buses\IPostCommitEventHandlerFinder.cs" />
-    <Compile Include="Events\ImmediateHandlerRegistry.cs" />
+    <Compile Include="Events\Buses\IEventHandlerRegistry.cs" />
     <Compile Include="Events\Storage\DefaultEventTypeResolver.cs" />
     <Compile Include="Events\Storage\IEventIdGenerator.cs" />
     <Compile Include="Events\Storage\IEventStore.cs" />
@@ -85,10 +87,7 @@
     <Compile Include="DomainEvent.cs" />
     <Compile Include="Events\AbstractImmediatelyEventHandler.cs" />
     <Compile Include="Events\AbstractPostCommitEventHandler.cs" />
-    <Compile Include="Events\Buses\DefaultPostCommitEventHandlerFinder.cs" />
-    <Compile Include="Events\Buses\DefaultImmediateEventHandlerFinder.cs" />
     <Compile Include="Data\AbstractUnitOfWork.cs" />
-    <Compile Include="Events\Buses\IImmediateEventHandlerFinder.cs" />
     <Compile Include="Events\IPostCommitEventHandler.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="Events\IImmediatelyEventHandler.cs" />

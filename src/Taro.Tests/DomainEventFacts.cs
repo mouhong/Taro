@@ -22,7 +22,7 @@ namespace Taro.Tests
             [Fact]
             public void will_append_event_to_uncommitted_event_stream_if_immediate_event_handlers_succeeded()
             {
-                TaroEnvironment.Instance.ImmediateHandlerRegistry.Clear();
+                TaroEnvironment.Instance.UseDefaultEventBuses();
                 DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))
@@ -37,33 +37,21 @@ namespace Taro.Tests
             [Fact]
             public void will_not_append_event_to_uncommitted_event_stream_if_immediate_event_handler_fails()
             {
-                TaroEnvironment.Instance.ImmediateHandlerRegistry.Clear();
+                TaroEnvironment.Instance.UseDefaultEventBuses();
                 DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 var invoked = false;
                 Action<IEvent> callback = evnt => { invoked = true; };
 
-                TaroEnvironment.Instance.ImmediateHandlerRegistry.RegisterHandler(typeof(Handler1));
+                TaroEnvironment.Instance.ImmediateEventBus.RegisterHandler(typeof(Handler1));
 
                 try
                 {
-                    using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))
-                    {
-                        DomainEvent.Apply(new SomeEvent());
-                    }
+                    DomainEvent.Apply(new SomeEvent());
                 }
                 catch { }
 
                 Assert.False(invoked);
-            }
-
-            [Fact]
-            public void will_throw_if_Apply_method_is_not_called_inside_a_UnitOfWorkScope()
-            {
-                Assert.Throws(typeof(InvalidOperationException), () =>
-                {
-                    DomainEvent.Apply(new SomeEvent());
-                });
             }
 
             public class Handler1 : AbstractImmediatelyEventHandler<SomeEvent>

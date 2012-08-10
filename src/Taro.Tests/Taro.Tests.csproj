@@ -74,7 +74,7 @@
     <Compile Include="Domain\A.cs" />
     <Compile Include="Domain\Events\AValueAdded.cs" />
     <Compile Include="Domain\Mapping\AMap.cs" />
-    <Compile Include="Events\Buses\DefaultEventHandlerFinderFacts.cs" />
+    <Compile Include="Events\Buses\ImmediateEventHandlerRegistryFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

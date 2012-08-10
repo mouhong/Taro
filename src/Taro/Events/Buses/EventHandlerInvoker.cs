@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Taro.Events.Buses
 {
-    public static class EventHandlerInvoker
+    static class EventHandlerInvoker
     {
         public static void Invoke(object handler, object evnt)
         {

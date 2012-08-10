@@ -4,27 +4,57 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
-using Taro.Events.Storage;
+using Taro.Utils;
 
 namespace Taro.Events.Buses
 {
     public class DefaultEventBus : IEventBus
     {
-        private IPostCommitEventHandlerFinder _handlerFinder;
+        private IEventHandlerRegistry _handlerRegistry;
         private List<IEvent> _uncommittedEvents = new List<IEvent>();
 
-        public DefaultEventBus(IPostCommitEventHandlerFinder handlerFinder)
+        public DefaultEventBus(IEventHandlerRegistry eventHandlerRegistry)
         {
-            _handlerFinder = handlerFinder;
+            Require.NotNull(eventHandlerRegistry, "eventHandlerRegistry");
+            _handlerRegistry = eventHandlerRegistry;
         }
 
         public void Publish<TEvent>(TEvent evnt) where TEvent : IEvent
         {
-            foreach (var handler in _handlerFinder.FindHandlers(evnt))
+            Require.NotNull(evnt, "evnt");
+
+            var eventType = evnt.GetType();
+
+            foreach (var handler in _handlerRegistry.FindHandlers(eventType))
             {
                 EventHandlerInvoker.Invoke(handler, evnt);
                 _uncommittedEvents.Add(evnt);
             }
+        }
+
+        public bool RegisterHandler(Type handlerType)
+        {
+            return _handlerRegistry.RegisterHandler(handlerType);
+        }
+
+        public void RegisterHandlers(params Assembly[] assembliesToScan)
+        {
+            _handlerRegistry.RegisterHandlers(assembliesToScan);
+        }
+
+        public bool UnregisterHandler(Type handlerType)
+        {
+            return _handlerRegistry.UnregisterHandler(handlerType);
+        }
+
+        public void UnregisterHandlers(Type eventType)
+        {
+            _handlerRegistry.UnregisterHandlers(eventType);
+        }
+
+        public void UnregisterAllHandlers()
+        {
+            _handlerRegistry.UnregisterAllHandlers();
         }
     }
 }

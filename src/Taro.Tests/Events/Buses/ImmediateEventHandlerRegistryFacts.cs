@@ -8,19 +8,19 @@ using Taro.Events;
 
 namespace Taro.Tests.Events.Buses
 {
-    public class DefaultEventHandlerFinderFacts
+    public class ImmediateEventHandlerRegistryFacts
     {
         public class TheFindHandlersMethod
         {
             [Fact]
             public void will_only_find_handlers_for_passed_in_event_type()
             {
-                var finder = new DefaultImmediateEventHandlerFinder();
+                var finder = new ImmediateEventHandlerRegistry();
                 finder.RegisterHandler(typeof(Event1Handler1));
                 finder.RegisterHandler(typeof(Event1Handler2));
                 finder.RegisterHandler(typeof(Event2Handler1));
 
-                var handlers = finder.FindHandlers(new Event1());
+                var handlers = finder.FindHandlers(typeof(Event1));
                 var handlersList = new List<object>();
 
                 foreach (var each in handlers)
@@ -39,21 +39,21 @@ namespace Taro.Tests.Events.Buses
             [Fact]
             public void will_not_register_if_passed_handlerType_is_not_valid()
             {
-                var finder = new DefaultImmediateEventHandlerFinder();
+                var finder = new ImmediateEventHandlerRegistry();
 
                 Assert.False(finder.RegisterHandler(typeof(TheRegisterHandlerMethod)));
                 Assert.False(finder.RegisterHandler(typeof(Event1)));
 
-                Assert.Empty(finder.FindHandlers(new Event1()));
+                Assert.Empty(finder.FindHandlers(typeof(Event1)));
             }
 
             [Fact]
             public void will_register_if_passed_handlerType_is_valid()
             {
-                var finder = new DefaultImmediateEventHandlerFinder();
+                var finder = new ImmediateEventHandlerRegistry();
                 Assert.True(finder.RegisterHandler(typeof(Event1Handler1)));
 
-                var handlers = finder.FindHandlers(new Event1());
+                var handlers = finder.FindHandlers(typeof(Event1));
                 Assert.NotEmpty(handlers);
 
                 var enumerator = handlers.GetEnumerator();

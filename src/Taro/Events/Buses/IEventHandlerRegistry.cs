@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +7,9 @@ using System.Reflection;
 
 namespace Taro.Events.Buses
 {
-    public interface IEventBus
+    public interface IEventHandlerRegistry
     {
-        void Publish<TEvent>(TEvent evnt) where TEvent : IEvent;
+        IEnumerable FindHandlers(Type eventType);
 
         bool RegisterHandler(Type handlerType);
 

@@ -29,7 +29,7 @@ namespace Taro.Data
         }
 
         protected AbstractUnitOfWork()
-            : this(TaroEnvironment.Instance.EventBus, null)
+            : this(TaroEnvironment.Instance.PostCommitEventBus, null)
         {
         }
 

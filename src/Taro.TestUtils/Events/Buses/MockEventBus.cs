@@ -26,5 +26,30 @@ namespace Taro.TestUtils.Events.Buses
                 PublishAction(evnt);
             }
         }
+
+        public bool RegisterHandler(Type handlerType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RegisterHandlers(params System.Reflection.Assembly[] assembliesToScan)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UnregisterHandler(Type handlerType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UnregisterHandlers(Type eventType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UnregisterAllHandlers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

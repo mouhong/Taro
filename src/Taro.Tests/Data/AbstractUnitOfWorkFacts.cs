@@ -29,6 +29,7 @@ namespace Taro.Tests.Data
             [Fact]
             public void will_clear_uncommitted_events_after_commit()
             {
+                TaroEnvironment.Instance.UseDefaultEventBuses();
                 DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))
@@ -57,7 +58,7 @@ namespace Taro.Tests.Data
             {
                 DomainEvent.ClearAllThreadStaticPendingEvents();
 
-                TaroEnvironment.Instance.EventBus = new MockEventBus(evnt =>
+                TaroEnvironment.Instance.PostCommitEventBus = new MockEventBus(evnt =>
                 {
                     throw new InvalidOperationException("Failed publishing post commit event.");
                 });
@@ -67,7 +68,7 @@ namespace Taro.Tests.Data
                 NhDomainDatabase.ExecuteUpdate("DELETE FROM A");
                 NhDomainDatabase.Save(new A { Id = 1, Value = 0 });
 
-                var unitOfWork = new NhUnitOfWork(NhDomainDatabase.OpenSession(), TaroEnvironment.Instance.EventBus, new NullEventStore());
+                var unitOfWork = new NhUnitOfWork(NhDomainDatabase.OpenSession(), TaroEnvironment.Instance.PostCommitEventBus, new NullEventStore());
 
                 using (var scope = new UnitOfWorkScope(unitOfWork))
                 {
@@ -88,15 +89,15 @@ namespace Taro.Tests.Data
             {
                 DomainEvent.ClearAllThreadStaticPendingEvents();
 
-                TaroEnvironment.Instance.EventBus = new MockEventBus();
-                
+                TaroEnvironment.Instance.PostCommitEventBus = new MockEventBus();
+
                 NhDomainDatabase.InitializeWithMssql(new[] { typeof(AMap) });
 
                 NhDomainDatabase.ExecuteUpdate("DELETE FROM A");
                 NhDomainDatabase.Save(new A { Id = 1, Value = 0 });
 
                 var eventStore = new MockEventStore(events => { throw new InvalidOperationException("Failed saving events."); });
-                var unitOfWork = new NhUnitOfWork(NhDomainDatabase.OpenSession(), TaroEnvironment.Instance.EventBus, eventStore);
+                var unitOfWork = new NhUnitOfWork(NhDomainDatabase.OpenSession(), TaroEnvironment.Instance.PostCommitEventBus, eventStore);
 
                 using (var scope = new UnitOfWorkScope(unitOfWork))
                 {
@@ -117,7 +118,7 @@ namespace Taro.Tests.Data
             {
                 DomainEvent.ClearAllThreadStaticPendingEvents();
 
-                TaroEnvironment.Instance.EventBus = new MockEventBus();
+                TaroEnvironment.Instance.PostCommitEventBus = new MockEventBus();
 
                 NhDomainDatabase.InitializeWithMssql(new[] { typeof(AMap) });
 
@@ -125,7 +126,7 @@ namespace Taro.Tests.Data
                 NhDomainDatabase.Save(new A { Id = 1, Value = 0 });
 
                 var eventStore = new MockEventStore();
-                var unitOfWork = new NhUnitOfWork(NhDomainDatabase.OpenSession(), TaroEnvironment.Instance.EventBus, eventStore);
+                var unitOfWork = new NhUnitOfWork(NhDomainDatabase.OpenSession(), TaroEnvironment.Instance.PostCommitEventBus, eventStore);
 
                 using (var scope = new UnitOfWorkScope(unitOfWork))
                 {
@@ -144,12 +145,13 @@ namespace Taro.Tests.Data
             [Fact]
             public void will_clear_pending_events()
             {
+                TaroEnvironment.Instance.UseDefaultEventBuses();
                 DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))
                 {
                     DomainEvent.Apply(new SomeEvent());
-                }
+                };
 
                 Assert.Equal(0, DomainEvent.GetThreadStaticPendingEvents().Count);
             }

@@ -17,9 +17,9 @@ namespace Taro
     {
         public static readonly TaroEnvironment Instance = new TaroEnvironment();
 
-        public ImmediateHandlerRegistry ImmediateHandlerRegistry { get; private set; }
+        public IEventBus ImmediateEventBus { get; set; }
 
-        public IEventBus EventBus { get; set; }
+        public IEventBus PostCommitEventBus { get; set; }
 
         public IEventStore EventStore { get; set; }
 
@@ -27,42 +27,39 @@ namespace Taro
 
         private TaroEnvironment()
         {
-            ImmediateHandlerRegistry = new ImmediateHandlerRegistry();
         }
 
-        public TaroEnvironment RegisterImmediateHandlers(params Assembly[] assembliesToScan)
+        public static void Configure(Action<TaroEnvironment> action)
         {
-            return RegisterImmediateHandlers(assembliesToScan as IEnumerable<Assembly>);
+            Require.NotNull(action, "action");
+            action(Instance);
         }
 
-        public TaroEnvironment RegisterImmediateHandlers(IEnumerable<Assembly> assembliesToScan)
+        public TaroEnvironment UseDefaultEventBuses()
         {
-            Require.NotNull(assembliesToScan, "assembliesToScan");
-
-            ImmediateHandlerRegistry.RegisterHandlers(assembliesToScan);
+            ImmediateEventBus = new DefaultEventBus(new ImmediateEventHandlerRegistry());
+            PostCommitEventBus = new DefaultEventBus(new PostCommitEventHandlerRegistry());
             return this;
         }
 
-        public TaroEnvironment UseDefaultEventBus(params Assembly[] handlerAssemblies)
+        public TaroEnvironment RegisterEventHandlers(params Assembly[] assembliesToScan)
         {
-            return UseDefaultEventBus(handlerAssemblies as IEnumerable<Assembly>);
-        }
+            if (ImmediateEventBus == null)
+            {
+                ImmediateEventBus = new DefaultEventBus(new ImmediateEventHandlerRegistry());
+            }
+            if (PostCommitEventBus == null)
+            {
+                PostCommitEventBus = new DefaultEventBus(new PostCommitEventHandlerRegistry());
+            }
 
-        public TaroEnvironment UseDefaultEventBus(IEnumerable<Assembly> handlerAssemblies)
-        {
-            Require.NotNull(handlerAssemblies, "handlerAssemblies");
-
-            var handlerFinder = new DefaultPostCommitEventHandlerFinder();
-            handlerFinder.RegisterHandlers(handlerAssemblies);
-
-            var bus = new DefaultEventBus(handlerFinder);
-
-            EventBus = bus;
+            ImmediateEventBus.RegisterHandlers(assembliesToScan);
+            PostCommitEventBus.RegisterHandlers(assembliesToScan);
 
             return this;
         }
 
-        public TaroEnvironment UseUnitOfWorkFactory(Func<IUnitOfWork> factory)
+        public TaroEnvironment RegisterUnitOfWorkFactory(Func<IUnitOfWork> factory)
         {
             Require.NotNull(factory, "factory");
             UnitOfWorkFactory = factory;
