@@ -31,11 +31,7 @@ namespace BookStore.Web.Controllers
         {
             base.OnActionExecuted(filterContext);
 
-            if (filterContext.Exception == null)
-            {
-                CurrentUnitOfWorkScope.Complete();
-                CurrentUnitOfWorkScope.Dispose();
-            }
+            CurrentUnitOfWorkScope.Dispose();
         }
 
         protected IQueryable<T> Query<T>()

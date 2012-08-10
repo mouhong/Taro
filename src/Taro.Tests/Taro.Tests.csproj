@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Data\AbstractUnitOfWorkFacts.cs" />
     <Compile Include="Data\ThreadStaticUnitOfWorkContextFacts.cs" />
+    <Compile Include="Data\UnitOfWorkScopeFacts.cs" />
     <Compile Include="DomainEventFacts.cs" />
     <Compile Include="Domain\A.cs" />
     <Compile Include="Domain\Events\AValueAdded.cs" />

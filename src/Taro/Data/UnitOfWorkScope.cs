@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Taro.Utils;
 
 namespace Taro.Data
 {
@@ -16,14 +17,10 @@ namespace Taro.Data
 
         public UnitOfWorkScope(IUnitOfWork unitOfWork)
         {
+            Require.NotNull(unitOfWork, "unitOfWork");
+
             UnitOfWork = unitOfWork;
             ThreadStaticUnitOfWorkContext.Bind(unitOfWork);
-        }
-
-        public void Complete()
-        {
-            UnitOfWork.Commit();
-            ThreadStaticUnitOfWorkContext.Unbind();
         }
 
         public void Dispose()
