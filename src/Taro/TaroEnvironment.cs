@@ -44,6 +44,11 @@ namespace Taro
 
         public TaroEnvironment RegisterEventHandlers(params Assembly[] assembliesToScan)
         {
+            return RegisterEventHandlers(assembliesToScan as IEnumerable<Assembly>);
+        }
+
+        public TaroEnvironment RegisterEventHandlers(IEnumerable<Assembly> assembliesToScan)
+        {
             if (ImmediateEventBus == null)
             {
                 ImmediateEventBus = new DefaultEventBus(new ImmediateEventHandlerRegistry());

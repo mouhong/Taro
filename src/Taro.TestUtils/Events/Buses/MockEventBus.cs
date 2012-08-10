@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Taro.Events.Buses;
+using System.Reflection;
 
 namespace Taro.TestUtils.Events.Buses
 {
@@ -32,7 +33,7 @@ namespace Taro.TestUtils.Events.Buses
             throw new NotImplementedException();
         }
 
-        public void RegisterHandlers(params System.Reflection.Assembly[] assembliesToScan)
+        public void RegisterHandlers(IEnumerable<Assembly> assembliesToScan)
         {
             throw new NotImplementedException();
         }

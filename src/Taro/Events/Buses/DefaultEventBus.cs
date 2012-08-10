@@ -37,7 +37,7 @@ namespace Taro.Events.Buses
             return _handlerRegistry.RegisterHandler(handlerType);
         }
 
-        public void RegisterHandlers(params Assembly[] assembliesToScan)
+        public void RegisterHandlers(IEnumerable<Assembly> assembliesToScan)
         {
             _handlerRegistry.RegisterHandlers(assembliesToScan);
         }

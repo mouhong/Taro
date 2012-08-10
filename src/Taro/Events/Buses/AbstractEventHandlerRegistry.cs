@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections;
 
 using Taro.Utils;
+using System.Reflection;
 
 namespace Taro.Events.Buses
 {
@@ -63,7 +64,7 @@ namespace Taro.Events.Buses
             return false;
         }
 
-        public void RegisterHandlers(params System.Reflection.Assembly[] assembliesToScan)
+        public void RegisterHandlers(IEnumerable<Assembly> assembliesToScan)
         {
             Require.NotNull(assembliesToScan, "assembliesToScan");
 

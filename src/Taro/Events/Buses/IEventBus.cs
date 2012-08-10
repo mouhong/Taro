@@ -12,7 +12,7 @@ namespace Taro.Events.Buses
 
         bool RegisterHandler(Type handlerType);
 
-        void RegisterHandlers(params Assembly[] assembliesToScan);
+        void RegisterHandlers(IEnumerable<Assembly> assembliesToScan);
 
         bool UnregisterHandler(Type handlerType);
 
