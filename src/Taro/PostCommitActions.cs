@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Taro.Utils;
+using Taro.Data;
 using System.Threading;
 
 namespace Taro
@@ -14,6 +15,10 @@ namespace Taro
         public static void Enqueue(Action action)
         {
             Require.NotNull(action, "action");
+
+            if (ThreadStaticUnitOfWorkContext.Current == null)
+                throw new InvalidOperationException("Cannot enqueue post commit actions outside a UnitOfWorkScope. Ensure this code is wrapped in a UnitOfWorkScope.");
+
             _actions.Value.Add(action);
         }
 

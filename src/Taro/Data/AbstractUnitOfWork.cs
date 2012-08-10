@@ -14,14 +14,11 @@ namespace Taro.Data
     public abstract class AbstractUnitOfWork : IUnitOfWork
     {
         private bool _disposed;
-        private Action<IEvent> _eventAppliedCallback;
         private TransactionScopeOption _transactionScopeOption = TransactionScopeOption.Required;
 
         protected IEventBus EventBus { get; private set; }
 
         protected IEventStore EventStore { get; private set; }
-
-        public UncommittedEventStream UncommittedEvents { get; private set; }
 
         public TransactionScopeOption TransactionScopeOption
         {
@@ -47,11 +44,6 @@ namespace Taro.Data
 
             EventBus = eventBus;
             EventStore = eventStore;
-            UncommittedEvents = new UncommittedEventStream();
-
-            _eventAppliedCallback = new Action<IEvent>(OnEventApplied);
-
-            DomainEvent.RegisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
         }
 
         ~AbstractUnitOfWork()
@@ -59,47 +51,37 @@ namespace Taro.Data
             Dispose(false);
         }
 
-        protected virtual void OnEventApplied(IEvent evnt)
-        {
-            UncommittedEvents.Append(evnt);
-        }
-
         public virtual void Commit()
         {
             if (_disposed)
                 throw new ObjectDisposedException(null, "Cannot commit a disposed unit of work.");
 
-            if (UncommittedEvents.Count == 0 && PostCommitActions.Count() == 0)
+            using (var scope = new TransactionScope(_transactionScopeOption))
             {
                 CommitChanges();
-            }
-            else
-            {
-                using (var scope = new TransactionScope(_transactionScopeOption))
+
+                foreach (var action in PostCommitActions.GetQueuedActions())
                 {
-                    CommitChanges();
-
-                    if (EventStore != null)
-                    {
-                        EventStore.SaveEvents(UncommittedEvents);
-                    }
-
-                    foreach (var evnt in UncommittedEvents)
-                    {
-                        EventBus.Publish(evnt);
-                    }
-
-                    foreach (var action in PostCommitActions.GetQueuedActions())
-                    {
-                        action();
-                    }
-
-                    scope.Complete();
+                    action();
                 }
+
+                var pendingEvents = DomainEvent.GetThreadStaticPendingEvents();
+
+                if (EventStore != null)
+                {
+                    EventStore.SaveEvents(pendingEvents);
+                }
+
+                foreach (var evnt in pendingEvents)
+                {
+                    EventBus.Publish(evnt);
+                }
+
+                scope.Complete();
             }
 
-            UncommittedEvents.Clear();
             PostCommitActions.Clear();
+            DomainEvent.ClearAllThreadStaticPendingEvents();
         }
 
         protected abstract void CommitChanges();
@@ -116,7 +98,8 @@ namespace Taro.Data
             {
                 if (disposing)
                 {
-                    DomainEvent.UnregisterThreadStaticEventAppliedCallback(_eventAppliedCallback);
+                    PostCommitActions.Clear();
+                    DomainEvent.ClearAllThreadStaticPendingEvents();
                 }
 
                 _disposed = true;

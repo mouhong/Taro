@@ -13,44 +13,32 @@ namespace Taro
 {
     public static class DomainEvent
     {
-        private static ThreadLocal<List<Action<IEvent>>> _eventAppliedCallbacks = new ThreadLocal<List<Action<IEvent>>>(() => new List<Action<IEvent>>());
+        static ThreadLocal<UncommittedEventStream> _uncommittedEvents = new ThreadLocal<UncommittedEventStream>(() => new UncommittedEventStream());
 
         public static void Apply<TEvent>(TEvent evnt)
             where TEvent : IEvent
         {
             Require.NotNull(evnt, "evnt");
 
+            if (ThreadStaticUnitOfWorkContext.Current == null)
+                throw new InvalidOperationException("Events cannot be applied within a UnitOfWorkScope. Ensure this code is wrapped with a UnitOfWorkScope.");
+
             foreach (var handler in TaroEnvironment.Instance.ImmediateHandlerRegistry.GetHandlers(evnt))
             {
                 EventHandlerInvoker.Invoke(handler, evnt);
             }
 
-            foreach (var callback in _eventAppliedCallbacks.Value)
-            {
-                callback(evnt);
-            }
+            _uncommittedEvents.Value.Append(evnt);
         }
 
-        public static void RegisterThreadStaticEventAppliedCallback(Action<IEvent> callback)
+        public static UncommittedEventStream GetThreadStaticPendingEvents()
         {
-            Require.NotNull(callback, "callback");
-            _eventAppliedCallbacks.Value.Add(callback);
+            return _uncommittedEvents.Value;
         }
 
-        public static bool UnregisterThreadStaticEventAppliedCallback(Action<IEvent> callback)
+        public static void ClearAllThreadStaticPendingEvents()
         {
-            Require.NotNull(callback, "callback");
-            return _eventAppliedCallbacks.Value.Remove(callback);
-        }
-
-        public static int GetRegisteredThreadStaticEventAppliedCallbackCount()
-        {
-            return _eventAppliedCallbacks.Value.Count;
-        }
-
-        internal static void ClearRegisteredThreadStaticEventAppliedCallbacks()
-        {
-            _eventAppliedCallbacks.Value.Clear();
+            _uncommittedEvents.Value.Clear();
         }
     }
 }

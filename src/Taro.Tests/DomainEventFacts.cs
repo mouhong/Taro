@@ -10,6 +10,8 @@ using Taro.TestUtils.Events;
 using Taro.Events.Buses;
 using Taro.TestUtils.Events.Buses;
 using Taro.Events;
+using Taro.Data;
+using Taro.TestUtils.Data;
 
 namespace Taro.Tests
 {
@@ -18,46 +20,50 @@ namespace Taro.Tests
         public class TheApplyMethod
         {
             [Fact]
-            public void will_invoke_callbacks_on_immediate_event_success()
+            public void will_append_event_to_uncommitted_event_stream_if_immediate_event_handlers_succeeded()
             {
                 TaroEnvironment.Instance.ImmediateHandlerRegistry.Clear();
-                DomainEvent.ClearRegisteredThreadStaticEventAppliedCallbacks();
+                DomainEvent.ClearAllThreadStaticPendingEvents();
 
-                var invoked1 = false;
-                Action<IEvent> callback1 = evnt => { invoked1 = true; };
+                using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))
+                {
+                    DomainEvent.Apply(new SomeEvent());
 
-                var invoked2 = false;
-                Action<IEvent> callback2 = evnt => { invoked2 = true; };
-
-                DomainEvent.RegisterThreadStaticEventAppliedCallback(callback1);
-                DomainEvent.RegisterThreadStaticEventAppliedCallback(callback2);
-
-                DomainEvent.Apply(new SomeEvent());
-
-                Assert.True(invoked1);
-                Assert.True(invoked2);
+                    Assert.Equal(1, DomainEvent.GetThreadStaticPendingEvents().Count);
+                    Assert.IsType(typeof(SomeEvent), DomainEvent.GetThreadStaticPendingEvents().First());
+                }
             }
 
             [Fact]
-            public void will_not_invoke_callback_on_immediate_event_handler_failed()
+            public void will_not_append_event_to_uncommitted_event_stream_if_immediate_event_handler_fails()
             {
                 TaroEnvironment.Instance.ImmediateHandlerRegistry.Clear();
-                DomainEvent.ClearRegisteredThreadStaticEventAppliedCallbacks();
+                DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 var invoked = false;
                 Action<IEvent> callback = evnt => { invoked = true; };
-
-                DomainEvent.RegisterThreadStaticEventAppliedCallback(callback);
 
                 TaroEnvironment.Instance.ImmediateHandlerRegistry.RegisterHandler(typeof(Handler1));
 
                 try
                 {
-                    DomainEvent.Apply(new SomeEvent());
+                    using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))
+                    {
+                        DomainEvent.Apply(new SomeEvent());
+                    }
                 }
                 catch { }
 
                 Assert.False(invoked);
+            }
+
+            [Fact]
+            public void will_throw_if_Apply_method_is_not_called_inside_a_UnitOfWorkScope()
+            {
+                Assert.Throws(typeof(InvalidOperationException), () =>
+                {
+                    DomainEvent.Apply(new SomeEvent());
+                });
             }
 
             public class Handler1 : AbstractImmediatelyEventHandler<SomeEvent>
@@ -66,63 +72,6 @@ namespace Taro.Tests
                 {
                     throw new NotSupportedException();
                 }
-            }
-        }
-
-        public class TheRegisterThreadStaticEventAppliedCallbackMethod
-        {
-            [Fact]
-            public void will_register_callback_to_current_thread_only()
-            {
-                DomainEvent.ClearRegisteredThreadStaticEventAppliedCallbacks();
-
-                Action<IEvent> mainThreadCallback = evnt => { };
-
-                DomainEvent.RegisterThreadStaticEventAppliedCallback(mainThreadCallback);
-
-                Assert.Equal(1, DomainEvent.GetRegisteredThreadStaticEventAppliedCallbackCount());
-
-                var childThread = new Thread(new ThreadStart(() =>
-                {
-                    Action<IEvent> childThreadCallback = evnt => { };
-
-                    DomainEvent.RegisterThreadStaticEventAppliedCallback(mainThreadCallback);
-
-                    Assert.Equal(1, DomainEvent.GetRegisteredThreadStaticEventAppliedCallbackCount());
-                }));
-
-                childThread.Start();
-                childThread.Join();
-
-                Assert.Equal(1, DomainEvent.GetRegisteredThreadStaticEventAppliedCallbackCount());
-            }
-        }
-
-        public class TheUnregisterThreadStaticEventAppliedCallbackMethod
-        {
-            [Fact]
-            public void will_unregister_current_thread_callbacks_only()
-            {
-                DomainEvent.ClearRegisteredThreadStaticEventAppliedCallbacks();
-
-                Action<IEvent> mainThreadCallback = evnt => { };
-
-                DomainEvent.RegisterThreadStaticEventAppliedCallback(mainThreadCallback);
-
-                var childThread = new Thread(new ThreadStart(() =>
-                {
-                    var result = DomainEvent.UnregisterThreadStaticEventAppliedCallback(mainThreadCallback);
-                    Assert.False(result, "Should not unregister other thread's callbacks");
-                }));
-
-                childThread.Start();
-                childThread.Join();
-
-                Assert.Equal(1, DomainEvent.GetRegisteredThreadStaticEventAppliedCallbackCount());
-
-                DomainEvent.UnregisterThreadStaticEventAppliedCallback(mainThreadCallback);
-
-                Assert.Equal(0, DomainEvent.GetRegisteredThreadStaticEventAppliedCallbackCount());
             }
         }
     }

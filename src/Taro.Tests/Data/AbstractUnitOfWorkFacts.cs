@@ -24,42 +24,20 @@ namespace Taro.Tests.Data
 {
     public class AbstractUnitOfWorkFacts
     {
-        [Fact]
-        public void will_append_uncommitted_event_on_event_applied()
-        {
-            var unitOfWork = new MockUnitOfWork();
-
-            DomainEvent.Apply(new SomeEvent());
-
-            Assert.Equal(1, unitOfWork.UncommittedEvents.Count);
-        }
-
-        public class TheConstructor
-        {
-            [Fact]
-            public void will_register_event_applied_callback()
-            {
-                DomainEvent.ClearRegisteredThreadStaticEventAppliedCallbacks();
-
-                var unitOfWork = new MockUnitOfWork();
-                Assert.Equal(1, DomainEvent.GetRegisteredThreadStaticEventAppliedCallbackCount());
-            }
-        }
-
         public class TheCommitMethod
         {
             [Fact]
             public void will_clear_uncommitted_events_after_commit()
             {
-                DomainEvent.ClearRegisteredThreadStaticEventAppliedCallbacks();
+                DomainEvent.ClearAllThreadStaticPendingEvents();
 
-                var unitOfWork = new MockUnitOfWork();
+                using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))
+                {
+                    DomainEvent.Apply(new SomeEvent());
+                    scope.UnitOfWork.Commit();
+                }
 
-                DomainEvent.Apply(new SomeEvent());
-
-                unitOfWork.Commit();
-
-                Assert.Equal(0, ((AbstractUnitOfWork)unitOfWork).UncommittedEvents.Count);
+                Assert.Equal(0, DomainEvent.GetThreadStaticPendingEvents().Count);
             }
 
             [Fact]
@@ -77,7 +55,7 @@ namespace Taro.Tests.Data
             [Fact]
             public void will_rollback_domain_database_if_post_commit_event_publishing_fails()
             {
-                DomainEvent.ClearRegisteredThreadStaticEventAppliedCallbacks();
+                DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 TaroEnvironment.Instance.EventBus = new MockEventBus(evnt =>
                 {
@@ -91,15 +69,16 @@ namespace Taro.Tests.Data
 
                 var unitOfWork = new NhUnitOfWork(NhDomainDatabase.OpenSession(), TaroEnvironment.Instance.EventBus, new NullEventStore());
 
-                try
+                using (var scope = new UnitOfWorkScope(unitOfWork))
                 {
-                    var a = unitOfWork.Get<A>(1);
-                    a.AddValue(3);
-                    unitOfWork.Commit();
+                    try
+                    {
+                        var a = unitOfWork.Get<A>(1);
+                        a.AddValue(3);
+                        unitOfWork.Commit();
+                    }
+                    catch { }
                 }
-                catch { }
-
-                unitOfWork.Dispose();
 
                 Assert.Equal(0, NhDomainDatabase.Get<A>(1).Value);
             }
@@ -107,7 +86,7 @@ namespace Taro.Tests.Data
             [Fact]
             public void will_rollback_domain_database_if_event_store_fails()
             {
-                DomainEvent.ClearRegisteredThreadStaticEventAppliedCallbacks();
+                DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 TaroEnvironment.Instance.EventBus = new MockEventBus();
                 
@@ -119,15 +98,16 @@ namespace Taro.Tests.Data
                 var eventStore = new MockEventStore(events => { throw new InvalidOperationException("Failed saving events."); });
                 var unitOfWork = new NhUnitOfWork(NhDomainDatabase.OpenSession(), TaroEnvironment.Instance.EventBus, eventStore);
 
-                try
+                using (var scope = new UnitOfWorkScope(unitOfWork))
                 {
-                    var a = unitOfWork.Get<A>(1);
-                    a.AddValue(3);
-                    unitOfWork.Commit();
+                    try
+                    {
+                        var a = unitOfWork.Get<A>(1);
+                        a.AddValue(3);
+                        unitOfWork.Commit();
+                    }
+                    catch { }
                 }
-                catch { }
-
-                unitOfWork.Dispose();
 
                 Assert.Equal(0, NhDomainDatabase.Get<A>(1).Value);
             }
@@ -135,7 +115,7 @@ namespace Taro.Tests.Data
             [Fact]
             public void will_commit_domain_model_change_if_all_not_fail()
             {
-                DomainEvent.ClearRegisteredThreadStaticEventAppliedCallbacks();
+                DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 TaroEnvironment.Instance.EventBus = new MockEventBus();
 
@@ -147,11 +127,12 @@ namespace Taro.Tests.Data
                 var eventStore = new MockEventStore();
                 var unitOfWork = new NhUnitOfWork(NhDomainDatabase.OpenSession(), TaroEnvironment.Instance.EventBus, eventStore);
 
-                var a = unitOfWork.Session.Get<A>(1);
-                a.AddValue(3);
-                unitOfWork.Commit();
-
-                unitOfWork.Dispose();
+                using (var scope = new UnitOfWorkScope(unitOfWork))
+                {
+                    var a = unitOfWork.Session.Get<A>(1);
+                    a.AddValue(3);
+                    unitOfWork.Commit();
+                }
 
                 Assert.Equal(3, NhDomainDatabase.Get<A>(1).Value);
             }
@@ -161,17 +142,32 @@ namespace Taro.Tests.Data
         public class TheDisposeMethod
         {
             [Fact]
-            public void will_unregister_event_applied_callback()
+            public void will_clear_pending_events()
             {
-                DomainEvent.ClearRegisteredThreadStaticEventAppliedCallbacks();
+                DomainEvent.ClearAllThreadStaticPendingEvents();
 
-                var unitOfWork = new MockUnitOfWork();
+                using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))
+                {
+                    DomainEvent.Apply(new SomeEvent());
+                }
 
-                Assert.Equal(1, DomainEvent.GetRegisteredThreadStaticEventAppliedCallbackCount());
+                Assert.Equal(0, DomainEvent.GetThreadStaticPendingEvents().Count);
+            }
 
-                unitOfWork.Dispose();
+            [Fact]
+            public void will_clear_post_commit_actions()
+            {
+                PostCommitActions.Clear();
 
-                Assert.Equal(0, DomainEvent.GetRegisteredThreadStaticEventAppliedCallbackCount());
+                using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))
+                {
+                    PostCommitActions.Enqueue(() =>
+                    {
+                        Console.WriteLine("Hello");
+                    });
+                }
+
+                Assert.Equal(0, PostCommitActions.Count());
             }
         }
     }
