@@ -37,29 +37,111 @@ namespace Taro.Tests.Events.Buses
         public class TheRegisterHandlerMethod
         {
             [Fact]
-            public void will_not_register_if_passed_handlerType_is_not_valid()
+            public void will_not_register_invalid_handler()
             {
-                var finder = new ImmediateEventHandlerRegistry();
+                var registry = new ImmediateEventHandlerRegistry();
 
-                Assert.False(finder.RegisterHandler(typeof(TheRegisterHandlerMethod)));
-                Assert.False(finder.RegisterHandler(typeof(Event1)));
+                Assert.False(registry.RegisterHandler(typeof(TheRegisterHandlerMethod)));
+                Assert.False(registry.RegisterHandler(typeof(Event1)));
 
-                Assert.Empty(finder.FindHandlers(typeof(Event1)));
+                Assert.Empty(registry.FindHandlers(typeof(Event1)));
             }
 
             [Fact]
-            public void will_register_if_passed_handlerType_is_valid()
+            public void will_register_valid_handler()
             {
-                var finder = new ImmediateEventHandlerRegistry();
-                Assert.True(finder.RegisterHandler(typeof(Event1Handler1)));
+                var registry = new ImmediateEventHandlerRegistry();
+                Assert.True(registry.RegisterHandler(typeof(Event1Handler1)));
 
-                var handlers = finder.FindHandlers(typeof(Event1));
+                var handlers = registry.FindHandlers(typeof(Event1));
                 Assert.NotEmpty(handlers);
 
                 var enumerator = handlers.GetEnumerator();
                 enumerator.MoveNext();
 
                 Assert.IsType<Event1Handler1>(enumerator.Current);
+            }
+
+            [Fact]
+            public void will_not_duplicate_register_existing_handler()
+            {
+                var registry = new ImmediateEventHandlerRegistry();
+                registry.RegisterHandler(typeof(Event1Handler1));
+                registry.RegisterHandler(typeof(Event1Handler1));
+
+                var handlers = registry.FindHandlers(typeof(Event1));
+
+                var enumerator = handlers.GetEnumerator();
+                enumerator.MoveNext();
+
+                Assert.IsType<Event1Handler1>(enumerator.Current);
+                Assert.False(enumerator.MoveNext());
+            }
+        }
+
+        public class TheUnregisterHandlerMethod
+        {
+            [Fact]
+            public void can_unregister_handler()
+            {
+                var registry = new ImmediateEventHandlerRegistry();
+                registry.RegisterHandler(typeof(Event1Handler1));
+                registry.RegisterHandler(typeof(Event2Handler1));
+                registry.RegisterHandler(typeof(Event2Handler2));
+
+                Assert.True(registry.UnregisterHandler(typeof(Event2Handler1)));
+
+                var enumerator = registry.FindHandlers(typeof(Event2)).GetEnumerator();
+                Assert.True(enumerator.MoveNext());
+
+                Assert.IsType<Event2Handler2>(enumerator.Current);
+            }
+
+            [Fact]
+            public void will_return_false_for_non_existing_handler()
+            {
+                var registry = new ImmediateEventHandlerRegistry();
+                registry.RegisterHandler(typeof(Event1Handler1));
+
+                Assert.False(registry.UnregisterHandler(typeof(Event1Handler2)));
+            }
+        }
+
+        public class TheUnregisterHandlersMethod
+        {
+            [Fact]
+            public void can_unregister_handlers()
+            {
+                var registry = new ImmediateEventHandlerRegistry();
+                registry.RegisterHandler(typeof(Event1Handler1));
+                registry.RegisterHandler(typeof(Event2Handler1));
+                registry.RegisterHandler(typeof(Event2Handler2));
+
+                registry.UnregisterHandlers(typeof(Event2));
+
+                var enumerator = registry.FindHandlers(typeof(Event2)).GetEnumerator();
+                Assert.False(enumerator.MoveNext());
+
+                enumerator = registry.FindHandlers(typeof(Event1)).GetEnumerator();
+                Assert.True(enumerator.MoveNext());
+                Assert.IsType<Event1Handler1>(enumerator.Current);
+            }
+        }
+
+        public class TheUnregisterAllHandlersMethod
+        {
+            [Fact]
+            public void can_unregister_all_handlers()
+            {
+                var register = new ImmediateEventHandlerRegistry();
+                register.RegisterHandler(typeof(Event1Handler1));
+                register.RegisterHandler(typeof(Event2Handler1));
+                register.RegisterHandler(typeof(Event2Handler2));
+
+                register.UnregisterAllHandlers();
+
+                Assert.False(register.FindHandlers(typeof(Event1)).GetEnumerator().MoveNext());
+                Assert.False(register.FindHandlers(typeof(Event2)).GetEnumerator().MoveNext());
             }
         }
 
@@ -86,6 +168,13 @@ namespace Taro.Tests.Events.Buses
         }
 
         public class Event2Handler1 : IImmediatelyEventHandler<Event2>
+        {
+            public void Handle(Event2 evnt)
+            {
+            }
+        }
+
+        public class Event2Handler2 : IImmediatelyEventHandler<Event2>
         {
             public void Handle(Event2 evnt)
             {
