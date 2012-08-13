@@ -26,7 +26,13 @@ namespace Taro.Data
             {
                 return _transactionScopeOption;
             }
+            set
+            {
+                _transactionScopeOption = value;
+            }
         }
+
+        public bool DisableDTC { get; set; }
 
         protected AbstractUnitOfWork()
             : this(TaroEnvironment.Instance.PostCommitEventBus, null)
@@ -56,35 +62,46 @@ namespace Taro.Data
             if (_disposed)
                 throw new ObjectDisposedException(null, "Cannot commit a disposed unit of work.");
 
-            using (var scope = new TransactionScope(_transactionScopeOption))
+            if (DisableDTC)
             {
-                CommitChanges();
-
-                foreach (var action in PostCommitActions.GetQueuedActions())
+                DoCommit();
+                OnCommitted();
+            }
+            else
+            {
+                using (var scope = new TransactionScope(_transactionScopeOption))
                 {
-                    action();
+                    DoCommit();
+                    OnCommitted();
+                    scope.Complete();
                 }
-
-                var pendingEvents = DomainEvent.GetThreadStaticPendingEvents();
-
-                if (EventStore != null)
-                {
-                    EventStore.SaveEvents(pendingEvents);
-                }
-
-                foreach (var evnt in pendingEvents)
-                {
-                    EventBus.Publish(evnt);
-                }
-
-                scope.Complete();
             }
 
             PostCommitActions.Clear();
             DomainEvent.ClearAllThreadStaticPendingEvents();
         }
 
-        protected abstract void CommitChanges();
+        protected virtual void OnCommitted()
+        {
+            foreach (var action in PostCommitActions.GetQueuedActions())
+            {
+                action();
+            }
+
+            var pendingEvents = DomainEvent.GetThreadStaticPendingEvents();
+
+            if (EventStore != null)
+            {
+                EventStore.SaveEvents(pendingEvents);
+            }
+
+            foreach (var evnt in pendingEvents)
+            {
+                EventBus.Publish(evnt);
+            }
+        }
+
+        protected abstract void DoCommit();
 
         public void Dispose()
         {

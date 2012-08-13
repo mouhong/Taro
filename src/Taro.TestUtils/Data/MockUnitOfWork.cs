@@ -17,7 +17,7 @@ namespace Taro.TestUtils.Data
         {
         }
 
-        protected override void CommitChanges()
+        protected override void DoCommit()
         {
         }
 

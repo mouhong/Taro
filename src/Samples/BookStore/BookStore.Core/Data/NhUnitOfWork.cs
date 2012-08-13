@@ -52,7 +52,7 @@ namespace BookStore.Data
             Session.Delete(entity);
         }
 
-        protected override void CommitChanges()
+        protected override void DoCommit()
         {
             using (var tran = Session.BeginTransaction())
             {

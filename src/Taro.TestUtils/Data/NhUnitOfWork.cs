@@ -32,7 +32,7 @@ namespace Taro.TestUtils.Data
             return Session.Query<T>();
         }
 
-        protected override void CommitChanges()
+        protected override void DoCommit()
         {
             using (var tran = Session.BeginTransaction())
             {
