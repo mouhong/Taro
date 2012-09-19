@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Taro.Data;
 using Taro.Events;
+using Taro.Utils;
 
 namespace Taro.Data
 {
@@ -22,6 +23,7 @@ namespace Taro.Data
 
         public static void Bind(IUnitOfWork unitOfWork)
         {
+            Require.NotNull(unitOfWork, "unitOfWork");
             _current = unitOfWork;
         }
 

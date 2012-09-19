@@ -34,21 +34,25 @@ namespace Taro.Events.Buses
 
         public bool RegisterHandler(Type handlerType)
         {
+            Require.NotNull(handlerType, "handlerType");
             return _handlerRegistry.RegisterHandler(handlerType);
         }
 
         public void RegisterHandlers(IEnumerable<Assembly> assembliesToScan)
         {
+            Require.NotNull(assembliesToScan, "assembliesToScan");
             _handlerRegistry.RegisterHandlers(assembliesToScan);
         }
 
         public bool UnregisterHandler(Type handlerType)
         {
+            Require.NotNull(handlerType, "handlerType");
             return _handlerRegistry.UnregisterHandler(handlerType);
         }
 
         public void UnregisterHandlers(Type eventType)
         {
+            Require.NotNull(eventType, "eventType");
             _handlerRegistry.UnregisterHandlers(eventType);
         }
 

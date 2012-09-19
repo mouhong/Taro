@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using Taro.Data;
+using Taro.Utils;
 
 namespace Taro.Events
 {
@@ -19,6 +20,7 @@ namespace Taro.Events
 
         protected AbstractPostCommitEventHandler(IUnitOfWork unitOfWork)
         {
+            Require.NotNull(unitOfWork, "unitOfWork");
             UnitOfWork = unitOfWork;
         }
 

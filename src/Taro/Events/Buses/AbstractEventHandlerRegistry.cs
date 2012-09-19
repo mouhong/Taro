@@ -82,6 +82,8 @@ namespace Taro.Events.Buses
 
         public bool UnregisterHandler(Type handlerType)
         {
+            Require.NotNull(handlerType, "handlerType");
+
             lock (_lock)
             {
                 foreach (var each in _handlerTypes)
@@ -98,6 +100,8 @@ namespace Taro.Events.Buses
 
         public void UnregisterHandlers(Type eventType)
         {
+            Require.NotNull(eventType, "eventType");
+
             if (!_handlerTypes.ContainsKey(eventType)) return;
 
             lock (_lock)

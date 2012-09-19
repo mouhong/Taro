@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Taro.Utils;
 
 namespace Taro.Events
 {
@@ -23,6 +24,7 @@ namespace Taro.Events
 
         public void Append(IEvent evnt)
         {
+            Require.NotNull(evnt, "evnt");
             _events.Add(evnt);
         }
 
