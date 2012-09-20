@@ -14,7 +14,6 @@ using NHibernate.Mapping.ByCode;
 using Taro;
 using Taro.Data;
 using Taro.Events;
-using Taro.Events.Storage.Rdbms;
 using BookStore.Data;
 
 namespace BookStore.Web

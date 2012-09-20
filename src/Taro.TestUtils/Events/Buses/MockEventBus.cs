@@ -30,27 +30,24 @@ namespace Taro.TestUtils.Events.Buses
 
         public bool RegisterHandler(Type handlerType)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public void RegisterHandlers(IEnumerable<Assembly> assembliesToScan)
         {
-            throw new NotImplementedException();
         }
 
         public bool UnregisterHandler(Type handlerType)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public void UnregisterHandlers(Type eventType)
         {
-            throw new NotImplementedException();
         }
 
         public void UnregisterAllHandlers()
         {
-            throw new NotImplementedException();
         }
     }
 }

@@ -7,8 +7,6 @@ using System.Reflection;
 using Taro.Data;
 using Taro.Events;
 using Taro.Events.Buses;
-using Taro.Events.Storage;
-using Taro.Events.Storage.Rdbms;
 using Taro.Utils;
 
 namespace Taro
@@ -20,8 +18,6 @@ namespace Taro
         public IEventBus ImmediateEventBus { get; set; }
 
         public IEventBus PostCommitEventBus { get; set; }
-
-        public IEventStore EventStore { get; set; }
 
         public Func<IUnitOfWork> UnitOfWorkFactory { get; set; }
 
@@ -44,6 +40,8 @@ namespace Taro
 
         public TaroEnvironment RegisterEventHandlers(IEnumerable<Assembly> assembliesToScan)
         {
+            Require.NotNull(assembliesToScan, "assembliesToScan");
+
             var immediateEventBus = ImmediateEventBus;
             var postCommitEventBus = PostCommitEventBus;
 
@@ -63,12 +61,6 @@ namespace Taro
         {
             Require.NotNull(factory, "factory");
             UnitOfWorkFactory = factory;
-            return this;
-        }
-
-        public TaroEnvironment UsingRdbmsEventStore(string connectionString, string dbProviderInvariantName, ISqlStatementProvider dialect)
-        {
-            EventStore = new RdbmsEventStore(connectionString, dbProviderInvariantName, dialect);
             return this;
         }
     }

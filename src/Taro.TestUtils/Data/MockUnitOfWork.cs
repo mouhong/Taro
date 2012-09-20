@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Taro.Data;
-using Taro.Events.Storage;
 using Taro.TestUtils.Events.Buses;
 
 namespace Taro.TestUtils.Data
@@ -13,7 +12,7 @@ namespace Taro.TestUtils.Data
         public bool IsDisposed { get; private set; }
 
         public MockUnitOfWork()
-            : base(new MockEventBus(), new NullEventStore())
+            : base(new MockEventBus())
         {
         }
 

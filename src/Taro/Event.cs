@@ -6,8 +6,7 @@ using System.Runtime.Serialization;
 
 namespace Taro
 {
-    [Serializable]
-    [DataContract]
+    [Serializable, DataContract]
     public abstract class Event : IEvent
     {
         [DataMember]

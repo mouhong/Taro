@@ -21,6 +21,10 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -184,10 +188,6 @@
     <ProjectReference Include="..\BookStore.Core\BookStore.Core.csproj">
       <Project>{4410A7A6-13D9-4586-AAE6-293B0B05D7F2}</Project>
       <Name>BookStore.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Extensions\Taro.Events.Storage.RavenDB\Taro.Events.Storage.RavenDB.csproj">
-      <Project>{7DAC6772-4F80-4767-A829-9B1C53CDD246}</Project>
-      <Name>Taro.Events.Storage.RavenDB</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Taro\Taro.csproj">
       <Project>{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}</Project>

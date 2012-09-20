@@ -69,7 +69,6 @@
     <Compile Include="Data\NhUnitOfWork.cs" />
     <Compile Include="Events\Buses\MockEventBus.cs" />
     <Compile Include="Events\SomeEvent.cs" />
-    <Compile Include="Events\Storage\MockEventStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

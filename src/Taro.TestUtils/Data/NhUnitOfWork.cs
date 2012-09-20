@@ -8,7 +8,6 @@ using NHibernate.Linq;
 
 using Taro.Data;
 using Taro.Events.Buses;
-using Taro.Events.Storage;
 
 namespace Taro.TestUtils.Data
 {
@@ -16,8 +15,8 @@ namespace Taro.TestUtils.Data
     {
         public ISession Session { get; set; }
 
-        public NhUnitOfWork(ISession session, IEventBus eventBus, IEventStore eventStore)
-            : base(eventBus, eventStore)
+        public NhUnitOfWork(ISession session, IEventBus eventBus)
+            : base(eventBus)
         {
             Session = session;
         }

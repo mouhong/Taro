@@ -6,7 +6,6 @@ using System.Transactions;
 
 using Taro.Events;
 using Taro.Events.Buses;
-using Taro.Events.Storage;
 using Taro.Utils;
 
 namespace Taro.Data
@@ -17,8 +16,6 @@ namespace Taro.Data
         private TransactionScopeOption _transactionScopeOption = TransactionScopeOption.Required;
 
         protected IEventBus EventBus { get; private set; }
-
-        protected IEventStore EventStore { get; private set; }
 
         public TransactionScopeOption TransactionScopeOption
         {
@@ -35,21 +32,14 @@ namespace Taro.Data
         public bool DisableDTC { get; set; }
 
         protected AbstractUnitOfWork()
-            : this(TaroEnvironment.Instance.PostCommitEventBus, null)
+            : this(TaroEnvironment.Instance.PostCommitEventBus)
         {
         }
 
-        protected AbstractUnitOfWork(IEventBus eventBus)
-            : this(eventBus, null)
+        protected AbstractUnitOfWork(IEventBus postCommitEventBus)
         {
-        }
-
-        protected AbstractUnitOfWork(IEventBus eventBus, IEventStore eventStore)
-        {
-            Require.NotNull(eventBus, "eventBus");
-
-            EventBus = eventBus;
-            EventStore = eventStore;
+            Require.NotNull(postCommitEventBus, "postCommitEventBus");
+            EventBus = postCommitEventBus;
         }
 
         ~AbstractUnitOfWork()
@@ -83,19 +73,21 @@ namespace Taro.Data
 
         protected virtual void OnCommitted()
         {
+            ExecutePostCommitActions();
+            PublishPostCommitEvents();
+        }
+
+        protected virtual void ExecutePostCommitActions()
+        {
             foreach (var action in PostCommitActions.GetQueuedActions())
             {
                 action();
             }
+        }
 
-            var pendingEvents = DomainEvent.GetThreadStaticPendingEvents();
-
-            if (EventStore != null)
-            {
-                EventStore.SaveEvents(pendingEvents);
-            }
-
-            foreach (var evnt in pendingEvents)
+        protected virtual void PublishPostCommitEvents()
+        {
+            foreach (var evnt in DomainEvent.GetThreadStaticPendingEvents())
             {
                 EventBus.Publish(evnt);
             }

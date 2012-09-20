@@ -53,7 +53,6 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -69,19 +68,8 @@
     <Compile Include="Events\Buses\EventHandlerInvoker.cs" />
     <Compile Include="Events\Buses\IEventBus.cs" />
     <Compile Include="Events\Buses\IEventHandlerRegistry.cs" />
-    <Compile Include="Events\Storage\DefaultEventTypeResolver.cs" />
-    <Compile Include="Events\Storage\IEventIdGenerator.cs" />
-    <Compile Include="Events\Storage\IEventStore.cs" />
-    <Compile Include="Events\Storage\IEventTypeResolver.cs" />
-    <Compile Include="Events\Storage\Rdbms\ISqlStatementProvider.cs" />
-    <Compile Include="Events\Storage\Rdbms\RdbmsEventStore.cs" />
-    <Compile Include="Events\Storage\Rdbms\SqlServerSqlStatementProvider.cs" />
-    <Compile Include="Events\Storage\Rdbms\SqlStatement.cs" />
     <Compile Include="Events\UncommittedEventStream.cs" />
     <Compile Include="PostCommitActions.cs" />
-    <Compile Include="Serialization\DefaultJsonSerializer.cs" />
-    <Compile Include="Serialization\ISerializer.cs" />
-    <Compile Include="Serialization\Serializers.cs" />
     <Compile Include="TaroEnvironment.cs" />
     <Compile Include="Data\ThreadStaticUnitOfWorkContext.cs" />
     <Compile Include="DomainEvent.cs" />
@@ -117,6 +105,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
