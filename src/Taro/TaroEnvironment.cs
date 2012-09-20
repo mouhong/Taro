@@ -27,19 +27,14 @@ namespace Taro
 
         private TaroEnvironment()
         {
+            ImmediateEventBus = new DefaultEventBus(new ImmediateEventHandlerRegistry());
+            PostCommitEventBus = new DefaultEventBus(new PostCommitEventHandlerRegistry());
         }
 
         public static void Configure(Action<TaroEnvironment> action)
         {
             Require.NotNull(action, "action");
             action(Instance);
-        }
-
-        public TaroEnvironment UseDefaultEventBuses()
-        {
-            ImmediateEventBus = new DefaultEventBus(new ImmediateEventHandlerRegistry());
-            PostCommitEventBus = new DefaultEventBus(new PostCommitEventHandlerRegistry());
-            return this;
         }
 
         public TaroEnvironment RegisterEventHandlers(params Assembly[] assembliesToScan)
@@ -49,17 +44,17 @@ namespace Taro
 
         public TaroEnvironment RegisterEventHandlers(IEnumerable<Assembly> assembliesToScan)
         {
-            if (ImmediateEventBus == null)
-            {
-                ImmediateEventBus = new DefaultEventBus(new ImmediateEventHandlerRegistry());
-            }
-            if (PostCommitEventBus == null)
-            {
-                PostCommitEventBus = new DefaultEventBus(new PostCommitEventHandlerRegistry());
-            }
+            var immediateEventBus = ImmediateEventBus;
+            var postCommitEventBus = PostCommitEventBus;
 
-            ImmediateEventBus.RegisterHandlers(assembliesToScan);
-            PostCommitEventBus.RegisterHandlers(assembliesToScan);
+            if (immediateEventBus == null)
+                throw new InvalidOperationException("Please register immediate event bus to the TaroEnvironment first.");
+
+            if (postCommitEventBus == null)
+                throw new InvalidOperationException("Please register post commit event bus to the TaroEvnironment first.");
+
+            immediateEventBus.RegisterHandlers(assembliesToScan);
+            postCommitEventBus.RegisterHandlers(assembliesToScan);
 
             return this;
         }
@@ -71,7 +66,7 @@ namespace Taro
             return this;
         }
 
-        public TaroEnvironment UseRdbmsEventStore(string connectionString, string dbProviderInvariantName, ISqlStatementProvider dialect)
+        public TaroEnvironment UsingRdbmsEventStore(string connectionString, string dbProviderInvariantName, ISqlStatementProvider dialect)
         {
             EventStore = new RdbmsEventStore(connectionString, dbProviderInvariantName, dialect);
             return this;

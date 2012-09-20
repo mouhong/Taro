@@ -29,7 +29,6 @@ namespace Taro.Tests.Data
             [Fact]
             public void will_clear_uncommitted_events_after_commit()
             {
-                TaroEnvironment.Instance.UseDefaultEventBuses();
                 DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))
@@ -145,7 +144,6 @@ namespace Taro.Tests.Data
             [Fact]
             public void will_clear_pending_events()
             {
-                TaroEnvironment.Instance.UseDefaultEventBuses();
                 DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))

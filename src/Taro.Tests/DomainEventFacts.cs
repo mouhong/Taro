@@ -22,7 +22,6 @@ namespace Taro.Tests
             [Fact]
             public void will_append_event_to_uncommitted_event_stream_if_immediate_event_handlers_succeeded()
             {
-                TaroEnvironment.Instance.UseDefaultEventBuses();
                 DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 using (var scope = new UnitOfWorkScope(new MockUnitOfWork()))
@@ -37,7 +36,6 @@ namespace Taro.Tests
             [Fact]
             public void will_not_append_event_to_uncommitted_event_stream_if_immediate_event_handler_fails()
             {
-                TaroEnvironment.Instance.UseDefaultEventBuses();
                 DomainEvent.ClearAllThreadStaticPendingEvents();
 
                 var invoked = false;
