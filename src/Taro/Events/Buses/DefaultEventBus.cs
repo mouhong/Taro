@@ -11,7 +11,6 @@ namespace Taro.Events.Buses
     public class DefaultEventBus : IEventBus
     {
         private IEventHandlerRegistry _handlerRegistry;
-        private List<IEvent> _uncommittedEvents = new List<IEvent>();
 
         public DefaultEventBus(IEventHandlerRegistry eventHandlerRegistry)
         {
@@ -28,7 +27,6 @@ namespace Taro.Events.Buses
             foreach (var handler in _handlerRegistry.FindHandlers(eventType))
             {
                 EventHandlerInvoker.Invoke(handler, evnt);
-                _uncommittedEvents.Add(evnt);
             }
         }
 
