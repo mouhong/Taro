@@ -43,9 +43,11 @@ namespace Taro
 
         protected virtual void OnCommitted()
         {
+            var context = new EventDispathcingContext(this, true);
+
             foreach (var evnt in DomainEvent.UncommittedEvents)
             {
-                EventDispatcher.Dispatch(evnt, new EventDispathcingContext(this, true));
+                EventDispatcher.Dispatch(evnt, context);
             }
         }
 
