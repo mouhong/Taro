@@ -58,30 +58,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\UnitOfWorkScope.cs" />
-    <Compile Include="Event.cs" />
-    <Compile Include="Events\Buses\AbstractEventHandlerRegistry.cs" />
-    <Compile Include="Events\Buses\DefaultEventBus.cs" />
-    <Compile Include="Events\Buses\ImmediateEventHandlerRegistry.cs" />
-    <Compile Include="Events\Buses\PostCommitEventHandlerRegistry.cs" />
-    <Compile Include="Events\Buses\EventHandlerFinderUtil.cs" />
-    <Compile Include="Events\Buses\EventHandlerInvoker.cs" />
-    <Compile Include="Events\Buses\IEventBus.cs" />
-    <Compile Include="Events\Buses\IEventHandlerRegistry.cs" />
-    <Compile Include="Events\UncommittedEventStream.cs" />
-    <Compile Include="PostCommitActions.cs" />
-    <Compile Include="TaroEnvironment.cs" />
-    <Compile Include="Data\ThreadStaticUnitOfWorkContext.cs" />
+    <Compile Include="Events\DefaultEventDispatcher.cs" />
+    <Compile Include="Events\DefaultEventHandlerRegistry.cs" />
+    <Compile Include="Events\EventDispathcingContext.cs" />
+    <Compile Include="Events\EventHandlerException.cs" />
+    <Compile Include="Events\IEventDispatcher.cs" />
+    <Compile Include="Events\IEventHandlerRegistry.cs" />
+    <Compile Include="AwaitCommittedAttribute.cs" />
+    <Compile Include="UnitOfWorkScope.cs" />
+    <Compile Include="HandleAsyncAttribute.cs" />
+    <Compile Include="IHandle.cs" />
+    <Compile Include="Config\TaroEnvironment.cs" />
+    <Compile Include="UnitOfWorkAmbient.cs" />
     <Compile Include="DomainEvent.cs" />
-    <Compile Include="Events\AbstractImmediatelyEventHandler.cs" />
-    <Compile Include="Events\AbstractPostCommitEventHandler.cs" />
-    <Compile Include="Data\AbstractUnitOfWork.cs" />
-    <Compile Include="Events\IPostCommitEventHandler.cs" />
-    <Compile Include="IEvent.cs" />
-    <Compile Include="Events\IImmediatelyEventHandler.cs" />
-    <Compile Include="Data\IUnitOfWork.cs" />
+    <Compile Include="AbstractUnitOfWork.cs" />
+    <Compile Include="IDomainEvent.cs" />
+    <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\Require.cs" />
+    <Compile Include="Require.cs" />
+    <Compile Include="Events\TypeUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
