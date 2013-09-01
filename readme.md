@@ -10,7 +10,6 @@ Add an implementation of IUnitOfWork specifc to your data access component.
 For example, for Linq to SQL, you can add this one:
 
 ```csharp
-
 public class UnitOfWork : AbstractUnitOfWork 
 {
 	private DataContext _dataContext;
@@ -40,18 +39,14 @@ public class UnitOfWork : AbstractUnitOfWork
 		_dataContext.SubmitChanges();
 	}
 }
-
-
 ```
 
 ### 2. Implement a unit of work scope
 
 ```csharp
-
 public class UnitOfWorkScope : UnitOfWorkScope<UnitOfWork>
 {
 }
-
 ```
 
 It's simply setting the generic parameter of Taro.UnitOfWorkScope<TUnitOfWork> to your IUnitOfWork implementation. This is not actually required.
@@ -65,7 +60,6 @@ Implement domain models in your project
 Domain events should inherit from Taro.DomainEvent, like this:
 
 ```csharp
-
 public class OrderDelivered : Taro.DomainEvent
 {
 	public Order Order { get; private set; }
@@ -75,16 +69,13 @@ public class OrderDelivered : Taro.DomainEvent
 		Order = order;
 	}
 }
-
 ```
-
 
 ### 5. Raise domain events
 
 Domain events should be located in the domain model. So it can only be fired from entities or domain services. For example:
 
 ```chsarp
-
 // A domain service to handle order delivery
 public class DeiveryService 
 {
@@ -96,8 +87,6 @@ public class DeiveryService
 		DomainEvent.Apply(new OrderDelivered(order));
 	}
 }
-
-
 ```
 
 ### 6. Handle domain events
@@ -105,7 +94,6 @@ public class DeiveryService
 Event handlers should implement IHandle<TEvent> interface, like this:
 
 ```csharp
-
 [AwaitComitted, HandleAsync]
 public class OnOrderDelivered_NotifyCustomer : IHandle<OrderDelivered>
 {
@@ -114,7 +102,6 @@ public class OnOrderDelivered_NotifyCustomer : IHandle<OrderDelivered>
 		// Mail to customer: Your order was delivered
 	}
 }
-
 ```
 
 **AwaitCommitted attribute**
@@ -133,13 +120,11 @@ Means this handle will be executed in async manner.
 You need to configure Taro in you application entry point (For example, in asp.net, it's Global.asax), like this:
 
 ```csharp
-
 Taro.Config.TaroEnvironment.Configure(taro => 
 {
 	taro.UsingUnitOfWorkFactory(() => new UnitOfWork(...));
 	taro.UsingDefaultEventDispatcher(Assembly.Load("YourEventHandlersAssembly"));
 });
-
 ```
 
 ### 8. Wire up
@@ -147,7 +132,6 @@ Taro.Config.TaroEnvironment.Configure(taro =>
 In you controller action (for MVC application), write this down:
 
 ```csharp
-
 using (var scope = new UnitOfWorkScope()) 
 {
 	var unitOfWork = scope.UnitOfWork;
@@ -160,7 +144,6 @@ using (var scope = new UnitOfWorkScope())
 	// Calling Complete will commit the unit of work
 	scope.Complete();
 }
-
 ```
 
 If you want to introduce an additional application service layer, you need to move above code to your application service layer.
