@@ -6,19 +6,29 @@ using Taro.Config;
 
 namespace Taro
 {
-    public class UnitOfWorkScope : IDisposable
+    public class UnitOfWorkScope<TUnitOfWork> : IDisposable
+        where TUnitOfWork : IUnitOfWork
     {
-        public IUnitOfWork UnitOfWork { get; private set; }
+        public TUnitOfWork UnitOfWork { get; private set; }
 
         public UnitOfWorkScope()
-            : this(TaroEnvironment.Instance.CreateUnitOfWork())
         {
+            var unitOfWork = TaroEnvironment.Instance.CreateUnitOfWork();
+
+            if (!(unitOfWork is TUnitOfWork))
+                throw new InvalidOperationException("Unit of work scope requires the unit of work to be of type " + typeof(TUnitOfWork) + ", but the unit of work is " + unitOfWork.GetType() + ".");
+
+            Bind((TUnitOfWork)unitOfWork);
         }
 
-        public UnitOfWorkScope(IUnitOfWork unitOfWork)
+        public UnitOfWorkScope(TUnitOfWork unitOfWork)
         {
             Require.NotNull(unitOfWork, "unitOfWork");
+            Bind(unitOfWork);
+        }
 
+        private void Bind(TUnitOfWork unitOfWork)
+        {
             UnitOfWork = unitOfWork;
             UnitOfWorkAmbient.Bind(unitOfWork);
         }
