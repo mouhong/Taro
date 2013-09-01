@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Taro.Tryout
+namespace Taro.Tryout.Data
 {
-    public class UnitOfWorkScope : UnitOfWorkScope<UnitOfWork>
+    public class UnitOfWorkScope : UnitOfWorkScope<InMemoryUnitOfWork>
     {
     }
 }

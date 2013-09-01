@@ -3,35 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Taro.Tryout.Events;
+using Taro.Tryout.Domain;
+using Taro.Tryout.Domain.Events;
 
 namespace Taro.Tryout.Handlers
 {
-    class WhenOrderWasPayed : IHandle<OrderPayedEvent>
+    // AwaitCommitted: This handler will be executed only when the unit of work is committed successfully
+    // HandleAsync: This handler will be executed in async manner
+    [AwaitCommitted, HandleAsync]
+    class OnOrderPayed_MailCustomer : IHandle<OrderPayed>
     {
-        public void Handle(OrderPayedEvent evnt)
+        public void Handle(OrderPayed evnt)
         {
-            Console.WriteLine("Unit of Work: Order " + evnt.Order.Id + " was paid.");
-        }
-    }
-
-    [AwaitCommitted]
-    class WhenOrderWasPayedAndCommitted_InvokeOneShortOperation : IHandle<OrderPayedEvent>
-    {
-        public void Handle(OrderPayedEvent evnt)
-        {
-            Console.WriteLine("After Commit: Short operation");
+            Console.WriteLine("[Mail] To customer: Thank you for choosing us!");
+            Thread.Sleep(3000);
+            Console.WriteLine("[Mail] Payment notification succeeded (to customer)");
         }
     }
 
     [AwaitCommitted, HandleAsync]
-    class WhenOrderWasPayedAndComitted_InvokeOneLongOperation : IHandle<OrderPayedEvent>
+    class OnOrderPayed_MailCustomerService : IHandle<OrderPayed>
     {
-        public void Handle(OrderPayedEvent evnt)
+        public void Handle(OrderPayed evnt)
         {
-            Console.WriteLine("After Commit: Start sending email to customer.");
+            Console.WriteLine("[Mail] To customer service: New order! Please prepare for delivery.");
             Thread.Sleep(3000);
-            Console.WriteLine("After Commit: Finish sending email to customer (3 seconds).");
+            Console.WriteLine("[Mail] Payment notification succeeded (to customer service)");
         }
     }
 }

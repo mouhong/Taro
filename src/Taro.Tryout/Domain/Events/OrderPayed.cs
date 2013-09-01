@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Taro.Tryout.Events
+namespace Taro.Tryout.Domain.Events
 {
-    public class OrderDeliveredEvent : DomainEvent
+    public class OrderPayed : DomainEvent
     {
         public Order Order { get; private set; }
 
-        public OrderDeliveredEvent(Order order)
+        public OrderPayed(Order order)
         {
             Order = order;
         }
