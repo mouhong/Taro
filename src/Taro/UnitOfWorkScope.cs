@@ -33,7 +33,7 @@ namespace Taro
             UnitOfWorkAmbient.Bind(unitOfWork);
         }
 
-        public void Commit()
+        public void Complete()
         {
             UnitOfWork.Commit();
         }

@@ -28,7 +28,7 @@ namespace Taro.Tryout
                 order.AcceptPayment("Alipay");
                 order.Deliver();
 
-                scope.Commit();
+                scope.Complete();
             }
 
             Console.WriteLine();
