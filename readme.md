@@ -104,14 +104,14 @@ public class OnOrderDelivered_NotifyCustomer : IHandle<OrderDelivered>
 }
 ```
 
-**AwaitCommitted attribute**
+**AwaitCommitted attribute:**
 
 Means this handle will not be executed immediately after the event is fired. It'll wait unit the unit of work is committed successfully.
 If your handler code need to be transactional, simply remove this attribute. Then it'll be executed before the unit of work is committed.
 
-But please note that, if you remove the AwaitCommitted attribute, it often means that you need to also remove the HandleAsync attribute.
+But please note that, if you remove the `AwaitCommitted` attribute, it often means that you need to also remove the `HandleAsync` attribute.
 
-**HandleAsync attribute**
+**HandleAsync attribute:**
 
 Means this handle will be executed in async manner.
 
