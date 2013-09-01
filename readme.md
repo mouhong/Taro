@@ -106,14 +106,14 @@ public class OnOrderDelivered_NotifyCustomer : IHandle<OrderDelivered>
 
 **AwaitCommitted attribute:**
 
-Means this handle will not be executed immediately after the event is fired. It'll wait unit the unit of work is committed successfully.
+Means this handler will not be executed immediately after the event is fired. It'll wait unit the unit of work is committed successfully.
 If your handler code need to be transactional, simply remove this attribute. Then it'll be executed before the unit of work is committed.
 
 But please note that, if you remove the `AwaitCommitted` attribute, it often means that you need to also remove the `HandleAsync` attribute.
 
 **HandleAsync attribute:**
 
-Means this handle will be executed in async manner.
+Means this handler will be executed in async manner.
 
 ### 7. Taro Configuration
 
@@ -129,7 +129,7 @@ Taro.Config.TaroEnvironment.Configure(taro =>
 
 ### 8. Wire up
 
-In you controller action (for MVC application), write this down:
+In you controller action (in Webform, it might be in your `.aspx.cs`), write this down:
 
 ```csharp
 using (var scope = new UnitOfWorkScope()) 
