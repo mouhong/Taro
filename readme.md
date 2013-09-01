@@ -6,7 +6,7 @@
 
 ### 1. Implement a unit of work
 
-Add an implementation of IUnitOfWork specifc to your data access component.
+Add an implementation of `IUnitOfWork` specifc to your data access component.
 For example, for Linq to SQL, you can add this one:
 
 ```csharp
@@ -49,7 +49,7 @@ public class UnitOfWorkScope : UnitOfWorkScope<UnitOfWork>
 }
 ```
 
-It's simply setting the generic parameter of Taro.UnitOfWorkScope<TUnitOfWork> to your IUnitOfWork implementation. This is not actually required.
+It's simply setting the generic parameter of `UnitOfWorkScope<TUnitOfWork>` to your `IUnitOfWork` implementation. This is not actually required.
 
 ### 3. Implement your domain model
 
@@ -57,7 +57,7 @@ Implement domain models in your project
 
 ### 4. Add domain events
 
-Domain events should inherit from Taro.DomainEvent, like this:
+Domain events should inherit from `Taro.DomainEvent`, like this:
 
 ```csharp
 public class OrderDelivered : Taro.DomainEvent
@@ -91,7 +91,7 @@ public class DeiveryService
 
 ### 6. Handle domain events
 
-Event handlers should implement IHandle<TEvent> interface, like this:
+Event handlers should implement `IHandle<TEvent>` interface, like this:
 
 ```csharp
 [AwaitComitted, HandleAsync]
@@ -117,7 +117,7 @@ Means this handle will be executed in async manner.
 
 ### 7. Taro Configuration
 
-You need to configure Taro in you application entry point (For example, in asp.net, it's Global.asax), like this:
+You need to configure Taro in you application entry point (For example, in asp.net, it's `Global.asax`), like this:
 
 ```csharp
 Taro.Config.TaroEnvironment.Configure(taro => 
