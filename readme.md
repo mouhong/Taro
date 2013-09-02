@@ -6,7 +6,7 @@
 
 ### 1. Implement a unit of work
 
-Add an implementation of `IUnitOfWork` specifc to your data access component.
+Add an implementation of `IUnitOfWork` specific to your data access component.
 For example, for Linq to SQL, you can add this one:
 
 ```csharp
@@ -109,7 +109,7 @@ public class OnOrderDelivered_NotifyCustomer : IHandle<OrderDelivered>
 Means this handler will not be executed immediately after the event is fired. It'll wait unit the unit of work is committed successfully.
 If your handler code need to be transactional, simply remove this attribute. Then it'll be executed before the unit of work is committed.
 
-But please note that, if you remove the `AwaitCommitted` attribute, it often means that you need to also remove the `HandleAsync` attribute.
+But please note that, if you remove the `AwaitCommitted` attribute, it often means that you also need to remove the `HandleAsync` attribute.
 
 **HandleAsync attribute:**
 
