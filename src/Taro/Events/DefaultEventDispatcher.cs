@@ -27,28 +27,18 @@ namespace Taro.Events
 
                 if (handlerType.IsDefined(typeof(HandleAsyncAttribute), false))
                 {
-                    Task.Factory.StartNew(() => InvokeHandler(evnt, handlerType));
+                    Task.Factory.StartNew(() => InvokeHandler(evnt, handlerType, context));
                 }
                 else
                 {
-                    InvokeHandler(evnt, handlerType);
+                    InvokeHandler(evnt, handlerType, context);
                 }
             }
         }
 
-        private void InvokeHandler(IDomainEvent evnt, Type handlerType)
+        private void InvokeHandler(IDomainEvent evnt, Type handlerType, EventDispathcingContext context)
         {
-            object handler = null;
-
-            try
-            {
-                handler = Activator.CreateInstance(handlerType);
-            }
-            catch (Exception ex)
-            {
-                throw new EventHandlerException("Cannot create handler instance. Handler type: " + handlerType + ".", ex);
-            }
-
+            var handler = CreateHandlerInstance(handlerType, context);
             var method = TypeUtil.FindHandleMethod(handlerType, evnt.GetType());
 
             try
@@ -58,6 +48,26 @@ namespace Taro.Events
             catch (Exception ex)
             {
                 throw new EventHandlerException("Event handler throws an exception, please check inner exception for detail. Handler type: " + handlerType + ".", ex);
+            }
+        }
+
+        private object CreateHandlerInstance(Type handlerType, EventDispathcingContext context)
+        {
+            try
+            {
+                var handler = Activator.CreateInstance(handlerType);
+
+                if (handler is IUnitOfWorkAware)
+                {
+                    var unitOfWorkAware = (IUnitOfWorkAware)handler;
+                    unitOfWorkAware.UnitOfWork = context.UnitOfWork;
+                }
+
+                return handler;
+            }
+            catch (Exception ex)
+            {
+                throw new EventHandlerException("Cannot create handler instance. Handler type: " + handlerType + ".", ex);
             }
         }
 

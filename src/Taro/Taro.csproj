@@ -65,6 +65,7 @@
     <Compile Include="Events\IEventDispatcher.cs" />
     <Compile Include="Events\IEventHandlerRegistry.cs" />
     <Compile Include="AwaitCommittedAttribute.cs" />
+    <Compile Include="IUnitOfWorkAware.cs" />
     <Compile Include="UnitOfWorkScope.cs" />
     <Compile Include="HandleAsyncAttribute.cs" />
     <Compile Include="IHandle.cs" />

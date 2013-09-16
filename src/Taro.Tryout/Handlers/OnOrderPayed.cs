@@ -33,8 +33,10 @@ namespace Taro.Tryout.Handlers
     //    }
     //}
 
-    class OnOrderPayed : IHandle<OrderPayed>
+    class OnOrderPayed : IHandle<OrderPayed>, IUnitOfWorkAware
     {
+        public IUnitOfWork UnitOfWork { get; set; }
+
         public void Handle(OrderPayed evnt)
         {
             Console.WriteLine("[BeforeCommit] Order payed");
