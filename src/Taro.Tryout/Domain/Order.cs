@@ -72,5 +72,17 @@ namespace Taro.Tryout.Domain
 
             DomainEvent.Apply(new OrderCompleted(this));
         }
+
+        public void CreateInvoice()
+        {
+            Console.WriteLine("[Domain] Creating Invoice");
+            DomainEvent.Apply(new InvoiceCreated(this));
+        }
+
+        public void LogCustomerCredit()
+        {
+            Console.WriteLine("[Domain] Log customer credit");
+            DomainEvent.Apply(new CustomerCreditLogged(this));
+        }
     }
 }

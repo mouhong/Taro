@@ -19,7 +19,7 @@ namespace Taro.Tryout
 
             using (var scope = new UnitOfWorkScope())
             {
-                Console.WriteLine("[Database] Begin transaction");
+                Console.WriteLine("Start Unit of Work Scope");
                 Console.WriteLine();
 
                 var customer = new Customer
@@ -41,17 +41,19 @@ namespace Taro.Tryout
                 order.AcceptPayment("Alipay");
 
                 // 3. Deliver this order
-                order.Deliver();
+                //order.Deliver();
 
                 // 4. Complete this order
-                order.Complete();
+                //order.Complete();
 
                 scope.Complete();
 
                 Console.WriteLine();
-                Console.WriteLine("[Database] End transaction");
+                Console.WriteLine("End Unit of Work Scope");
                 Console.WriteLine();
             }
+
+            Console.WriteLine("No current unit of work? " + (UnitOfWorkAmbient.Current == null));
 
             Console.WriteLine();
             Console.WriteLine("[App] Main procedure exited");

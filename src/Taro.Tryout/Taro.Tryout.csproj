@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="Domain\Customer.cs" />
     <Compile Include="Domain\Events\AwardPointsChanged.cs" />
+    <Compile Include="Domain\Events\CustomerCreditLogged.cs" />
+    <Compile Include="Domain\Events\InvoiceCreated.cs" />
     <Compile Include="Domain\Events\OrderDelivered.cs" />
     <Compile Include="Domain\OrderItem.cs" />
     <Compile Include="Domain\OrderItemCollection.cs" />
@@ -50,6 +52,8 @@
     <Compile Include="Domain\Order.cs" />
     <Compile Include="Domain\Events\OrderPayed.cs" />
     <Compile Include="Handlers\OnAwardPointsChanged.cs" />
+    <Compile Include="Handlers\OnCustomerCreditLogged.cs" />
+    <Compile Include="Handlers\OnInvoiceCreated.cs" />
     <Compile Include="Handlers\OnOrderCompleted.cs" />
     <Compile Include="Handlers\OnOrderDelivered.cs" />
     <Compile Include="Handlers\OnOrderPayed.cs" />

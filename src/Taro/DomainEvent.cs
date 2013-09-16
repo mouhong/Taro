@@ -21,39 +21,17 @@ namespace Taro
             UtcTimestamp = utcTimestamp;
         }
 
-        static ThreadLocal<List<IDomainEvent>> _uncommittedEvents = new ThreadLocal<List<IDomainEvent>>(() => new List<IDomainEvent>());
-
-        public static IEnumerable<IDomainEvent> UncommittedEvents
-        {
-            get
-            {
-                return _uncommittedEvents.Value;
-            }
-        }
-
         public static void Apply<TEvent>(TEvent evnt)
             where TEvent : IDomainEvent
         {
             Require.NotNull(evnt, "evnt");
 
-            var unitOfWork = UnitOfWorkAmbient.Current;
+            var unitOfWork = (AbstractUnitOfWork)UnitOfWorkAmbient.Current;
 
             if (unitOfWork == null)
                 throw new InvalidOperationException("Domain event can only be applied within a unit of work scope.");
 
-            var dispatcher = TaroEnvironment.Instance.EventDispatcher;
-
-            if (dispatcher == null)
-                throw new InvalidOperationException("Domain event dispatcher is not registered.");
-
-            _uncommittedEvents.Value.Add(evnt);
-
-            dispatcher.Dispatch(evnt, new EventDispathcingContext(unitOfWork, false));
-        }
-
-        public static void ClearUncommittedEvents()
-        {
-            _uncommittedEvents.Value.Clear();
+            unitOfWork.ApplyEvent(evnt);
         }
     }
 }
