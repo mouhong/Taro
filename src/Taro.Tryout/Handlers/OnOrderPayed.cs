@@ -33,6 +33,14 @@ namespace Taro.Tryout.Handlers
     //    }
     //}
 
+    class OnOrderPayed : IHandle<OrderPayed>
+    {
+        public void Handle(OrderPayed evnt)
+        {
+            Console.WriteLine("[BeforeCommit] Order payed");
+        }
+    }
+
     [AwaitCommitted]
     class OnOrderPayed_CreateInvoice : IHandle<OrderPayed>
     {
@@ -40,11 +48,11 @@ namespace Taro.Tryout.Handlers
         {
             Console.WriteLine("[AfterCommit] Order payed, need to create invoice");
 
-            evnt.Order.CreateInvoice();
+            //evnt.Order.CreateInvoice();
 
-            var unitOfWork = (InMemoryUnitOfWork)UnitOfWorkAmbient.Current;
+            //var unitOfWork = (InMemoryUnitOfWork)UnitOfWorkAmbient.Current;
 
-            unitOfWork.Commit();
+            //unitOfWork.Commit();
 
             //using (var scope = new UnitOfWorkScope())
             //{

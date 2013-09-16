@@ -39,6 +39,7 @@ namespace Taro.Tryout
 
                 // 2. Mark order as payed
                 order.AcceptPayment("Alipay");
+                order.Deliver();
 
                 // 3. Deliver this order
                 //order.Deliver();

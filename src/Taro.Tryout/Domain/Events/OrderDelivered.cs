@@ -5,13 +5,11 @@ using System.Text;
 
 namespace Taro.Tryout.Domain.Events
 {
-    public class OrderDelivered : DomainEvent
+    public class OrderDelivered : StateChanged
     {
-        public Order Order { get; private set; }
-
         public OrderDelivered(Order order)
+            : base(order)
         {
-            Order = order;
         }
     }
 }

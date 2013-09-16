@@ -57,7 +57,7 @@ namespace Taro.Events
             }
             catch (Exception ex)
             {
-                throw new EventHandlerException("Error invoking domain event handler. Handler type: " + handlerType + ".", ex);
+                throw new EventHandlerException("Event handler throws an exception, please check inner exception for detail. Handler type: " + handlerType + ".", ex);
             }
         }
 

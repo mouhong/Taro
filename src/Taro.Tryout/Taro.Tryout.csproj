@@ -45,6 +45,7 @@
     <Compile Include="Domain\Events\CustomerCreditLogged.cs" />
     <Compile Include="Domain\Events\InvoiceCreated.cs" />
     <Compile Include="Domain\Events\OrderDelivered.cs" />
+    <Compile Include="Domain\Events\StateChanged.cs" />
     <Compile Include="Domain\OrderItem.cs" />
     <Compile Include="Domain\OrderItemCollection.cs" />
     <Compile Include="Domain\OrderState.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Handlers\OnOrderCompleted.cs" />
     <Compile Include="Handlers\OnOrderDelivered.cs" />
     <Compile Include="Handlers\OnOrderPayed.cs" />
+    <Compile Include="Handlers\OnOrderStateChanged.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\InMemoryUnitOfWork.cs" />
