@@ -11,7 +11,7 @@ namespace Taro.Events
     {
         public void Invoke(IDomainEvent evnt, MethodInfo handlerMethod, EventDispatchingContext context)
         {
-            if (HandlerUtil.IsAttributeDefined(handlerMethod, typeof(HandleAsyncAttribute)))
+            if (TypeUtil.IsAttributeDefinedInMethodOrDeclaringClass(handlerMethod, typeof(HandleAsyncAttribute)))
             {
                 Task.Factory.StartNew(() => InvokeHandler(evnt, handlerMethod, context));
             }
@@ -41,11 +41,19 @@ namespace Taro.Events
             try
             {
                 var handler = Activator.CreateInstance(handlerType);
+                var unitOfWorkType = TypeUtil.GetOpenGenericArgumentTypes(handlerType, typeof(IUnitOfWorkAware<>)).FirstOrDefault();
 
-                if (handler is IUnitOfWorkAware)
+                if (unitOfWorkType != null)
                 {
-                    var unitOfWorkAware = (IUnitOfWorkAware)handler;
-                    unitOfWorkAware.UnitOfWork = context.UnitOfWork;
+                    if (!unitOfWorkType.IsAssignableFrom(context.UnitOfWork.GetType()))
+                        throw new EventHandlerException("Handler requires to be aware of unit of work of type \"" + unitOfWorkType + "\", but the unit of work in current context is of type \"" + context.UnitOfWork.GetType() + "\".");
+
+                    var prop = handlerType.GetProperty("UnitOfWork", BindingFlags.Public | BindingFlags.Instance | BindingFlags.ExactBinding);
+
+                    if (!prop.CanWrite)
+                        throw new EventHandlerException("IUnitOfWorkAware.UnitOfWork property must be writable.");
+
+                    prop.SetValue(handler, context.UnitOfWork, null);
                 }
 
                 return handler;

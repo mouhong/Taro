@@ -51,7 +51,7 @@ namespace Taro.Events
 
             foreach (var method in _handlerRegistry.FindHandlerMethods(evnt.GetType()))
             {
-                var awaitCommit = HandlerUtil.IsAttributeDefined(method, typeof(AwaitCommittedAttribute));
+                var awaitCommit = TypeUtil.IsAttributeDefinedInMethodOrDeclaringClass(method, typeof(AwaitCommittedAttribute));
 
                 if (awaitCommit && !context.WasUnitOfWorkCommitted
                     || !awaitCommit && context.WasUnitOfWorkCommitted)

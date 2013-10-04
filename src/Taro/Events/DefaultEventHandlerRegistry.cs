@@ -70,7 +70,7 @@ namespace Taro.Events
                 return false;
             }
 
-            var eventTypes = HandlerUtil.GetHandledEventTypes(handlerType).ToList();
+            var eventTypes = TypeUtil.GetOpenGenericArgumentTypes(handlerType, typeof(IHandle<>)).ToList();
 
             if (eventTypes.Count == 0)
             {

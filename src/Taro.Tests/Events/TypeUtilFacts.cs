@@ -8,29 +8,29 @@ using Xunit;
 
 namespace Taro.Tests.Events
 {
-    public class HandlerUtilFacts
+    public class TypeUtilFacts
     {
-        public class TheIsAttributeDefinedMethod
+        public class TheIsAttributeDefinedInMethodOrDeclaringClassMethod
         {
             [Fact]
             public void CanCheckMethodLevelAttributes()
             {
                 var method = typeof(AttributeDefinedInMethodLevel).GetMethod("Method", BindingFlags.Public | BindingFlags.Instance);
-                Assert.True(HandlerUtil.IsAttributeDefined(method, typeof(AwaitCommittedAttribute)));
+                Assert.True(TypeUtil.IsAttributeDefinedInMethodOrDeclaringClass(method, typeof(AwaitCommittedAttribute)));
             }
 
             [Fact]
             public void CanCheckClassLevelAttributes()
             {
                 var method = typeof(AttributeDefinedInClassLevel).GetMethod("Method", BindingFlags.Public | BindingFlags.Instance);
-                Assert.True(HandlerUtil.IsAttributeDefined(method, typeof(AwaitCommittedAttribute)));
+                Assert.True(TypeUtil.IsAttributeDefinedInMethodOrDeclaringClass(method, typeof(AwaitCommittedAttribute)));
             }
 
             [Fact]
             public void ReturnFalseIfAttributeNotDefined()
             {
                 var method = typeof(AttributeDefinedInMethodLevel).GetMethod("Method", BindingFlags.Public | BindingFlags.Instance);
-                Assert.False(HandlerUtil.IsAttributeDefined(method, typeof(HandleAsyncAttribute)));
+                Assert.False(TypeUtil.IsAttributeDefinedInMethodOrDeclaringClass(method, typeof(HandleAsyncAttribute)));
             }
 
             public class AttributeDefinedInMethodLevel
@@ -46,27 +46,27 @@ namespace Taro.Tests.Events
             }
         }
 
-        public class TheGetHandledEventTypesMethod
+        public class TheGetOpenGenericArgumentTypesMethod
         {
             [Fact]
-            public void ReturnEmptyCollectionForNonHandlerType()
+            public void ReturnEmptyCollectionIfNothingFound()
             {
-                var eventTypes = HandlerUtil.GetHandledEventTypes(typeof(NonHandler)).ToList();
+                var eventTypes = TypeUtil.GetOpenGenericArgumentTypes(typeof(NonHandler), typeof(IHandle<>)).ToList();
                 Assert.Equal(0, eventTypes.Count);
             }
 
             [Fact]
-            public void CanReturnSingleHandledEvent()
+            public void WillReturnGenericArgumentTypes()
             {
-                var eventTypes = HandlerUtil.GetHandledEventTypes(typeof(HandleSingleEvent)).ToList();
+                var eventTypes = TypeUtil.GetOpenGenericArgumentTypes(typeof(HandleSingleEvent), typeof(IHandle<>)).ToList();
                 Assert.Equal(1, eventTypes.Count);
                 Assert.Equal(typeof(Event2), eventTypes[0]);
             }
 
             [Fact]
-            public void CanReturnMultiHandledEvents()
+            public void WillReturnAllGenericArgumentTypes()
             {
-                var eventTypes = HandlerUtil.GetHandledEventTypes(typeof(HandleMultiEvents)).ToList();
+                var eventTypes = TypeUtil.GetOpenGenericArgumentTypes(typeof(HandleMultiEvents), typeof(IHandle<>)).ToList();
                 Assert.Equal(2, eventTypes.Count);
                 Assert.Equal(typeof(Event1), eventTypes[0]);
                 Assert.Equal(typeof(Event3), eventTypes[1]);

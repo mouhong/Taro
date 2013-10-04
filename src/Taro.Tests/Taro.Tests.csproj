@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Events\DefaultEventDispatcherFacts.cs" />
-    <Compile Include="Events\HandlerUtilFacts.cs" />
+    <Compile Include="Events\TypeUtilFacts.cs" />
     <Compile Include="Events\CountedHandlerInvoker.cs" />
     <Compile Include="MockUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
