@@ -103,5 +103,21 @@ namespace Taro.Events
 
             return true;
         }
+
+        public bool RemoveHandlers(Type eventType)
+        {
+            lock (_handlerMethodsByEventType)
+            {
+                return _handlerMethodsByEventType.Remove(eventType);
+            }
+        }
+
+        public void Clear()
+        {
+            lock (_handlerMethodsByEventType)
+            {
+                _handlerMethodsByEventType.Clear();
+            }
+        }
     }
 }

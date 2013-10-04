@@ -11,5 +11,9 @@ namespace Taro.Events
         bool RegisterHandler(Type handlerType);
 
         void RegisterHandlers(Assembly assembly);
+
+        bool RemoveHandlers(Type eventType);
+
+        void Clear();
     }
 }

@@ -8,6 +8,14 @@ namespace Taro.Events
     {
         private IEventHandlerRegistry _handlerRegistry;
 
+        public IEventHandlerRegistry HandlerRegistry
+        {
+            get
+            {
+                return _handlerRegistry;
+            }
+        }
+
         public DefaultEventDispatcher(IEventHandlerRegistry handlerRegistry)
         {
             Require.NotNull(handlerRegistry, "handlerRegistry");
