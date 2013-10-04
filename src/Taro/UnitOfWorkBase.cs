@@ -37,6 +37,10 @@ namespace Taro
             where TEvent : IDomainEvent
         {
             Require.NotNull(evnt, "evnt");
+
+            if (_disposed)
+                throw new ObjectDisposedException(null, "Unit of work was disposed.");
+
             UncommittedEvents.Add(evnt);
             EventDispatcher.Dispatch(evnt, new EventDispatchingContext(this, false));
         }

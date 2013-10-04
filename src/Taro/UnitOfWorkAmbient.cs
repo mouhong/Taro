@@ -6,9 +6,6 @@ namespace Taro
 {
     public static class UnitOfWorkAmbient
     {
-        [ThreadStatic]
-        private static IUnitOfWork _current;
-
         static readonly ThreadLocal<Stack<IUnitOfWork>> _unitOfWorks = new ThreadLocal<Stack<IUnitOfWork>>(() => new Stack<IUnitOfWork>());
 
         public static IUnitOfWork Current

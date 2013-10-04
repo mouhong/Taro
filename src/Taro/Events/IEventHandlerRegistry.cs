@@ -10,6 +10,8 @@ namespace Taro.Events
 
         bool RegisterHandler(Type handlerType);
 
+        void RegisterHandlers(IEnumerable<Type> handlerTypes);
+
         void RegisterHandlers(Assembly assembly);
 
         bool RemoveHandlers(Type eventType);

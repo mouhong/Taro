@@ -41,13 +41,11 @@ namespace Taro.Events
             return Enumerable.Empty<MethodInfo>();
         }
 
-        public void RegisterHandlers(Assembly assembly)
+        public void RegisterHandlers(IEnumerable<Type> handlerTypes)
         {
-            Require.NotNull(assembly, "assembly");
-
             lock (_handlerMethodsByEventType)
             {
-                foreach (var type in assembly.GetTypes())
+                foreach (var type in handlerTypes)
                 {
                     if (type.IsClass && !type.IsAbstract)
                     {
@@ -55,6 +53,12 @@ namespace Taro.Events
                     }
                 }
             }
+        }
+
+        public void RegisterHandlers(Assembly assembly)
+        {
+            Require.NotNull(assembly, "assembly");
+            RegisterHandlers(assembly.GetTypes());
         }
 
         public bool RegisterHandler(Type handlerType)
