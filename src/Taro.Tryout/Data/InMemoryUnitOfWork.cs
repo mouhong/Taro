@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Taro.Tryout.Data
 {
-    public class InMemoryUnitOfWork : AbstractUnitOfWork
+    public class InMemoryUnitOfWork : UnitOfWorkBase
     {
         protected override void DoCommit()
         {

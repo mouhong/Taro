@@ -26,7 +26,7 @@ namespace Taro
         {
             Require.NotNull(evnt, "evnt");
 
-            var unitOfWork = (AbstractUnitOfWork)UnitOfWorkAmbient.Current;
+            var unitOfWork = (UnitOfWorkBase)UnitOfWorkAmbient.Current;
 
             if (unitOfWork == null)
                 throw new InvalidOperationException("Domain event can only be applied within a unit of work scope.");

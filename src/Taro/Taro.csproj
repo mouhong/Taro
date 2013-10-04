@@ -72,7 +72,7 @@
     <Compile Include="Config\TaroEnvironment.cs" />
     <Compile Include="UnitOfWorkAmbient.cs" />
     <Compile Include="DomainEvent.cs" />
-    <Compile Include="AbstractUnitOfWork.cs" />
+    <Compile Include="UnitOfWorkBase.cs" />
     <Compile Include="IDomainEvent.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

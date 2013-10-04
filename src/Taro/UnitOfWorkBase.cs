@@ -8,7 +8,7 @@ using Taro.Events;
 
 namespace Taro
 {
-    public abstract class AbstractUnitOfWork : IUnitOfWork
+    public abstract class UnitOfWorkBase : IUnitOfWork
     {
         private bool _disposed;
 
@@ -16,19 +16,19 @@ namespace Taro
 
         protected IList<IDomainEvent> UncommittedEvents { get; private set; }
 
-        protected AbstractUnitOfWork()
+        protected UnitOfWorkBase()
             : this(TaroEnvironment.Instance.EventDispatcher)
         {
         }
 
-        protected AbstractUnitOfWork(IEventDispatcher eventDispatcher)
+        protected UnitOfWorkBase(IEventDispatcher eventDispatcher)
         {
             Require.NotNull(eventDispatcher, "eventDispatcher");
             EventDispatcher = eventDispatcher;
             UncommittedEvents = new List<IDomainEvent>();
         }
 
-        ~AbstractUnitOfWork()
+        ~UnitOfWorkBase()
         {
             Dispose(false);
         }
