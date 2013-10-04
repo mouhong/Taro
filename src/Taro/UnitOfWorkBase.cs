@@ -38,7 +38,7 @@ namespace Taro
         {
             Require.NotNull(evnt, "evnt");
             UncommittedEvents.Add(evnt);
-            EventDispatcher.Dispatch(evnt, new EventDispathcingContext(this, false));
+            EventDispatcher.Dispatch(evnt, new EventDispatchingContext(this, false));
         }
 
         public virtual void Commit()
@@ -68,7 +68,7 @@ namespace Taro
 
         private void DispatchPostCommitEvents(IEnumerable<IDomainEvent> events)
         {
-            var context = new EventDispathcingContext(this, true);
+            var context = new EventDispatchingContext(this, true);
 
             foreach (var evnt in events)
             {

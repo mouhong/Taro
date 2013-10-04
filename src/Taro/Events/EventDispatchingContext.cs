@@ -2,13 +2,13 @@
 
 namespace Taro.Events
 {
-    public class EventDispathcingContext
+    public class EventDispatchingContext
     {
         public IUnitOfWork UnitOfWork { get; private set; }
 
         public bool WasUnitOfWorkCommitted { get; private set; }
 
-        public EventDispathcingContext(IUnitOfWork unitOfWork, bool wasUnitOfWorkCommitted)
+        public EventDispatchingContext(IUnitOfWork unitOfWork, bool wasUnitOfWorkCommitted)
         {
             Require.NotNull(unitOfWork, "unitOfWork");
             UnitOfWork = unitOfWork;

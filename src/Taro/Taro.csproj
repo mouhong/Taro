@@ -60,7 +60,7 @@
   <ItemGroup>
     <Compile Include="Events\DefaultEventDispatcher.cs" />
     <Compile Include="Events\DefaultEventHandlerRegistry.cs" />
-    <Compile Include="Events\EventDispathcingContext.cs" />
+    <Compile Include="Events\EventDispatchingContext.cs" />
     <Compile Include="Events\EventHandlerException.cs" />
     <Compile Include="Events\IEventDispatcher.cs" />
     <Compile Include="Events\IEventHandlerRegistry.cs" />

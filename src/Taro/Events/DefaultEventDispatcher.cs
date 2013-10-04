@@ -22,7 +22,7 @@ namespace Taro.Events
             _handlerRegistry = handlerRegistry;
         }
 
-        public void Dispatch(IDomainEvent evnt, EventDispathcingContext context)
+        public void Dispatch(IDomainEvent evnt, EventDispatchingContext context)
         {
             Require.NotNull(evnt, "evnt");
             Require.NotNull(context, "context");
@@ -45,7 +45,7 @@ namespace Taro.Events
             }
         }
 
-        private void InvokeHandler(IDomainEvent evnt, MethodInfo method, EventDispathcingContext context)
+        private void InvokeHandler(IDomainEvent evnt, MethodInfo method, EventDispatchingContext context)
         {
             var handlerType = method.DeclaringType;
             var handler = CreateHandlerInstance(handlerType, context);
@@ -60,7 +60,7 @@ namespace Taro.Events
             }
         }
 
-        private object CreateHandlerInstance(Type handlerType, EventDispathcingContext context)
+        private object CreateHandlerInstance(Type handlerType, EventDispatchingContext context)
         {
             try
             {
