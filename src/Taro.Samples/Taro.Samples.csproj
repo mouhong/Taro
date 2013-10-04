@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{193634C5-0939-49C7-B57B-5BB706B5CD5D}</ProjectGuid>
+    <ProjectGuid>{6A8D7045-745F-4B10-8FDB-D9867AC363BE}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Taro.Tryout</RootNamespace>
-    <AssemblyName>Taro.Tryout</AssemblyName>
+    <RootNamespace>Taro.Samples</RootNamespace>
+    <AssemblyName>Taro.Samples</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,29 +40,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Customer.cs" />
-    <Compile Include="Domain\Events\AwardPointsChanged.cs" />
-    <Compile Include="Domain\Events\CustomerCreditLogged.cs" />
-    <Compile Include="Domain\Events\InvoiceCreated.cs" />
-    <Compile Include="Domain\Events\OrderDelivered.cs" />
-    <Compile Include="Domain\Events\StateChanged.cs" />
-    <Compile Include="Domain\OrderItem.cs" />
-    <Compile Include="Domain\OrderItemCollection.cs" />
-    <Compile Include="Domain\OrderState.cs" />
-    <Compile Include="Domain\Events\OrderCompleted.cs" />
-    <Compile Include="Domain\Order.cs" />
-    <Compile Include="Domain\Events\OrderPayed.cs" />
-    <Compile Include="Handlers\OnAwardPointsChanged.cs" />
-    <Compile Include="Handlers\OnCustomerCreditLogged.cs" />
-    <Compile Include="Handlers\OnInvoiceCreated.cs" />
-    <Compile Include="Handlers\OnOrderCompleted.cs" />
-    <Compile Include="Handlers\OnOrderDelivered.cs" />
-    <Compile Include="Handlers\OnOrderPayed.cs" />
-    <Compile Include="Handlers\OnOrderStateChanged.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\InMemoryUnitOfWork.cs" />
+    <Compile Include="..\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Data\IUnitOfWorkAware.cs" />
+    <Compile Include="Data\UnitOfWork.cs" />
     <Compile Include="Data\UnitOfWorkScope.cs" />
+    <Compile Include="Domain\AccountLog.cs" />
+    <Compile Include="Domain\BankAccount.cs" />
+    <Compile Include="Domain\Events\AccountBalanceChanged.cs" />
+    <Compile Include="Domain\Events\MoneyTransferCompleted.cs" />
+    <Compile Include="Domain\MoneyTransferService.cs" />
+    <Compile Include="Handlers\AsyncHandler.cs" />
+    <Compile Include="Handlers\BaseEventHandler.cs" />
+    <Compile Include="Handlers\MultiEventHandler.cs" />
+    <Compile Include="Handlers\PostCommitHandler.cs" />
+    <Compile Include="Handlers\PreCommitHandler.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Taro\Taro.csproj">
@@ -70,7 +64,6 @@
       <Name>Taro</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

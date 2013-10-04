@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro", "Taro\Taro.csproj", "{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro.Tryout", "Taro.Tryout\Taro.Tryout.csproj", "{193634C5-0939-49C7-B57B-5BB706B5CD5D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro.Tests", "Taro.Tests\Taro.Tests.csproj", "{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro.Samples", "Taro.Samples\Taro.Samples.csproj", "{6A8D7045-745F-4B10-8FDB-D9867AC363BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,16 +27,6 @@ Global
 		{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}.Release|x86.ActiveCfg = Release|Any CPU
-		{193634C5-0939-49C7-B57B-5BB706B5CD5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{193634C5-0939-49C7-B57B-5BB706B5CD5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{193634C5-0939-49C7-B57B-5BB706B5CD5D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{193634C5-0939-49C7-B57B-5BB706B5CD5D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{193634C5-0939-49C7-B57B-5BB706B5CD5D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{193634C5-0939-49C7-B57B-5BB706B5CD5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{193634C5-0939-49C7-B57B-5BB706B5CD5D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{193634C5-0939-49C7-B57B-5BB706B5CD5D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{193634C5-0939-49C7-B57B-5BB706B5CD5D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{193634C5-0939-49C7-B57B-5BB706B5CD5D}.Release|x86.ActiveCfg = Release|Any CPU
 		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -47,6 +37,16 @@ Global
 		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Release|x86.ActiveCfg = Release|Any CPU
+		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
