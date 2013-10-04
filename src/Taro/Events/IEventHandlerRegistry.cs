@@ -6,7 +6,7 @@ namespace Taro.Events
 {
     public interface IEventHandlerRegistry
     {
-        IEnumerable<Type> FindHandlerTypes(Type eventType);
+        IEnumerable<MethodInfo> FindHandlerMethods(Type eventType);
 
         bool RegisterHandler(Type handlerType);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Taro.Events
@@ -18,28 +19,28 @@ namespace Taro.Events
             Require.NotNull(evnt, "evnt");
             Require.NotNull(context, "context");
 
-            foreach (var handlerType in _handlerRegistry.FindHandlerTypes(evnt.GetType()))
+            foreach (var method in _handlerRegistry.FindHandlerMethods(evnt.GetType()))
             {
-                if (!NeedToHandle(handlerType, context))
+                if (!context.WasUnitOfWorkCommitted && HandlerUtil.IsAttributeDefined(method, typeof(AwaitCommittedAttribute)))
                 {
                     continue;
                 }
 
-                if (handlerType.IsDefined(typeof(HandleAsyncAttribute), false))
+                if (HandlerUtil.IsAttributeDefined(method, typeof(HandleAsyncAttribute)))
                 {
-                    Task.Factory.StartNew(() => InvokeHandler(evnt, handlerType, context));
+                    Task.Factory.StartNew(() => InvokeHandler(evnt, method, context));
                 }
                 else
                 {
-                    InvokeHandler(evnt, handlerType, context);
+                    InvokeHandler(evnt, method, context);
                 }
             }
         }
 
-        private void InvokeHandler(IDomainEvent evnt, Type handlerType, EventDispathcingContext context)
+        private void InvokeHandler(IDomainEvent evnt, MethodInfo method, EventDispathcingContext context)
         {
+            var handlerType = method.DeclaringType;
             var handler = CreateHandlerInstance(handlerType, context);
-            var method = TypeUtil.FindHandleMethod(handlerType, evnt.GetType());
 
             try
             {
@@ -67,20 +68,8 @@ namespace Taro.Events
             }
             catch (Exception ex)
             {
-                throw new EventHandlerException("Cannot create handler instance. Handler type: " + handlerType + ".", ex);
+                throw new EventHandlerException("Failed creating event handler instance. Handler type: " + handlerType + ".", ex);
             }
-        }
-
-        private bool NeedToHandle(Type handlerType, EventDispathcingContext context)
-        {
-            var isPostCommitEventHandler = handlerType.IsDefined(typeof(AwaitCommittedAttribute), false);
-
-            if (context.WasUnitOfWorkCommitted)
-            {
-                return isPostCommitEventHandler;
-            }
-
-            return !isPostCommitEventHandler;
         }
     }
 }

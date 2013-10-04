@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Taro
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class HandleAsyncAttribute : Attribute
     {
     }

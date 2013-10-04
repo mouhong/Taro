@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Taro.Events
 {
-    static class TypeUtil
+    static class HandlerUtil
     {
         public static IEnumerable<Type> GetHandledEventTypes(Type handlerType)
         {
@@ -22,9 +22,9 @@ namespace Taro.Events
             }
         }
 
-        public static MethodInfo FindHandleMethod(Type handlerType, Type eventType)
+        public static bool IsAttributeDefined(MethodInfo method, Type attributeType)
         {
-            return handlerType.GetMethod("Handle", new Type[] { eventType });
+            return method.IsDefined(attributeType, false) || method.DeclaringType.IsDefined(attributeType, false);
         }
     }
 }

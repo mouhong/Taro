@@ -8,13 +8,13 @@ namespace Taro.Events
 {
     public class DefaultEventHandlerRegistry : IEventHandlerRegistry
     {
-        private ConcurrentDictionary<Type, ConcurrentBag<Type>> _handlerTypesByEventType = new ConcurrentDictionary<Type, ConcurrentBag<Type>>();
+        private Dictionary<Type, List<MethodInfo>> _handlerMethodsByEventType = new Dictionary<Type, List<MethodInfo>>();
 
-        public IEnumerable<Type> FindHandlerTypes(Type eventType)
+        public IEnumerable<MethodInfo> FindHandlerMethods(Type eventType)
         {
             Require.NotNull(eventType, "eventType");
 
-            var handlers = FindDirectHandlers(eventType).ToList();
+            var handlerMethods = FindDirectHandlers(eventType).ToList();
 
             // Here we need to support base event subscribtion:
             // If event A is raised, handlers subscribing to A and A's base events all need to be invoked.
@@ -22,34 +22,37 @@ namespace Taro.Events
 
             while (baseEventType != null && typeof(IDomainEvent).IsAssignableFrom(baseEventType))
             {
-                handlers.AddRange(FindDirectHandlers(baseEventType));
+                handlerMethods.AddRange(FindDirectHandlers(baseEventType));
                 baseEventType = baseEventType.BaseType;
             }
 
-            return handlers;
+            return handlerMethods;
         }
 
-        private IEnumerable<Type> FindDirectHandlers(Type eventType)
+        private IEnumerable<MethodInfo> FindDirectHandlers(Type eventType)
         {
-            ConcurrentBag<Type> handlerTypes = null;
+            List<MethodInfo> handlerTypes = null;
 
-            if (_handlerTypesByEventType.TryGetValue(eventType, out handlerTypes))
+            if (_handlerMethodsByEventType.TryGetValue(eventType, out handlerTypes))
             {
                 return handlerTypes;
             }
 
-            return Enumerable.Empty<Type>();
+            return Enumerable.Empty<MethodInfo>();
         }
 
         public void RegisterHandlers(Assembly assembly)
         {
             Require.NotNull(assembly, "assembly");
 
-            foreach (var type in assembly.GetTypes())
+            lock (_handlerMethodsByEventType)
             {
-                if (type.IsClass && !type.IsAbstract)
+                foreach (var type in assembly.GetTypes())
                 {
-                    RegisterHandler(type);
+                    if (type.IsClass && !type.IsAbstract)
+                    {
+                        RegisterHandler(type);
+                    }
                 }
             }
         }
@@ -63,17 +66,39 @@ namespace Taro.Events
                 return false;
             }
 
-            var eventTypes = TypeUtil.GetHandledEventTypes(handlerType).ToList();
+            var eventTypes = HandlerUtil.GetHandledEventTypes(handlerType).ToList();
 
             if (eventTypes.Count == 0)
             {
                 return false;
             }
 
-            foreach (var eventType in eventTypes)
+            lock (_handlerMethodsByEventType)
             {
-                var handlerTypes = _handlerTypesByEventType.GetOrAdd(eventType, new ConcurrentBag<Type>());
-                handlerTypes.Add(handlerType);
+                var thisHandlerMethods = handlerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                                                    .Where(m => m.Name == "Handle" && m.ReturnType == typeof(void))
+                                                    .ToList();
+
+                foreach (var eventType in eventTypes)
+                {
+                    List<MethodInfo> handlerMethods = null;
+
+                    if (!_handlerMethodsByEventType.TryGetValue(eventType, out handlerMethods))
+                    {
+                        handlerMethods = new List<MethodInfo>();
+                        _handlerMethodsByEventType.Add(eventType, handlerMethods);
+                    }
+
+                    foreach (var method in thisHandlerMethods)
+                    {
+                        var parameters = method.GetParameters();
+                        if (parameters.Length == 1 && parameters[0].ParameterType == eventType)
+                        {
+                            handlerMethods.Add(method);
+                            break;
+                        }
+                    }
+                }
             }
 
             return true;
