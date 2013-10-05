@@ -6,7 +6,7 @@
 
 ### 1. Implement a unit of work
 
-Add an implementation of `IUnitOfWork` specific to your data access component.
+Add a unit of work implementation specific to your data access component (inherits from UnitOfWorkBase).
 For example, for Linq to SQL, you can add this one:
 
 ```csharp
@@ -76,7 +76,7 @@ public class MoneyTransfered : Taro.DomainEvent
 
 Domain events should be located in the domain model. So it can only be fired from entities or domain services. For example:
 
-```chsarp
+```csharp
 public class MoneyTransferService 
 {
 	public void Transfer(Account source, Account dest, decimal amount) 
