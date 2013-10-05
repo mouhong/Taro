@@ -10,7 +10,7 @@ Add an implementation of `IUnitOfWork` specific to your data access component.
 For example, for Linq to SQL, you can add this one:
 
 ```csharp
-public class UnitOfWork : AbstractUnitOfWork 
+public class UnitOfWork : UnitOfWorkBase
 {
 	private DataContext _dataContext;
 
@@ -60,14 +60,15 @@ Implement domain models in your project
 Domain events should inherit from `Taro.DomainEvent`, like this:
 
 ```csharp
-public class OrderDelivered : Taro.DomainEvent
+public class MoneyTransfered : Taro.DomainEvent
 {
-	public Order Order { get; private set; }
+	public Account SourceAccount { get; private set; }
 
-	public OrderDelivered(Order order)
-	{
-		Order = order;
-	}
+    public Account DestinationAccount { get; private set; }
+ 
+    public decimal Amount { get; private set; }
+
+	// ...
 }
 ```
 
@@ -76,15 +77,14 @@ public class OrderDelivered : Taro.DomainEvent
 Domain events should be located in the domain model. So it can only be fired from entities or domain services. For example:
 
 ```chsarp
-// A domain service to handle order delivery
-public class DeiveryService 
+public class MoneyTransferService 
 {
-	public void DeliverOrder(Order order) 
+	public void Transfer(Account source, Account dest, decimal amount) 
 	{
 		// business logic goes here
 		
 		// Raise OrderDelivered event
-		DomainEvent.Apply(new OrderDelivered(order));
+		DomainEvent.Apply(new MoneyTransfered(...));
 	}
 }
 ```
@@ -95,11 +95,11 @@ Event handlers should implement `IHandle<TEvent>` interface, like this:
 
 ```csharp
 [AwaitComitted, HandleAsync]
-public class OnOrderDelivered_NotifyCustomer : IHandle<OrderDelivered>
+public class OnMoneyTransfered_NotifyOwner : IHandle<MoneyTransfered>
 {
-	public void Handle(OrderDelivered evnt) 
+	public void Handle(MoneyTransfered evnt) 
 	{
-		// Mail to customer: Your order was delivered
+		// Mail to account owner: Money transfer succeeded
 	}
 }
 ```
@@ -135,11 +135,13 @@ In you controller action (in Webform, it might be in your `.aspx.cs`), write thi
 using (var scope = new UnitOfWorkScope()) 
 {
 	var unitOfWork = scope.UnitOfWork;
-	var order = unitOfWork.Query<Order>()
-						  .FirstOrDefault(o => o.Id = xxx);
+	var account1 = unitOfWork.Query<Account>()
+						     .FirstOrDefault(x => x.Id == ...);
+    var account2 = unitOfWork.Query<Account>()
+ 							 .FirstOrDefault(x => x.Id == ...);
 
-	var deliveryService = new DeliveryService();
-	deliveryService.DeliverOrder(order);
+	var service = new MoneyTransferService();
+	service.Transfer(account1, account2, 1024);
 
 	// Calling Complete will commit the unit of work
 	scope.Complete();
