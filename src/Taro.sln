@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro", "Taro\Taro.csproj", "{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro.Tests", "Taro.Tests\Taro.Tests.csproj", "{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}"

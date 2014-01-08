@@ -8,6 +8,8 @@ namespace Taro
 {
     public interface IUnitOfWork : IDisposable
     {
+        event EventHandler Comitted;
+
         void Commit();
     }
 }

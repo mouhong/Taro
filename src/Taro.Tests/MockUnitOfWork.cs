@@ -12,24 +12,6 @@ namespace Taro.Tests
 
         public Action CommitAction { get; set; }
 
-        public new IList<IDomainEvent> UncommittedEvents
-        {
-            get
-            {
-                return base.UncommittedEvents;
-            }
-        }
-
-        public MockUnitOfWork()
-            : this(new DefaultEventDispatcher())
-        {
-        }
-
-        public MockUnitOfWork(IEventDispatcher dispatcher)
-            : base(dispatcher)
-        {
-        }
-
         protected override void DoCommit()
         {
             if (CommitAction != null)

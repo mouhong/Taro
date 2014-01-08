@@ -41,19 +41,11 @@ namespace Taro.Events
             try
             {
                 var handler = Activator.CreateInstance(handlerType);
-                var unitOfWorkType = TypeUtil.GetOpenGenericArgumentTypes(handlerType, typeof(IUnitOfWorkAware<>)).FirstOrDefault();
+                var unitOfWorkAware = handler as IUnitOfWorkAware;
 
-                if (unitOfWorkType != null)
+                if (unitOfWorkAware != null && context.UnitOfWorkScope != null)
                 {
-                    if (!unitOfWorkType.IsAssignableFrom(context.UnitOfWork.GetType()))
-                        throw new EventHandlerException("Handler requires to be aware of unit of work of type \"" + unitOfWorkType + "\", but the unit of work in current context is of type \"" + context.UnitOfWork.GetType() + "\".");
-
-                    var prop = handlerType.GetProperty("UnitOfWork", BindingFlags.Public | BindingFlags.Instance | BindingFlags.ExactBinding);
-
-                    if (!prop.CanWrite)
-                        throw new EventHandlerException("IUnitOfWorkAware.UnitOfWork property must be writable.");
-
-                    prop.SetValue(handler, context.UnitOfWork, null);
+                    unitOfWorkAware.UnitOfWork = context.UnitOfWorkScope.UnitOfWork;
                 }
 
                 return handler;

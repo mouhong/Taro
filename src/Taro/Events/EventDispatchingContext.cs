@@ -4,15 +4,14 @@ namespace Taro.Events
 {
     public class EventDispatchingContext
     {
-        public IUnitOfWork UnitOfWork { get; private set; }
+        public EventDispatchingPhase Phase { get; private set; }
 
-        public bool WasUnitOfWorkCommitted { get; private set; }
+        public UnitOfWorkScope UnitOfWorkScope { get; private set; }
 
-        public EventDispatchingContext(IUnitOfWork unitOfWork, bool wasUnitOfWorkCommitted)
+        public EventDispatchingContext(EventDispatchingPhase phase, UnitOfWorkScope unitOfWorkScope)
         {
-            Require.NotNull(unitOfWork, "unitOfWork");
-            UnitOfWork = unitOfWork;
-            WasUnitOfWorkCommitted = wasUnitOfWorkCommitted;
+            Phase = phase;
+            UnitOfWorkScope = unitOfWorkScope;
         }
     }
 }

@@ -5,9 +5,8 @@ using System.Text;
 
 namespace Taro
 {
-    public interface IUnitOfWorkAware<TUnitOfWork>
-        where TUnitOfWork : IUnitOfWork
+    public interface IUnitOfWorkAware
     {
-        TUnitOfWork UnitOfWork { get; set; }
+        IUnitOfWork UnitOfWork { get; set; }
     }
 }

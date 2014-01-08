@@ -43,9 +43,7 @@
     <Compile Include="..\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Data\IUnitOfWorkAware.cs" />
     <Compile Include="Data\UnitOfWork.cs" />
-    <Compile Include="Data\UnitOfWorkScope.cs" />
     <Compile Include="Domain\AccountLog.cs" />
     <Compile Include="Domain\BankAccount.cs" />
     <Compile Include="Domain\Events\AccountBalanceChanged.cs" />

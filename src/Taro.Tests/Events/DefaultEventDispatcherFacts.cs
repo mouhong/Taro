@@ -12,16 +12,19 @@ namespace Taro.Tests.Events
         public class TheDispatchMethod
         {
             [Fact]
-            public void WillNotDispatchAwaitCommittedHandlersBeforeCommit()
+            public void WillNotInvokeAwaitCommittedHandlersInPhase_OnEventRaised()
             {
                 var handlerInvoker = new CountedHandlerInvoker();
                 var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry(), handlerInvoker);
                 dispatcher.HandlerRegistry.RegisterHandlers(new[] { typeof(Event1Handler1), typeof(Event1Handler2), typeof(Event1AwaitCommittedHandler1) });
 
-                var uow = new MockUnitOfWork(dispatcher);
-                var context = new EventDispatchingContext(uow, false);
+                var uow = new MockUnitOfWork();
 
-                dispatcher.Dispatch(new Event1(), context);
+                using (var scope = UnitOfWorkScope.Begin(uow, dispatcher))
+                {
+                    var context = new EventDispatchingContext(EventDispatchingPhase.OnEventRaised, scope);
+                    dispatcher.Dispatch(new Event1(), context);
+                }
 
                 Assert.Equal(1, handlerInvoker.GetTotalInvoked(typeof(Event1Handler1)));
                 Assert.Equal(1, handlerInvoker.GetTotalInvoked(typeof(Event1Handler2)));
@@ -29,19 +32,39 @@ namespace Taro.Tests.Events
             }
 
             [Fact]
-            public void WillNotDispatchDirectHandlersAfterCommit()
+            public void WillNotInvokeDirectHandlersInPhase_OnUnitOfWorkCommitted()
             {
                 var handlerInvoker = new CountedHandlerInvoker();
                 var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry(), handlerInvoker);
                 dispatcher.HandlerRegistry.RegisterHandlers(new[] { typeof(Event1Handler1), typeof(Event1Handler2), typeof(Event1AwaitCommittedHandler1) });
 
-                var uow = new MockUnitOfWork(dispatcher);
-                var context = new EventDispatchingContext(uow, true);
+                var uow = new MockUnitOfWork();
 
-                dispatcher.Dispatch(new Event1(), context);
+                using (var scope = UnitOfWorkScope.Begin(uow, dispatcher))
+                {
+                    var context = new EventDispatchingContext(EventDispatchingPhase.OnUnitOfWorkCommitted, scope);
+                    dispatcher.Dispatch(new Event1(), context);
+                }
 
                 Assert.Equal(0, handlerInvoker.GetTotalInvoked(typeof(Event1Handler1)));
                 Assert.Equal(0, handlerInvoker.GetTotalInvoked(typeof(Event1Handler2)));
+                Assert.Equal(1, handlerInvoker.GetTotalInvoked(typeof(Event1AwaitCommittedHandler1)));
+            }
+
+            [Fact]
+            public void WillInvokeAllHandlersIfNotWithinUnitOfWorkScope()
+            {
+                var handlerInvoker = new CountedHandlerInvoker();
+                var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry(), handlerInvoker);
+                dispatcher.HandlerRegistry.RegisterHandlers(new[] { typeof(Event1Handler1), typeof(Event1Handler2), typeof(Event1AwaitCommittedHandler1) });
+
+                var uow = new MockUnitOfWork();
+
+                var context = new EventDispatchingContext(EventDispatchingPhase.OnEventRaised, null);
+                dispatcher.Dispatch(new Event1(), context);
+
+                Assert.Equal(1, handlerInvoker.GetTotalInvoked(typeof(Event1Handler1)));
+                Assert.Equal(1, handlerInvoker.GetTotalInvoked(typeof(Event1Handler2)));
                 Assert.Equal(1, handlerInvoker.GetTotalInvoked(typeof(Event1AwaitCommittedHandler1)));
             }
 
@@ -56,8 +79,9 @@ namespace Taro.Tests.Events
                     typeof(DerivedEvent1Handler1), 
                     typeof(DerivedDerivedEvent1Handler1) });
 
-                var uow = new MockUnitOfWork(dispatcher);
-                var context = new EventDispatchingContext(uow, false);
+                var uow = new MockUnitOfWork();
+
+                var context = new EventDispatchingContext(EventDispatchingPhase.OnEventRaised, null);
 
                 // 1 level
                 dispatcher.Dispatch(new DerivedEvent1(), context);
@@ -86,8 +110,8 @@ namespace Taro.Tests.Events
                     typeof(Event1And2Handler1)
                 });
 
-                var uow = new MockUnitOfWork(dispatcher);
-                var context = new EventDispatchingContext(uow, false);
+                var uow = new MockUnitOfWork();
+                var context = new EventDispatchingContext(EventDispatchingPhase.OnEventRaised, null);
 
                 var event1 = new Event1();
                 dispatcher.Dispatch(event1, context);

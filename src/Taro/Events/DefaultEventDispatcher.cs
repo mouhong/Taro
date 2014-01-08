@@ -51,15 +51,23 @@ namespace Taro.Events
 
             foreach (var method in _handlerRegistry.FindHandlerMethods(evnt.GetType()))
             {
-                var awaitCommit = TypeUtil.IsAttributeDefinedInMethodOrDeclaringClass(method, typeof(AwaitCommittedAttribute));
-
-                if (awaitCommit && !context.WasUnitOfWorkCommitted
-                    || !awaitCommit && context.WasUnitOfWorkCommitted)
+                // if it's not within a unit of work scope, then simply invoke all handlers
+                if (context.UnitOfWorkScope == null)
                 {
-                    continue;
+                    _handlerInvoker.Invoke(evnt, method, context);
                 }
-
-                _handlerInvoker.Invoke(evnt, method, context);
+                else
+                {
+                    var needToAwaitCommit = TypeUtil.IsAttributeDefinedInMethodOrDeclaringClass(method, typeof(AwaitCommittedAttribute));
+                    if (!needToAwaitCommit && context.Phase == EventDispatchingPhase.OnEventRaised)
+                    {
+                        _handlerInvoker.Invoke(evnt, method, context);
+                    }
+                    if (needToAwaitCommit && context.Phase == EventDispatchingPhase.OnUnitOfWorkCommitted)
+                    {
+                        _handlerInvoker.Invoke(evnt, method, context);
+                    }
+                }
             }
         }
     }

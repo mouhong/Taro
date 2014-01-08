@@ -14,21 +14,21 @@ namespace Taro.Samples
         {
             AppBootstrap();
 
-            using (var scope = new UnitOfWorkScope())
+            using(var unitOfWork = new UnitOfWork())
+            using (UnitOfWorkScope.Begin(unitOfWork))
             {
                 // Prepare data
                 var account1 = new BankAccount("001", "Mouhong", 500);
                 var account2 = new BankAccount("002", "Shuige");
 
-                scope.UnitOfWork.Save(account1);
-                scope.UnitOfWork.Save(account2);
+                unitOfWork.Save(account1);
+                unitOfWork.Save(account2);
 
                 // Play with domain model
-                var service = new MoneyTransferService(scope.UnitOfWork);
+                var service = new MoneyTransferService(unitOfWork);
                 service.Transfer(account1, account2, 100);
 
-                // Complete the UnitOfWorkScope (commit)
-                scope.Complete();
+                unitOfWork.Commit();
             }
 
             Console.WriteLine();

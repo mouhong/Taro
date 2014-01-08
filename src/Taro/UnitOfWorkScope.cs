@@ -3,45 +3,78 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Taro.Config;
+using Taro.Context;
+using Taro.Events;
 
 namespace Taro
 {
-    public class UnitOfWorkScope<TUnitOfWork> : IDisposable
-        where TUnitOfWork : IUnitOfWork
+    public class UnitOfWorkScope : IDisposable
     {
-        public TUnitOfWork UnitOfWork { get; private set; }
+        private IEventDispatcher _dispatcher;
+        private IUnitOfWork _unitOfWork;
+        private List<IDomainEvent> _events;
 
-        public UnitOfWorkScope()
+        public IUnitOfWork UnitOfWork
         {
-            var unitOfWork = TaroEnvironment.Instance.CreateUnitOfWork();
-
-            if (!(unitOfWork is TUnitOfWork))
-                throw new InvalidOperationException("Unit of work scope requires the unit of work to be of type " + typeof(TUnitOfWork) + ", but the unit of work is " + unitOfWork.GetType() + ".");
-
-            Bind((TUnitOfWork)unitOfWork);
+            get
+            {
+                return _unitOfWork;
+            }
         }
 
-        public UnitOfWorkScope(TUnitOfWork unitOfWork)
+        public UnitOfWorkScope(IUnitOfWork unitOfWork, IEventDispatcher dispatcher)
         {
             Require.NotNull(unitOfWork, "unitOfWork");
-            Bind(unitOfWork);
+            Require.NotNull(dispatcher, "dispatcher");
+
+            _unitOfWork = unitOfWork;
+            _dispatcher = dispatcher;
+            _events = new List<IDomainEvent>();
+
+            _unitOfWork.Comitted += OnUnitOfWorkComitted;
+            DomainEvent.RegisterEventAppliedCallback(OnEventApplied);
+            UnitOfWorkScopeContext.Bind(this);
         }
 
-        private void Bind(TUnitOfWork unitOfWork)
+        void OnEventApplied(IDomainEvent evnt)
         {
-            UnitOfWork = unitOfWork;
-            UnitOfWorkAmbient.Bind(unitOfWork);
+            _events.Add(evnt);
         }
 
-        public void Complete()
+        void OnUnitOfWorkComitted(object sender, EventArgs e)
         {
-            UnitOfWork.Commit();
+            var events = _events.ToList();
+            _events.Clear();
+
+            var context = new EventDispatchingContext(EventDispatchingPhase.OnUnitOfWorkCommitted, this);
+
+            foreach (var evnt in events)
+            {
+                _dispatcher.Dispatch(evnt, context);
+            }
+        }
+
+        public static UnitOfWorkScope Begin()
+        {
+            var unitOfWork = Taro.Config.TaroEnvironment.Instance.CreateUnitOfWork();
+            return Begin(unitOfWork);
+        }
+
+        public static UnitOfWorkScope Begin(IUnitOfWork unitOfWork)
+        {
+            return Begin(unitOfWork, Taro.Config.TaroEnvironment.Instance.EventDispatcher);
+        }
+
+        public static UnitOfWorkScope Begin(IUnitOfWork unitOfWork, IEventDispatcher dispatcher)
+        {
+            return new UnitOfWorkScope(unitOfWork, dispatcher);
         }
 
         public void Dispose()
         {
-            UnitOfWork.Dispose();
-            UnitOfWorkAmbient.Unbind();
+            _unitOfWork.Comitted -= OnUnitOfWorkComitted;
+            DomainEvent.UnregisterEventAppliedCallback(OnEventApplied);
+            UnitOfWorkScopeContext.Unbind();
         }
     }
 }
