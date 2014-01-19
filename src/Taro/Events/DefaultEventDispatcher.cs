@@ -7,7 +7,8 @@ namespace Taro.Events
     public class DefaultEventDispatcher : IEventDispatcher
     {
         private IEventHandlerRegistry _handlerRegistry;
-        private IHandlerInvoker _handlerInvoker;
+        private IHandlerActivator _handlerActivator = new DefaultHandlerActivator();
+        private IHandlerInvoker _handlerInvoker = new DefaultHandlerInvoker();
 
         public IEventHandlerRegistry HandlerRegistry
         {
@@ -17,11 +18,27 @@ namespace Taro.Events
             }
         }
 
+        public IHandlerActivator HandlerActivator
+        {
+            get
+            {
+                return _handlerActivator;
+            }
+            set
+            {
+                _handlerActivator = value;
+            }
+        }
+
         public IHandlerInvoker HandlerInvoker
         {
             get
             {
                 return _handlerInvoker;
+            }
+            set
+            {
+                _handlerInvoker = value;
             }
         }
 
@@ -31,17 +48,10 @@ namespace Taro.Events
         }
 
         public DefaultEventDispatcher(IEventHandlerRegistry handlerRegistry)
-            : this(handlerRegistry, new DefaultHandlerInvoker())
-        {
-        }
-
-        public DefaultEventDispatcher(IEventHandlerRegistry handlerRegistry, IHandlerInvoker handlerInvoker)
         {
             Require.NotNull(handlerRegistry, "handlerRegistry");
-            Require.NotNull(handlerInvoker, "handlerInvoker");
 
             _handlerRegistry = handlerRegistry;
-            _handlerInvoker = handlerInvoker;
         }
 
         public void Dispatch(IDomainEvent evnt, EventDispatchingContext context)
@@ -54,20 +64,56 @@ namespace Taro.Events
                 // if it's not within a unit of work scope, then simply invoke all handlers
                 if (context.UnitOfWorkScope == null)
                 {
-                    _handlerInvoker.Invoke(evnt, method, context);
+                    ExecuteHandler(method, evnt, context);
                 }
                 else
                 {
                     var needToAwaitCommit = TypeUtil.IsAttributeDefinedInMethodOrDeclaringClass(method, typeof(AwaitCommittedAttribute));
                     if (!needToAwaitCommit && context.Phase == EventDispatchingPhase.OnEventRaised)
                     {
-                        _handlerInvoker.Invoke(evnt, method, context);
+                        ExecuteHandler(method, evnt, context);
                     }
                     if (needToAwaitCommit && context.Phase == EventDispatchingPhase.OnUnitOfWorkCommitted)
                     {
-                        _handlerInvoker.Invoke(evnt, method, context);
+                        ExecuteHandler(method, evnt, context);
                     }
                 }
+            }
+        }
+
+        private void ExecuteHandler(MethodInfo handlerMethod, IDomainEvent evnt, EventDispatchingContext context)
+        {
+            if (TypeUtil.IsAttributeDefinedInMethodOrDeclaringClass(handlerMethod, typeof(HandleAsyncAttribute)))
+            {
+                Task.Factory.StartNew(() => DoExecuteHandler(handlerMethod, evnt, context));
+            }
+            else
+            {
+                DoExecuteHandler(handlerMethod, evnt, context);
+            }
+        }
+
+        private void DoExecuteHandler(MethodInfo handlerMethod, IDomainEvent evnt, EventDispatchingContext context)
+        {
+            var handlerType = handlerMethod.DeclaringType;
+            object handler = null;
+
+            try
+            {
+                handler = _handlerActivator.CreateHandlerInstance(handlerType, context);
+            }
+            catch (Exception ex)
+            {
+                throw new EventHandlerException("Faile to create handler instance, see inner exception for detail.", ex);
+            }
+
+            try
+            {
+                _handlerInvoker.Invoke(handler, handlerMethod, evnt, context);
+            }
+            catch (Exception ex)
+            {
+                throw new EventHandlerException("Faile to execute event handler, see inner exception for detail. Handler type: " + handlerType + ".", ex);
             }
         }
     }

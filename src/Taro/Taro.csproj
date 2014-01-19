@@ -60,7 +60,6 @@
     </Compile>
     <Compile Include="Events\DefaultEventDispatcher.cs" />
     <Compile Include="Events\DefaultEventHandlerRegistry.cs" />
-    <Compile Include="Events\DefaultHandlerInvoker.cs" />
     <Compile Include="Events\EventDispatchingContext.cs" />
     <Compile Include="Events\EventDispatchingPhase.cs" />
     <Compile Include="Events\EventHandlerException.cs" />
@@ -69,6 +68,7 @@
     <Compile Include="Events\IEventDispatcher.cs" />
     <Compile Include="Events\IEventHandlerRegistry.cs" />
     <Compile Include="AwaitCommittedAttribute.cs" />
+    <Compile Include="Events\IHandlerActivator.cs" />
     <Compile Include="Events\IHandlerInvoker.cs" />
     <Compile Include="Events\TypeUtil.cs" />
     <Compile Include="IUnitOfWorkAware.cs" />

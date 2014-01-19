@@ -8,6 +8,14 @@ namespace Taro.Events
 {
     public interface IHandlerInvoker
     {
-        void Invoke(IDomainEvent evnt, MethodInfo handlerMethod, EventDispatchingContext context);
+        void Invoke(object handler, MethodInfo handleMethod, IDomainEvent evnt, EventDispatchingContext context);
+    }
+
+    public class DefaultHandlerInvoker : IHandlerInvoker
+    {
+        public void Invoke(object handler, MethodInfo handleMethod, IDomainEvent evnt, EventDispatchingContext context)
+        {
+            handleMethod.Invoke(handler, new object[] { evnt });
+        }
     }
 }

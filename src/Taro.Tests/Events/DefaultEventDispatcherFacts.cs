@@ -15,7 +15,10 @@ namespace Taro.Tests.Events
             public void WillNotInvokeAwaitCommittedHandlersInPhase_OnEventRaised()
             {
                 var handlerInvoker = new CountedHandlerInvoker();
-                var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry(), handlerInvoker);
+                var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry())
+                {
+                    HandlerInvoker = handlerInvoker
+                };
                 dispatcher.HandlerRegistry.RegisterHandlers(new[] { typeof(Event1Handler1), typeof(Event1Handler2), typeof(Event1AwaitCommittedHandler1) });
 
                 var uow = new MockUnitOfWork();
@@ -35,7 +38,10 @@ namespace Taro.Tests.Events
             public void WillNotInvokeDirectHandlersInPhase_OnUnitOfWorkCommitted()
             {
                 var handlerInvoker = new CountedHandlerInvoker();
-                var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry(), handlerInvoker);
+                var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry())
+                {
+                    HandlerInvoker = handlerInvoker
+                };
                 dispatcher.HandlerRegistry.RegisterHandlers(new[] { typeof(Event1Handler1), typeof(Event1Handler2), typeof(Event1AwaitCommittedHandler1) });
 
                 var uow = new MockUnitOfWork();
@@ -55,7 +61,10 @@ namespace Taro.Tests.Events
             public void WillInvokeAllHandlersIfNotWithinUnitOfWorkScope()
             {
                 var handlerInvoker = new CountedHandlerInvoker();
-                var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry(), handlerInvoker);
+                var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry())
+                {
+                    HandlerInvoker = handlerInvoker
+                };
                 dispatcher.HandlerRegistry.RegisterHandlers(new[] { typeof(Event1Handler1), typeof(Event1Handler2), typeof(Event1AwaitCommittedHandler1) });
 
                 var uow = new MockUnitOfWork();
@@ -72,7 +81,10 @@ namespace Taro.Tests.Events
             public void SupportBaseEventSubscription()
             {
                 var handlerInvoker = new CountedHandlerInvoker();
-                var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry(), handlerInvoker);
+                var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry())
+                {
+                    HandlerInvoker = handlerInvoker
+                };
                 dispatcher.HandlerRegistry.RegisterHandlers(new[] { 
                     typeof(Event1Handler1), 
                     typeof(Event1Handler2), 
@@ -105,7 +117,10 @@ namespace Taro.Tests.Events
             public void OneHandlerCanSubscribeToMultiEvents()
             {
                 var handlerInvoker = new CountedHandlerInvoker();
-                var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry(), handlerInvoker);
+                var dispatcher = new DefaultEventDispatcher(new DefaultEventHandlerRegistry())
+                {
+                    HandlerInvoker = handlerInvoker
+                };
                 dispatcher.HandlerRegistry.RegisterHandlers(new[] { 
                     typeof(Event1And2Handler1)
                 });

@@ -13,7 +13,7 @@ namespace Taro.Tests.Events
         // Key: handler type, value: times invoked
         private Dictionary<Type, int> _invokations = new Dictionary<Type, int>();
 
-        public void Invoke(IDomainEvent evnt, MethodInfo handlerMethod, EventDispatchingContext context)
+        public void Invoke(object handler, MethodInfo handlerMethod, IDomainEvent evnt, EventDispatchingContext context)
         {
             if (!_invokations.ContainsKey(handlerMethod.DeclaringType))
             {
@@ -22,7 +22,7 @@ namespace Taro.Tests.Events
 
             _invokations[handlerMethod.DeclaringType]++;
 
-            _innerInvoker.Invoke(evnt, handlerMethod, context);
+            _innerInvoker.Invoke(handler, handlerMethod, evnt, context);
         }
 
         public void ClearCounter()
