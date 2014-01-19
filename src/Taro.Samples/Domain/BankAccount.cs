@@ -33,7 +33,7 @@ namespace Taro.Samples.Domain
 
             Balance += amount;
 
-            DomainEvent.Apply(new AccountBalanceChanged(this, amount));
+            Event.Apply(new AccountBalanceChanged(this, amount));
         }
 
         public void Decrease(decimal amount)
@@ -46,7 +46,7 @@ namespace Taro.Samples.Domain
 
             Balance -= amount;
 
-            DomainEvent.Apply(new AccountBalanceChanged(this, -amount));
+            Event.Apply(new AccountBalanceChanged(this, -amount));
         }
     }
 }

@@ -20,10 +20,18 @@ namespace Taro.Events
             // If event A is raised, handlers subscribing to A and A's base events all need to be invoked.
             var baseEventType = eventType.BaseType;
 
-            while (baseEventType != null && typeof(IDomainEvent).IsAssignableFrom(baseEventType))
+            while (baseEventType != null)
             {
-                handlerMethods.AddRange(FindDirectHandlers(baseEventType));
-                baseEventType = baseEventType.BaseType;
+                if (baseEventType == typeof(object))
+                {
+                    handlerMethods.AddRange(FindDirectHandlers(typeof(IEvent)));
+                    break;
+                }
+                else
+                {
+                    handlerMethods.AddRange(FindDirectHandlers(baseEventType));
+                    baseEventType = baseEventType.BaseType;
+                }
             }
 
             return handlerMethods;

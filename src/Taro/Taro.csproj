@@ -71,15 +71,14 @@
     <Compile Include="Events\IHandlerActivator.cs" />
     <Compile Include="Events\IHandlerInvoker.cs" />
     <Compile Include="Events\TypeUtil.cs" />
-    <Compile Include="IUnitOfWorkAware.cs" />
-    <Compile Include="UnitOfWorkBase.cs" />
-    <Compile Include="UnitOfWorkScope.cs" />
+    <Compile Include="CommitableBase.cs" />
+    <Compile Include="EventContext.cs" />
     <Compile Include="HandleAsyncAttribute.cs" />
     <Compile Include="IHandle.cs" />
     <Compile Include="Config\TaroEnvironment.cs" />
-    <Compile Include="DomainEvent.cs" />
-    <Compile Include="IDomainEvent.cs" />
-    <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="IEvent.cs" />
+    <Compile Include="ICommitable.cs" />
     <Compile Include="Require.cs" />
   </ItemGroup>
   <ItemGroup>

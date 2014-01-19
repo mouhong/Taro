@@ -17,13 +17,7 @@ namespace Taro.Events
             try
             {
                 var handler = Activator.CreateInstance(handlerType);
-                var unitOfWorkAware = handler as IUnitOfWorkAware;
-
-                if (unitOfWorkAware != null && dispatchingContext.UnitOfWorkScope != null)
-                {
-                    unitOfWorkAware.UnitOfWork = dispatchingContext.UnitOfWorkScope.UnitOfWork;
-                }
-
+                OnHandlerInstanceCreated(handler, dispatchingContext);
                 return handler;
             }
             catch (Exception ex)
@@ -31,5 +25,7 @@ namespace Taro.Events
                 throw new EventHandlerException("Failed creating event handler instance. Handler type: " + handlerType + ".", ex);
             }
         }
+
+        protected virtual void OnHandlerInstanceCreated(object handler, EventDispatchingContext dispatchingContext) { }
     }
 }

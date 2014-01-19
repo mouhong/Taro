@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Taro.Samples.Data
 {
-    public class UnitOfWork : UnitOfWorkBase
+    public class UnitOfWork : CommitableBase
     {
         private List<object> _records = new List<object>();
 

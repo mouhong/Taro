@@ -8,23 +8,23 @@ namespace Taro.Context
 {
     public static class UnitOfWorkScopeContext
     {
-        public static UnitOfWorkScope Current
+        public static EventContext Current
         {
             get
             {
-                return ThreadLocalContextStack<UnitOfWorkScope>.Current;
+                return ThreadLocalContextStack<EventContext>.Current;
             }
         }
 
-        public static void Bind(UnitOfWorkScope scope)
+        public static void Bind(EventContext scope)
         {
             Require.NotNull(scope, "scope");
-            ThreadLocalContextStack<UnitOfWorkScope>.Bind(scope);
+            ThreadLocalContextStack<EventContext>.Bind(scope);
         }
 
         public static void Unbind()
         {
-            ThreadLocalContextStack<UnitOfWorkScope>.Unbind();
+            ThreadLocalContextStack<EventContext>.Unbind();
         }
     }
 }

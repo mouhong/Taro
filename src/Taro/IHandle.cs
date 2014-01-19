@@ -6,7 +6,7 @@ using System.Text;
 namespace Taro
 {
     public interface IHandle<TEvent>
-        where TEvent: IDomainEvent
+        where TEvent: IEvent
     {
         void Handle(TEvent evnt);
     }

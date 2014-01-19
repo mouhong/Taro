@@ -6,9 +6,9 @@ namespace Taro.Events
     {
         public EventDispatchingPhase Phase { get; private set; }
 
-        public UnitOfWorkScope UnitOfWorkScope { get; private set; }
+        public EventContext UnitOfWorkScope { get; private set; }
 
-        public EventDispatchingContext(EventDispatchingPhase phase, UnitOfWorkScope unitOfWorkScope)
+        public EventDispatchingContext(EventDispatchingPhase phase, EventContext unitOfWorkScope)
         {
             Phase = phase;
             UnitOfWorkScope = unitOfWorkScope;

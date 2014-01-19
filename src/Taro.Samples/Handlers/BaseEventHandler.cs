@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Taro.Samples.Handlers
 {
-    class BaseEventHandler : IHandle<DomainEvent>
+    class BaseEventHandler : IHandle<IEvent>
     {
-        public void Handle(DomainEvent evnt)
+        public void Handle(IEvent evnt)
         {
             Console.WriteLine("System: Event raised (BaseEventHandler)");
         }

@@ -54,7 +54,7 @@ namespace Taro.Events
             _handlerRegistry = handlerRegistry;
         }
 
-        public void Dispatch(IDomainEvent evnt, EventDispatchingContext context)
+        public void Dispatch(IEvent evnt, EventDispatchingContext context)
         {
             Require.NotNull(evnt, "evnt");
             Require.NotNull(context, "context");
@@ -81,7 +81,7 @@ namespace Taro.Events
             }
         }
 
-        private void ExecuteHandler(MethodInfo handlerMethod, IDomainEvent evnt, EventDispatchingContext context)
+        private void ExecuteHandler(MethodInfo handlerMethod, IEvent evnt, EventDispatchingContext context)
         {
             if (TypeUtil.IsAttributeDefinedInMethodOrDeclaringClass(handlerMethod, typeof(HandleAsyncAttribute)))
             {
@@ -93,7 +93,7 @@ namespace Taro.Events
             }
         }
 
-        private void DoExecuteHandler(MethodInfo handlerMethod, IDomainEvent evnt, EventDispatchingContext context)
+        private void DoExecuteHandler(MethodInfo handlerMethod, IEvent evnt, EventDispatchingContext context)
         {
             var handlerType = handlerMethod.DeclaringType;
             object handler = null;

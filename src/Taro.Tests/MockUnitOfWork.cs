@@ -6,7 +6,7 @@ using Taro.Events;
 
 namespace Taro.Tests
 {
-    public class MockUnitOfWork : UnitOfWorkBase
+    public class MockUnitOfWork : CommitableBase
     {
         public string Tag { get; set; }
 

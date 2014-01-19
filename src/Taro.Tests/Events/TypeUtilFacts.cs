@@ -72,11 +72,11 @@ namespace Taro.Tests.Events
                 Assert.Equal(typeof(Event3), eventTypes[1]);
             }
 
-            public class Event1 : DomainEvent{}
+            public class Event1 : IEvent { }
 
-            public class Event2 : DomainEvent{}
+            public class Event2 : IEvent { }
 
-            public class Event3 : DomainEvent{}
+            public class Event3 : IEvent { }
 
             public class NonHandler { }
 

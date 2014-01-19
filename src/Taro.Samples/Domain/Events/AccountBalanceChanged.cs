@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Taro.Samples.Domain.Events
 {
-    public class AccountBalanceChanged : DomainEvent
+    public class AccountBalanceChanged : IEvent
     {
         public BankAccount Account { get; private set; }
 

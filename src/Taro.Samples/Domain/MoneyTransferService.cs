@@ -27,7 +27,7 @@ namespace Taro.Samples.Domain
             sourceAccount.Decrease(amount);
             destinationAccount.Increase(amount);
 
-            DomainEvent.Apply(new MoneyTransferCompleted(sourceAccount, destinationAccount, amount));
+            Event.Apply(new MoneyTransferCompleted(sourceAccount, destinationAccount, amount));
         }
     }
 }

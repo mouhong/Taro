@@ -15,7 +15,7 @@ namespace Taro.Samples
             AppBootstrap();
 
             using(var unitOfWork = new UnitOfWork())
-            using (UnitOfWorkScope.Begin(unitOfWork))
+            using (EventContext.Begin(unitOfWork))
             {
                 // Prepare data
                 var account1 = new BankAccount("001", "Mouhong", 500);
@@ -41,7 +41,6 @@ namespace Taro.Samples
         {
             TaroEnvironment.Configure(taro =>
             {
-                taro.UsingUnitOfWorkFactory(() => new UnitOfWork());
                 taro.UsingDefaultEventDispatcher(typeof(Program).Assembly);
             });
         }

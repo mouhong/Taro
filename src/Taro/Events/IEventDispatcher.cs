@@ -4,6 +4,6 @@ namespace Taro.Events
 {
     public interface IEventDispatcher
     {
-        void Dispatch(IDomainEvent evnt, EventDispatchingContext context);
+        void Dispatch(IEvent evnt, EventDispatchingContext context);
     }
 }

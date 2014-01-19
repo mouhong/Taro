@@ -11,8 +11,6 @@ namespace Taro.Config
 
         public IEventDispatcher EventDispatcher { get; private set; }
 
-        public Func<IUnitOfWork> UnitOfWorkFactory { get; private set; }
-
         private TaroEnvironment()
         {
         }
@@ -21,13 +19,6 @@ namespace Taro.Config
         {
             Require.NotNull(action, "action");
             action(Instance);
-        }
-
-        public TaroEnvironment UsingUnitOfWorkFactory(Func<IUnitOfWork> unitOfWorkFactory)
-        {
-            Require.NotNull(unitOfWorkFactory, "unitOfWorkFactory");
-            UnitOfWorkFactory = unitOfWorkFactory;
-            return this;
         }
 
         public TaroEnvironment UsingDefaultEventDispatcher(params Assembly[] handlerAssemblies)
@@ -49,19 +40,6 @@ namespace Taro.Config
             EventDispatcher = new DefaultEventDispatcher(registry);
 
             return this;
-        }
-
-        public IUnitOfWork CreateUnitOfWork()
-        {
-            if (UnitOfWorkFactory == null)
-                throw new InvalidOperationException("Please register unit of work factory first.");
-
-            var unitOfWork = UnitOfWorkFactory();
-
-            if (unitOfWork == null)
-                throw new InvalidOperationException("Unit of work factory returns null.");
-
-            return unitOfWork;
         }
     }
 }
