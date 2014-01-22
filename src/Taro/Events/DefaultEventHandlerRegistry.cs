@@ -8,13 +8,18 @@ namespace Taro.Events
 {
     public class DefaultEventHandlerRegistry : IEventHandlerRegistry
     {
+        private readonly object _writeLock = new object();
         private Dictionary<Type, List<MethodInfo>> _handlerMethodsByEventType = new Dictionary<Type, List<MethodInfo>>();
 
         public IEnumerable<MethodInfo> FindHandlerMethods(Type eventType)
         {
             Require.NotNull(eventType, "eventType");
 
-            var handlerMethods = FindDirectHandlers(eventType).ToList();
+            // Copy cache dictionary to a local variable to avoid concurrency issue.
+            // No lock is required for reads because the writes are performed in copy-on-write mode
+            var holder = _handlerMethodsByEventType;
+
+            var handlerMethods = FindDirectHandlers(eventType, holder).ToList();
 
             // Here we need to support base event subscribtion:
             // If event A is raised, handlers subscribing to A and A's base events all need to be invoked.
@@ -24,12 +29,12 @@ namespace Taro.Events
             {
                 if (baseEventType == typeof(object))
                 {
-                    handlerMethods.AddRange(FindDirectHandlers(typeof(IEvent)));
+                    handlerMethods.AddRange(FindDirectHandlers(typeof(IEvent), holder));
                     break;
                 }
                 else
                 {
-                    handlerMethods.AddRange(FindDirectHandlers(baseEventType));
+                    handlerMethods.AddRange(FindDirectHandlers(baseEventType, holder));
                     baseEventType = baseEventType.BaseType;
                 }
             }
@@ -37,11 +42,11 @@ namespace Taro.Events
             return handlerMethods;
         }
 
-        private IEnumerable<MethodInfo> FindDirectHandlers(Type eventType)
+        private IEnumerable<MethodInfo> FindDirectHandlers(Type eventType, Dictionary<Type, List<MethodInfo>> holder)
         {
             List<MethodInfo> handlerTypes = null;
 
-            if (_handlerMethodsByEventType.TryGetValue(eventType, out handlerTypes))
+            if (holder.TryGetValue(eventType, out handlerTypes))
             {
                 return handlerTypes;
             }
@@ -51,25 +56,48 @@ namespace Taro.Events
 
         public void RegisterHandlers(IEnumerable<Type> handlerTypes)
         {
-            lock (_handlerMethodsByEventType)
+            lock (_writeLock)
             {
+                // Copy on write
+                var holder = CopyInnerDictionary();
+
                 foreach (var type in handlerTypes)
                 {
                     if (type.IsClass && !type.IsAbstract)
                     {
-                        RegisterHandler(type);
+                        RegisterHandler(type, holder);
                     }
                 }
+
+                // Replace current cache
+                _handlerMethodsByEventType = holder;
             }
         }
 
-        public void RegisterHandlers(Assembly assembly)
+        public void RegisterAssembly(Assembly assembly)
         {
             Require.NotNull(assembly, "assembly");
             RegisterHandlers(assembly.GetTypes());
         }
 
-        public bool RegisterHandler(Type handlerType)
+        public void RegisterAssemblies(params Assembly[] assemblies)
+        {
+            Require.NotNull(assemblies, "assemblies");
+            RegisterAssemblies(assemblies as IEnumerable<Assembly>);
+        }
+
+        public void RegisterAssemblies(IEnumerable<Assembly> assemblies)
+        {
+            Require.NotNull(assemblies, "assemblies");
+
+            var types = assemblies.SelectMany(x => x.GetTypes()).ToList();
+            if (types.Count > 0)
+            {
+                RegisterHandlers(types);
+            }
+        }
+
+        private bool RegisterHandler(Type handlerType, Dictionary<Type, List<MethodInfo>> holder)
         {
             Require.NotNull(handlerType, "handlerType");
 
@@ -85,30 +113,27 @@ namespace Taro.Events
                 return false;
             }
 
-            lock (_handlerMethodsByEventType)
+            var thisHandlerMethods = handlerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                                                .Where(m => m.Name == "Handle" && m.ReturnType == typeof(void))
+                                                .ToList();
+
+            foreach (var eventType in eventTypes)
             {
-                var thisHandlerMethods = handlerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                                                    .Where(m => m.Name == "Handle" && m.ReturnType == typeof(void))
-                                                    .ToList();
+                List<MethodInfo> handlerMethods = null;
 
-                foreach (var eventType in eventTypes)
+                if (!holder.TryGetValue(eventType, out handlerMethods))
                 {
-                    List<MethodInfo> handlerMethods = null;
+                    handlerMethods = new List<MethodInfo>();
+                    holder.Add(eventType, handlerMethods);
+                }
 
-                    if (!_handlerMethodsByEventType.TryGetValue(eventType, out handlerMethods))
+                foreach (var method in thisHandlerMethods)
+                {
+                    var parameters = method.GetParameters();
+                    if (parameters.Length == 1 && parameters[0].ParameterType == eventType)
                     {
-                        handlerMethods = new List<MethodInfo>();
-                        _handlerMethodsByEventType.Add(eventType, handlerMethods);
-                    }
-
-                    foreach (var method in thisHandlerMethods)
-                    {
-                        var parameters = method.GetParameters();
-                        if (parameters.Length == 1 && parameters[0].ParameterType == eventType)
-                        {
-                            handlerMethods.Add(method);
-                            break;
-                        }
+                        handlerMethods.Add(method);
+                        break;
                     }
                 }
             }
@@ -116,20 +141,24 @@ namespace Taro.Events
             return true;
         }
 
-        public bool RemoveHandlers(Type eventType)
+        public void Clear()
         {
-            lock (_handlerMethodsByEventType)
+            lock (_writeLock)
             {
-                return _handlerMethodsByEventType.Remove(eventType);
+                _handlerMethodsByEventType = new Dictionary<Type, List<MethodInfo>>();
             }
         }
 
-        public void Clear()
+        private Dictionary<Type, List<MethodInfo>> CopyInnerDictionary()
         {
-            lock (_handlerMethodsByEventType)
+            var dictionary = new Dictionary<Type, List<MethodInfo>>();
+            foreach (var kvp in _handlerMethodsByEventType)
             {
-                _handlerMethodsByEventType.Clear();
+                var methods = kvp.Value.ToList();
+                dictionary.Add(kvp.Key, methods);
             }
+
+            return dictionary;
         }
     }
 }

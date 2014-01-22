@@ -34,7 +34,7 @@ namespace Taro.Config
 
             foreach (var asm in handlerAssemblies)
             {
-                registry.RegisterHandlers(asm);
+                registry.RegisterAssembly(asm);
             }
 
             EventDispatcher = new DefaultEventDispatcher(registry);

@@ -8,13 +8,13 @@ namespace Taro.Events
     {
         IEnumerable<MethodInfo> FindHandlerMethods(Type eventType);
 
-        bool RegisterHandler(Type handlerType);
-
         void RegisterHandlers(IEnumerable<Type> handlerTypes);
 
-        void RegisterHandlers(Assembly assembly);
+        void RegisterAssembly(Assembly assembly);
 
-        bool RemoveHandlers(Type eventType);
+        void RegisterAssemblies(params Assembly[] assemblies);
+
+        void RegisterAssemblies(IEnumerable<Assembly> assemblies);
 
         void Clear();
     }

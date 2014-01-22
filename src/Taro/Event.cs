@@ -7,7 +7,6 @@ using Taro.Events;
 
 namespace Taro
 {
-    [Serializable]
     public static class Event
     {
         static ThreadLocal<List<Action<IEvent>>> _eventAppliedCallbacks = new ThreadLocal<List<Action<IEvent>>>(() => new List<Action<IEvent>>());
