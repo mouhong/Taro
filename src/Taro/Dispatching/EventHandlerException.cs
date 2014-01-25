@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Taro.Events
+namespace Taro.Dispatching
 {
     [Serializable]
     public class EventHandlerException : Exception

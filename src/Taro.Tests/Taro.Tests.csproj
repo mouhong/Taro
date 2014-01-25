@@ -45,9 +45,9 @@
     <Compile Include="..\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Events\DefaultEventDispatcherFacts.cs" />
-    <Compile Include="Events\TypeUtilFacts.cs" />
-    <Compile Include="Events\CountedHandlerInvoker.cs" />
+    <Compile Include="Dispatching\DefaultEventDispatcherFacts.cs" />
+    <Compile Include="Dispatching\TypeUtilFacts.cs" />
+    <Compile Include="Dispatching\CountedHandlerInvoker.cs" />
     <Compile Include="MockUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>

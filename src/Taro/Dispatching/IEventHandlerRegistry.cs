@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Taro.Events
+namespace Taro.Dispatching
 {
     public interface IEventHandlerRegistry
     {
         IEnumerable<MethodInfo> FindHandlerMethods(Type eventType);
 
         void RegisterHandlers(IEnumerable<Type> handlerTypes);
-
-        void RegisterAssembly(Assembly assembly);
 
         void RegisterAssemblies(params Assembly[] assemblies);
 

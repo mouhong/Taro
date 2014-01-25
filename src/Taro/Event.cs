@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Taro.Config;
-using Taro.Events;
+using Taro.Dispatching;
 
 namespace Taro
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Taro.Events;
+using Taro.Dispatching;
 
 namespace Taro.Config
 {
@@ -31,11 +31,7 @@ namespace Taro.Config
             Require.NotNull(handlerAssemblies, "handlerAssemblies");
 
             var registry = new DefaultEventHandlerRegistry();
-
-            foreach (var asm in handlerAssemblies)
-            {
-                registry.RegisterAssembly(asm);
-            }
+            registry.RegisterAssemblies(handlerAssemblies);
 
             EventDispatcher = new DefaultEventDispatcher(registry);
 
