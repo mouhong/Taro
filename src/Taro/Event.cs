@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Taro.Config;
-using Taro.Context;
 using Taro.Events;
 
 namespace Taro
@@ -21,7 +20,7 @@ namespace Taro
             if (dispatcher == null)
                 throw new InvalidOperationException("Cannot resolve event dispatcher. Ensure event dispatcher is registered.");
 
-            dispatcher.Dispatch(evnt, new EventDispatchingContext(EventDispatchingPhase.OnEventRaised, UnitOfWorkScopeContext.Current));
+            dispatcher.Dispatch(evnt, new EventDispatchingContext(EventDispatchingPhase.OnEventRaised, UnitOfWorkScope.Current));
 
             OnEventApplied(evnt);
         }

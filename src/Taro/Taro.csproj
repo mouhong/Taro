@@ -63,8 +63,6 @@
     <Compile Include="Events\EventDispatchingContext.cs" />
     <Compile Include="Events\EventDispatchingPhase.cs" />
     <Compile Include="Events\EventHandlerException.cs" />
-    <Compile Include="Context\ThreadLocalContextStack.cs" />
-    <Compile Include="Context\UnitOfWorkScopeContext.cs" />
     <Compile Include="Events\IEventDispatcher.cs" />
     <Compile Include="Events\IEventHandlerRegistry.cs" />
     <Compile Include="AwaitCommittedAttribute.cs" />

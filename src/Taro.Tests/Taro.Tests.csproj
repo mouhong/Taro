@@ -49,7 +49,6 @@
     <Compile Include="Events\TypeUtilFacts.cs" />
     <Compile Include="Events\CountedHandlerInvoker.cs" />
     <Compile Include="MockUnitOfWork.cs" />
-    <Compile Include="Context\ThreadLocalContextStackFacts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

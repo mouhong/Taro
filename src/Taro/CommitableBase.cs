@@ -2,14 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Taro.Events;
 
 namespace Taro
 {
     public abstract class CommitableBase : ICommitable
     {
-        private bool isDisposed;
+        private bool _isDisposed;
 
         public event EventHandler Comitted;
+
+        protected IEventDispatcher EventDispatcher { get; private set; }
+
+        protected CommitableBase()
+            : this(Taro.Config.TaroEnvironment.Instance.EventDispatcher)
+        {
+        }
+
+        protected CommitableBase(IEventDispatcher eventDispatcher)
+        {
+            Require.NotNull(eventDispatcher, "eventDispatcher");
+            EventDispatcher = eventDispatcher;
+            UnitOfWorkScope.Begin(this, EventDispatcher);
+        }
 
         ~CommitableBase()
         {
@@ -32,16 +47,17 @@ namespace Taro
 
         public void Dispose()
         {
-            if (!isDisposed)
+            if (!_isDisposed)
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
-                isDisposed = true;
+                _isDisposed = true;
             }
         }
 
         protected virtual void Dispose(bool disposing)
         {
+            UnitOfWorkScope.Current.Dispose();
         }
     }
 }
