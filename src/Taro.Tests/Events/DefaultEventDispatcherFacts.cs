@@ -23,7 +23,7 @@ namespace Taro.Tests.Events
 
                 var uow = new MockUnitOfWork();
 
-                using (var scope = EventContext.Begin(uow, dispatcher))
+                using (var scope = UnitOfWorkScope.Begin(uow, dispatcher))
                 {
                     var context = new EventDispatchingContext(EventDispatchingPhase.OnEventRaised, scope);
                     dispatcher.Dispatch(new Event1(), context);
@@ -46,7 +46,7 @@ namespace Taro.Tests.Events
 
                 var uow = new MockUnitOfWork();
 
-                using (var scope = EventContext.Begin(uow, dispatcher))
+                using (var scope = UnitOfWorkScope.Begin(uow, dispatcher))
                 {
                     var context = new EventDispatchingContext(EventDispatchingPhase.OnUnitOfWorkCommitted, scope);
                     dispatcher.Dispatch(new Event1(), context);

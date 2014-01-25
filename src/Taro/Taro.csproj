@@ -72,7 +72,7 @@
     <Compile Include="Events\IHandlerInvoker.cs" />
     <Compile Include="Events\TypeUtil.cs" />
     <Compile Include="CommitableBase.cs" />
-    <Compile Include="EventContext.cs" />
+    <Compile Include="UnitOfWorkScope.cs" />
     <Compile Include="HandleAsyncAttribute.cs" />
     <Compile Include="IHandle.cs" />
     <Compile Include="Config\TaroEnvironment.cs" />

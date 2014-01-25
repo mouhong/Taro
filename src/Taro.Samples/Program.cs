@@ -15,7 +15,7 @@ namespace Taro.Samples
             AppBootstrap();
 
             using(var unitOfWork = new UnitOfWork())
-            using (EventContext.Begin(unitOfWork))
+            using (UnitOfWorkScope.Begin(unitOfWork))
             {
                 // Prepare data
                 var account1 = new BankAccount("001", "Mouhong", 500);
