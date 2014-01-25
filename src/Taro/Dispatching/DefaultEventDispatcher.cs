@@ -62,7 +62,7 @@ namespace Taro.Dispatching
             foreach (var method in _handlerRegistry.FindHandlerMethods(evnt.GetType()))
             {
                 // if it's not within a unit of work scope, then simply invoke all handlers
-                if (context.EventAmbient == null)
+                if (context.UnitOfWorkScope == null)
                 {
                     ExecuteHandler(method, evnt, context);
                 }
