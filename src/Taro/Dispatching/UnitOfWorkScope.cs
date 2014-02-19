@@ -22,7 +22,7 @@ namespace Taro.Dispatching
             }
         }
 
-        public UnitOfWorkScope(ICommitable unitOfWork, IEventDispatcher dispatcher)
+        internal UnitOfWorkScope(ICommitable unitOfWork, IEventDispatcher dispatcher)
         {
             Require.NotNull(unitOfWork, "unitOfWork");
             Require.NotNull(dispatcher, "dispatcher");
@@ -62,7 +62,7 @@ namespace Taro.Dispatching
             }
         }
 
-        public static UnitOfWorkScope Begin(ICommitable unitOfWork, IEventDispatcher dispatcher)
+        internal static UnitOfWorkScope Begin(ICommitable unitOfWork, IEventDispatcher dispatcher)
         {
             return new UnitOfWorkScope(unitOfWork, dispatcher);
         }

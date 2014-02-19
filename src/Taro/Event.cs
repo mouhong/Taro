@@ -10,19 +10,19 @@ namespace Taro
     {
         static ThreadLocal<List<Action<IEvent>>> _eventAppliedCallbacks = new ThreadLocal<List<Action<IEvent>>>(() => new List<Action<IEvent>>());
 
-        public static void Apply<TEvent>(TEvent evnt)
+        public static void Apply<TEvent>(TEvent @event)
             where TEvent : IEvent
         {
-            Require.NotNull(evnt, "evnt");
+            Require.NotNull(@event, "event");
 
             var dispatcher = Taro.Config.TaroEnvironment.Instance.EventDispatcher;
 
             if (dispatcher == null)
                 throw new InvalidOperationException("Cannot resolve event dispatcher. Ensure event dispatcher is registered.");
 
-            dispatcher.Dispatch(evnt, new EventDispatchingContext(EventDispatchingPhase.OnEventRaised, UnitOfWorkScope.Current));
+            dispatcher.Dispatch(@event, new EventDispatchingContext(EventDispatchingPhase.OnEventRaised, UnitOfWorkScope.Current));
 
-            OnEventApplied(evnt);
+            OnEventApplied(@event);
         }
 
         static void OnEventApplied(IEvent evnt)

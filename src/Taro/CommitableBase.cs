@@ -14,11 +14,6 @@ namespace Taro
 
         protected IEventDispatcher EventDispatcher { get; private set; }
 
-        protected CommitableBase()
-            : this(Taro.Config.TaroEnvironment.Instance.EventDispatcher)
-        {
-        }
-
         protected CommitableBase(IEventDispatcher eventDispatcher)
         {
             Require.NotNull(eventDispatcher, "eventDispatcher");

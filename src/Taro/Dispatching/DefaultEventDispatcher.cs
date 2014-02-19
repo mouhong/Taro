@@ -95,7 +95,7 @@ namespace Taro.Dispatching
 
         private void DoExecuteHandler(MethodInfo handlerMethod, IEvent evnt, EventDispatchingContext context)
         {
-            var handlerType = handlerMethod.DeclaringType;
+            var handlerType = handlerMethod.ReflectedType;
             object handler = null;
 
             try

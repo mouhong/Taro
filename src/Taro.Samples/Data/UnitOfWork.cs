@@ -9,6 +9,11 @@ namespace Taro.Samples.Data
     {
         private List<object> _records = new List<object>();
 
+        public UnitOfWork()
+            : base(Taro.Config.TaroEnvironment.Instance.EventDispatcher)
+        {
+        }
+
         public IQueryable<T> Query<T>()
         {
             return _records.OfType<T>().AsQueryable();

@@ -12,6 +12,11 @@ namespace Taro.Tests
 
         public Action CommitAction { get; set; }
 
+        public MockUnitOfWork(IEventDispatcher eventDispatcher)
+            : base(eventDispatcher)
+        {
+        }
+
         protected override void DoCommit()
         {
             if (CommitAction != null)

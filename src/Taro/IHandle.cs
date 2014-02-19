@@ -8,6 +8,6 @@ namespace Taro
     public interface IHandle<TEvent>
         where TEvent: IEvent
     {
-        void Handle(TEvent evnt);
+        void Handle(TEvent @event);
     }
 }
