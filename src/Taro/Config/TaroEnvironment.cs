@@ -9,7 +9,7 @@ namespace Taro.Config
     {
         public static readonly TaroEnvironment Instance = new TaroEnvironment();
 
-        public IEventDispatcher EventDispatcher { get; private set; }
+        public IEventDispatcher EventDispatcher { get; set; }
 
         private TaroEnvironment()
         {
