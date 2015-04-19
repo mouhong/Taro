@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro", "Taro\Taro.csproj", "{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro.Tests", "Taro.Tests\Taro.Tests.csproj", "{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro.Persistence.RavenDB", "Taro.RavenDB\Taro.Persistence.RavenDB.csproj", "{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro.Samples", "Taro.Samples\Taro.Samples.csproj", "{6A8D7045-745F-4B10-8FDB-D9867AC363BE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{918ABD42-EFDC-428C-8A1F-D6522DAB98C7}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,26 +34,16 @@ Global
 		{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AE9619FC-7C91-4AF8-8D6C-D5C94B99D3DC}.Release|x86.ActiveCfg = Release|Any CPU
-		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{375D86E2-E127-4D5F-AD99-5BFB80BEB92B}.Release|x86.ActiveCfg = Release|Any CPU
-		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{6A8D7045-745F-4B10-8FDB-D9867AC363BE}.Release|x86.ActiveCfg = Release|Any CPU
+		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

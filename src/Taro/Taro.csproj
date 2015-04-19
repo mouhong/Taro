@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Taro</RootNamespace>
     <AssemblyName>Taro</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -27,6 +27,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,6 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,6 +48,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -58,27 +61,27 @@
     <Compile Include="..\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Dispatching\DefaultEventDispatcher.cs" />
-    <Compile Include="Dispatching\DefaultEventHandlerRegistry.cs" />
-    <Compile Include="Dispatching\EventDispatchingContext.cs" />
-    <Compile Include="Dispatching\EventDispatchingPhase.cs" />
-    <Compile Include="Dispatching\EventHandlerException.cs" />
-    <Compile Include="Dispatching\IEventDispatcher.cs" />
-    <Compile Include="Dispatching\IEventHandlerRegistry.cs" />
-    <Compile Include="AwaitCommittedAttribute.cs" />
-    <Compile Include="Dispatching\IHandlerActivator.cs" />
-    <Compile Include="Dispatching\IHandlerInvoker.cs" />
-    <Compile Include="Dispatching\TypeUtil.cs" />
-    <Compile Include="CommitableBase.cs" />
-    <Compile Include="Dispatching\UnitOfWorkScope.cs" />
-    <Compile Include="HandleAsyncAttribute.cs" />
-    <Compile Include="IHandle.cs" />
-    <Compile Include="Config\TaroEnvironment.cs" />
-    <Compile Include="Event.cs" />
+    <Compile Include="AggregateRoot.cs" />
+    <Compile Include="DomainRepositoryBase.cs" />
+    <Compile Include="EventBus.cs" />
+    <Compile Include="IDomainRepository.cs" />
+    <Compile Include="IEventBus.cs" />
+    <Compile Include="Persistence\ILocalEventStore.cs" />
+    <Compile Include="Persistence\ILocalTransactionContext.cs" />
+    <Compile Include="Persistence\ILocalTransactionContextFactory.cs" />
+    <Compile Include="Persistence\IStoredEvent.cs" />
+    <Compile Include="Transports\DefaultHandlerActivator.cs" />
+    <Compile Include="Transports\EventHandlerException.cs" />
+    <Compile Include="Transports\InProcess\HandlerMethod.cs" />
+    <Compile Include="Transports\InProcess\HandlerRegistry.cs" />
+    <Compile Include="Transports\IHandlerActivator.cs" />
+    <Compile Include="Transports\InProcess\InProcessEventTransport.cs" />
+    <Compile Include="Transports\IEventTransport.cs" />
+    <Compile Include="Transports\RelayWorker.cs" />
+    <Compile Include="EventStream.cs" />
+    <Compile Include="IEventSource.cs" />
     <Compile Include="IEvent.cs" />
-    <Compile Include="ICommitable.cs" />
-    <Compile Include="Require.cs" />
-    <Compile Include="Dispatching\UnitOfWorkScopeContext.cs" />
+    <Compile Include="IHandles.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
