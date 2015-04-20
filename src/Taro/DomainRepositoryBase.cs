@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Taro.Persistence;
+using Taro.Transports;
 
 namespace Taro
 {
@@ -10,20 +11,28 @@ namespace Taro
     {
         protected IEventBus EventBus { get; private set; }
 
-        protected DomainRepositoryBase(IEventBus eventBus)
+        protected IRelayWorker RelayWorker { get; private set; }
+
+        protected DomainRepositoryBase(IEventBus eventBus, IRelayWorker relayWorker)
         {
+            Require.NotNull(eventBus, "eventBus");
+            Require.NotNull(relayWorker, "relayWorker");
+
             EventBus = eventBus;
+            RelayWorker = relayWorker;
         }
 
         public abstract T Find<T>(object id) where T : AggregateRoot;
 
         public virtual void Save<T>(T aggregate) where T : AggregateRoot
         {
-            using (var context = GetLocalTransactionContext())
+            Require.NotNull(aggregate, "aggregate");
+
+            using (var context = CreateLocalTransactionContext())
             {
                 SaveWithoutCommit(aggregate);
 
-                var localTransactionContext = GetLocalTransactionContext();
+                var localTransactionContext = CreateLocalTransactionContext();
                 foreach (var evnt in ((IEventSource)aggregate).Events)
                 {
                     EventBus.Publish(evnt, localTransactionContext);
@@ -31,11 +40,15 @@ namespace Taro
 
                 context.Commit();
             }
+
+            RelayWorker.Signal();
         }
 
         public virtual void Delete<T>(T aggregate) where T : AggregateRoot
         {
-            using (var context = GetLocalTransactionContext())
+            Require.NotNull(aggregate, "aggregate");
+
+            using (var context = CreateLocalTransactionContext())
             {
                 DeleteWithoutCommit(aggregate);
                 context.Commit();
@@ -46,6 +59,6 @@ namespace Taro
 
         protected abstract void DeleteWithoutCommit<T>(T aggregate) where T : AggregateRoot;
 
-        protected abstract ILocalTransactionContext GetLocalTransactionContext();
+        protected abstract ILocalTransactionContext CreateLocalTransactionContext();
     }
 }

@@ -1,6 +1,9 @@
 ﻿using Raven.Client;
+using Raven.Client.Indexes;
+using Raven.Client.Linq;
 using System;
 using System.Linq;
+using Taro.Transports;
 
 namespace Taro.Persistence.RavenDB
 {
@@ -8,8 +11,13 @@ namespace Taro.Persistence.RavenDB
     {
         private IDocumentSession _session;
 
-        public RavenDomainRepository(IDocumentSession session, IEventBus eventBus)
-            : base(eventBus)
+        public IDocumentSession Session
+        {
+            get { return _session; }
+        }
+
+        public RavenDomainRepository(IDocumentSession session, IEventBus eventBus, IRelayWorker relayWorker)
+            : base(eventBus, relayWorker)
         {
             _session = session;
         }
@@ -25,20 +33,20 @@ namespace Taro.Persistence.RavenDB
                 return _session.Load<T>((ValueType)id);
             }
 
-            throw new NotSupportedException("Only string or value type id is supported.");
+            throw new ArgumentException("Invalid id type. Expects string or value type.");
         }
 
-        protected override void SaveWithoutCommit<T>(T obj)
+        protected override void SaveWithoutCommit<T>(T aggregate)
         {
-            _session.Store(obj);
+            _session.Store(aggregate);
         }
 
-        protected override void DeleteWithoutCommit<T>(T obj)
+        protected override void DeleteWithoutCommit<T>(T aggregate)
         {
-            _session.Delete(obj);
+            _session.Delete(aggregate);
         }
 
-        protected override ILocalTransactionContext GetLocalTransactionContext()
+        protected override ILocalTransactionContext CreateLocalTransactionContext()
         {
             return new RavenLocalTransactionContext(_session, false);
         }

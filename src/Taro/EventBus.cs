@@ -8,25 +8,31 @@ namespace Taro
 {
     public class EventBus : IEventBus
     {
-        private ILocalTransactionContextFactory _transactionContextFactory;
+        private ILocalTransactionContextFactory _localTransactionContextFactory;
 
-        public EventBus(ILocalTransactionContextFactory transactionContextFactory)
+        public EventBus(ILocalTransactionContextFactory localTransactionContextFactory)
         {
-            _transactionContextFactory = transactionContextFactory;
+            Require.NotNull(localTransactionContextFactory, "localTransactionContextFactory");
+            _localTransactionContextFactory = localTransactionContextFactory;
         }
 
-        public void Publish(IEvent @event)
+        public void Publish(IEvent theEvent)
         {
-            using (var context = _transactionContextFactory.CreateLocalTransactionContext())
+            Require.NotNull(theEvent, "theEvent");
+
+            using (var context = _localTransactionContextFactory.CreateLocalTransactionContext())
             {
-                Publish(@event, context);
+                Publish(theEvent, context);
                 context.Commit();
             }
         }
 
-        public void Publish(IEvent @event, ILocalTransactionContext context)
+        public void Publish(IEvent theEvent, ILocalTransactionContext context)
         {
-            context.AddEvents(new List<IEvent> { @event });
+            Require.NotNull(theEvent, "theEvent");
+            Require.NotNull(context, "context");
+
+            context.AddEvents(new List<IEvent> { theEvent });
         }
     }
 }

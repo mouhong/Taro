@@ -9,7 +9,7 @@ using Taro.Persistence.Serialization;
 
 namespace Taro.Transports
 {
-    public class RelayWorker
+    public class RelayWorker : IRelayWorker
     {
         private Task _task;
         private TaskCompletionSource<int> _stopPromise;

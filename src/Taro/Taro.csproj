@@ -78,6 +78,7 @@
     <Compile Include="Persistence\IStoredEvent.cs" />
     <Compile Include="Persistence\Serialization\IEventSerializer.cs" />
     <Compile Include="Persistence\Serialization\JsonEventSerializer.cs" />
+    <Compile Include="Require.cs" />
     <Compile Include="Transports\DefaultHandlerActivator.cs" />
     <Compile Include="Transports\EventHandlerException.cs" />
     <Compile Include="Transports\InProcess\HandlerMethod.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Transports\IHandlerActivator.cs" />
     <Compile Include="Transports\InProcess\InProcessEventTransport.cs" />
     <Compile Include="Transports\IEventTransport.cs" />
+    <Compile Include="Transports\IRelayWorker.cs" />
     <Compile Include="Transports\RelayWorker.cs" />
     <Compile Include="EventStream.cs" />
     <Compile Include="IEventSource.cs" />

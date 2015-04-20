@@ -18,9 +18,9 @@ namespace Taro
             }
         }
 
-        protected virtual void AppendEvent(IEvent @event)
+        protected virtual void AppendEvent(IEvent theEvent)
         {
-            _events.Append(@event);
+            _events.Append(theEvent);
         }
     }
 }

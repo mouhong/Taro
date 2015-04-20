@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{918ABD
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taro.Persistence.NHibernate", "Taro.Persistence.NHibernate\Taro.Persistence.NHibernate.csproj", "{00D1521D-285A-495C-83AE-C8DA7ACFF60E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,16 @@ Global
 		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{F702C4F6-4DA6-4BE7-9EFF-C54C7F6B0249}.Release|x86.ActiveCfg = Release|Any CPU
+		{00D1521D-285A-495C-83AE-C8DA7ACFF60E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00D1521D-285A-495C-83AE-C8DA7ACFF60E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00D1521D-285A-495C-83AE-C8DA7ACFF60E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{00D1521D-285A-495C-83AE-C8DA7ACFF60E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{00D1521D-285A-495C-83AE-C8DA7ACFF60E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{00D1521D-285A-495C-83AE-C8DA7ACFF60E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00D1521D-285A-495C-83AE-C8DA7ACFF60E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00D1521D-285A-495C-83AE-C8DA7ACFF60E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{00D1521D-285A-495C-83AE-C8DA7ACFF60E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{00D1521D-285A-495C-83AE-C8DA7ACFF60E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

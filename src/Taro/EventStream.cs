@@ -14,9 +14,10 @@ namespace Taro
             _events = new List<IEvent>();
         }
 
-        public void Append(IEvent @event)
+        public void Append(IEvent theEvent)
         {
-            _events.Add(@event);
+            Require.NotNull(theEvent, "theEvent");
+            _events.Add(theEvent);
         }
 
         public IEnumerator<IEvent> GetEnumerator()
