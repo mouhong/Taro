@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Taro.Persistence;
+using Taro.Persistence.Serialization;
 
 namespace Taro.Transports
 {
@@ -42,7 +43,8 @@ namespace Taro.Transports
                 foreach (var storedEvent in _localEventStore.Enumerate())
                 {
                     // TODO: Exception handling
-                    _dispatcher.Send(storedEvent.Unwrap());
+                    var theEvent = _localEventStore.Unwrap(storedEvent);
+                    _dispatcher.Send(theEvent);
                     _localEventStore.Delete(storedEvent);
                 }
 

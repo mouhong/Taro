@@ -19,29 +19,33 @@ namespace Taro
 
         public virtual void Save<T>(T aggregate) where T : AggregateRoot
         {
-            SaveWithoutCommit(aggregate);
-
-            var localTransactionContext = GetCurrentLocalTransactionContext();
-            foreach (var evnt in ((IEventSource)aggregate).Events)
+            using (var context = GetLocalTransactionContext())
             {
-                EventBus.Publish(evnt, localTransactionContext);
-            }
+                SaveWithoutCommit(aggregate);
 
-            Commit();
+                var localTransactionContext = GetLocalTransactionContext();
+                foreach (var evnt in ((IEventSource)aggregate).Events)
+                {
+                    EventBus.Publish(evnt, localTransactionContext);
+                }
+
+                context.Commit();
+            }
         }
 
         public virtual void Delete<T>(T aggregate) where T : AggregateRoot
         {
-            DeleteWithoutCommit(aggregate);
-            Commit();
+            using (var context = GetLocalTransactionContext())
+            {
+                DeleteWithoutCommit(aggregate);
+                context.Commit();
+            }
         }
 
         protected abstract void SaveWithoutCommit<T>(T aggregate) where T : AggregateRoot;
 
         protected abstract void DeleteWithoutCommit<T>(T aggregate) where T : AggregateRoot;
 
-        protected abstract ILocalTransactionContext GetCurrentLocalTransactionContext();
-
-        protected abstract void Commit();
+        protected abstract ILocalTransactionContext GetLocalTransactionContext();
     }
 }

@@ -19,7 +19,7 @@ namespace Taro.Persistence.RavenDB
 
         public ILocalTransactionContext CreateLocalTransactionContext()
         {
-            return new RavenLocalTransactionContext(_store.OpenSession());
+            return new RavenLocalTransactionContext(_store.OpenSession(), true);
         }
     }
 }

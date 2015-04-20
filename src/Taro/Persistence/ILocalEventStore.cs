@@ -9,6 +9,8 @@ namespace Taro.Persistence
     {
         IEnumerable<IStoredEvent> Enumerate();
 
-        void Delete(IStoredEvent @event);
+        void Delete(IStoredEvent storedEvent);
+
+        IEvent Unwrap(IStoredEvent storedEvent);
     }
 }
