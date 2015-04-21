@@ -9,17 +9,26 @@ namespace Taro.Persistence.Serialization
 {
     public class JsonEventSerializer : IEventSerializer<string>
     {
-        public string Serialize(IEvent theEvent)
+        private JsonSerializerSettings _serializerSettings;
+
+        public JsonEventSerializer() : this(null) { }
+
+        public JsonEventSerializer(JsonSerializerSettings serializerSettings)
         {
-            return JsonConvert.SerializeObject(theEvent, new JsonSerializerSettings
+            _serializerSettings = serializerSettings ?? new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.Auto
-            });
+            };
+        }
+
+        public string Serialize(IEvent theEvent)
+        {
+            return JsonConvert.SerializeObject(theEvent, typeof(IEvent), _serializerSettings);
         }
 
         public IEvent Deserialize(string json)
         {
-            return JsonConvert.DeserializeObject<IEvent>(json);
+            return JsonConvert.DeserializeObject<IEvent>(json, _serializerSettings);
         }
     }
 }

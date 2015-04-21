@@ -31,13 +31,18 @@ namespace Taro.Transports.InProcess
         private void CompileInvoker()
         {
             var instance = Expression.Parameter(typeof(object));
-            var evnt = Expression.Parameter(typeof(object));
-            _invoke = Expression.Lambda<Action<object, object>>(Expression.Call(instance, _methodInfo), evnt).Compile();
+            var theEvent = Expression.Parameter(typeof(object));
+
+            var handlerType = _methodInfo.ReflectedType;
+            var eventType = _methodInfo.GetParameters()[0].ParameterType;
+
+            _invoke = Expression.Lambda<Action<object, object>>(
+                Expression.Call(Expression.TypeAs(instance, handlerType), _methodInfo, Expression.TypeAs(theEvent, eventType)), instance, theEvent).Compile();
         }
 
-        public void Invoke(object handlerInstance, IEvent @event)
+        public void Invoke(object handlerInstance, IEvent theEvent)
         {
-            _invoke(handlerInstance, @event);
+            _invoke(handlerInstance, theEvent);
         }
     }
 }

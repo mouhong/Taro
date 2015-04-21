@@ -1,10 +1,12 @@
 ﻿using Raven.Client;
+using Raven.Client.Indexes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Taro.Persistence;
+using Taro.Persistence.RavenDB.Indexes;
 using Taro.Persistence.Serialization;
 
 namespace Taro.Persistence.RavenDB
@@ -18,20 +20,32 @@ namespace Taro.Persistence.RavenDB
         {
             _store = store;
             _serializer = new JsonEventSerializer();
+
+            IndexCreation.CreateIndexes(typeof(RavenEventStore).Assembly, store);
         }
 
-        public IEnumerable<IStoredEvent> Enumerate()
+        public IList<IStoredEvent> NextBatch(int batchSize)
         {
             var session = _store.OpenSession();
-            var query = session.Query<StoredEvent>()
+            var query = session.Query<StoredEvent, StoredEventIndex>()
                                .OrderByDescending(it => it.UtcCreationTime);
-            
-            var stream = _store.OpenSession().Advanced.Stream<StoredEvent>(query);
 
-            while (stream.MoveNext())
+            var result = new List<IStoredEvent>();
+
+            using (var stream = _store.OpenSession().Advanced.Stream<StoredEvent>(query))
             {
-                yield return stream.Current.Document;
+                while (stream.MoveNext())
+                {
+                    result.Add(stream.Current.Document);
+
+                    if (result.Count == batchSize)
+                    {
+                        break;
+                    }
+                }
             }
+
+            return result;
         }
 
         public void Delete(IStoredEvent @event)

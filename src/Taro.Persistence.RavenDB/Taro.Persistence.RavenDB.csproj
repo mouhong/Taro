@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Taro.Persistence.RavenDB</RootNamespace>
     <AssemblyName>Taro.Persistence.RavenDB</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -57,6 +57,7 @@
       <Link>Require.cs</Link>
     </Compile>
     <Compile Include="DomainRepositoryExtensions.cs" />
+    <Compile Include="Indexes\StoredEventIndex.cs" />
     <Compile Include="RavenDomainRepository.cs" />
     <Compile Include="RavenEventStore.cs" />
     <Compile Include="RavenLocalTransactionContext.cs" />
@@ -64,13 +65,13 @@
     <Compile Include="StoredEvent.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Taro\Taro.csproj">
       <Project>{ae9619fc-7c91-4af8-8d6c-d5c94b99d3dc}</Project>
       <Name>Taro</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

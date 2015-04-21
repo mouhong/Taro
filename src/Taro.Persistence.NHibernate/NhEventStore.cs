@@ -1,4 +1,5 @@
 ﻿using NHibernate;
+using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,16 +20,27 @@ namespace Taro.Persistence.NHibernate
             _serializer = new JsonEventSerializer();
         }
 
-        public IEnumerable<IStoredEvent> Enumerate()
+        public IList<IStoredEvent> NextBatch(int batchSize)
         {
-            throw new NotImplementedException();
+            using (var session = _sessionFactory.OpenStatelessSession())
+            {
+                var result = new List<IStoredEvent>();
+                var events = session.Query<StoredEvent>()
+                                    .OrderByDescending(it => it.UtcCreationTime)
+                                    .Take(batchSize)
+                                    .ToList();
+
+                result.AddRange(events);
+
+                return result;
+            }
         }
 
         public void Delete(IStoredEvent storedEvent)
         {
             var eventId = ((StoredEvent)storedEvent).Id;
 
-            using(var session = _sessionFactory.OpenSession())
+            using (var session = _sessionFactory.OpenSession())
             using (var tx = session.BeginTransaction())
             {
                 var theEvent = session.Load<StoredEvent>(eventId);

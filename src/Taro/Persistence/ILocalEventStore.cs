@@ -7,7 +7,7 @@ namespace Taro.Persistence
 {
     public interface ILocalEventStore
     {
-        IEnumerable<IStoredEvent> Enumerate();
+        IList<IStoredEvent> NextBatch(int batchSize);
 
         void Delete(IStoredEvent storedEvent);
 

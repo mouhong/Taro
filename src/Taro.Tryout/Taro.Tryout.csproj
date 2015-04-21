@@ -4,18 +4,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{00D1521D-285A-495C-83AE-C8DA7ACFF60E}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{BC6AD736-3FD2-45E7-B957-EF2FEB0844D1}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Taro.Persistence.NHibernate</RootNamespace>
-    <AssemblyName>Taro.Persistence.NHibernate</AssemblyName>
+    <RootNamespace>Taro.Tryout</RootNamespace>
+    <AssemblyName>Taro.Tryout</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,6 +25,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,13 +34,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Iesi.Collections">
-      <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    <Reference Include="Raven.Abstractions">
+      <HintPath>..\packages\RavenDB.Client.3.0.3660\lib\net45\Raven.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate">
-      <HintPath>..\packages\NHibernate.4.0.3.4000\lib\net40\NHibernate.dll</HintPath>
+    <Reference Include="Raven.Client.Lightweight">
+      <HintPath>..\packages\RavenDB.Client.3.0.3660\lib\net45\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -48,21 +50,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Taro\Require.cs">
-      <Link>Require.cs</Link>
-    </Compile>
-    <Compile Include="DomainRepositoryExtensions.cs" />
-    <Compile Include="NhDomainRepository.cs" />
-    <Compile Include="NhEventStore.cs" />
-    <Compile Include="NhLocalTransactionContext.cs" />
-    <Compile Include="NhLocalTransactionContextFactory.cs" />
+    <Compile Include="Domain\Customer.cs" />
+    <Compile Include="Domain\CustomerAccount.cs" />
+    <Compile Include="Domain\Events\CustomerApproved.cs" />
+    <Compile Include="Domain\Events\Handlers\CustomerApprovedHandler.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StoredEvent.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Taro.Persistence.RavenDB\Taro.Persistence.RavenDB.csproj">
+      <Project>{f702c4f6-4da6-4be7-9eff-c54c7f6b0249}</Project>
+      <Name>Taro.Persistence.RavenDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Taro\Taro.csproj">
       <Project>{ae9619fc-7c91-4af8-8d6c-d5c94b99d3dc}</Project>
       <Name>Taro</Name>

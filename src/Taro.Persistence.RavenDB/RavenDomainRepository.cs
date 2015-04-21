@@ -50,5 +50,10 @@ namespace Taro.Persistence.RavenDB
         {
             return new RavenLocalTransactionContext(_session, false);
         }
+
+        public override void Dispose()
+        {
+            _session.Dispose();
+        }
     }
 }

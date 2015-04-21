@@ -9,6 +9,11 @@ namespace Taro.Transports.InProcess
 
         public HandlerRegistry Registry { get; private set; }
 
+        public InProcessEventTransport()
+            : this(new DefaultHandlerActivator())
+        {
+        }
+
         public InProcessEventTransport(IHandlerActivator handlerActivator)
         {
             _handlerActivator = handlerActivator;
@@ -25,6 +30,7 @@ namespace Taro.Transports.InProcess
             while (baseEventType != null && typeof(IEvent).IsAssignableFrom(baseEventType))
             {
                 eventTypes.Add(baseEventType);
+                baseEventType = baseEventType.BaseType;
             }
 
             foreach (var @interface in eventType.GetInterfaces())

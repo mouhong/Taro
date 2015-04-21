@@ -1,6 +1,8 @@
-﻿namespace Taro
+﻿using System;
+
+namespace Taro
 {
-    public interface IDomainRepository
+    public interface IDomainRepository : IDisposable
     {
         T Find<T>(object id) where T : AggregateRoot;
 

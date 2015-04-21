@@ -43,5 +43,10 @@ namespace Taro.Persistence.NHibernate
         {
             return new NhLocalTransactionContext(_session, _session.BeginTransaction(), false);
         }
+
+        public override void Dispose()
+        {
+            _session.Dispose();
+        }
     }
 }

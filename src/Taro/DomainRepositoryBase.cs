@@ -60,5 +60,7 @@ namespace Taro
         protected abstract void DeleteWithoutCommit<T>(T aggregate) where T : AggregateRoot;
 
         protected abstract ILocalTransactionContext CreateLocalTransactionContext();
+
+        public abstract void Dispose();
     }
 }

@@ -20,6 +20,7 @@ namespace Taro.Persistence.NHibernate
             _session = session;
             _transaction = transaction;
             _ownedSession = ownedSession;
+            _serializer = new JsonEventSerializer();
         }
 
         public void AddEvents(IEnumerable<IEvent> events)
