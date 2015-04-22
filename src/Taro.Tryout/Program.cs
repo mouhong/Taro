@@ -1,5 +1,6 @@
 ﻿using Raven.Client;
 using Raven.Client.Document;
+using Raven.Client.Indexes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +59,10 @@ namespace Taro.Tryout
 
         static void AppStart()
         {
+            IndexCreation.CreateIndexes(typeof(Program).Assembly, Database.Store);
+
+            Database.Store.Conventions.JsonContractResolver = new Taro.RavenDB.Serialization.AggregateRootContractResolver();
+
             var transport = new InProcessEventTransport();
             transport.Registry.RegisterHandlers(new[] { typeof(Program).Assembly });
 

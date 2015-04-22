@@ -60,6 +60,7 @@
     <Compile Include="IRavenDomainRepository.cs" />
     <Compile Include="RavenDomainRepository.cs" />
     <Compile Include="RavenDomainDbSession.cs" />
+    <Compile Include="Serialization\AggregateRootContractResolver.cs" />
     <Compile Include="StoredEvent.cs" />
   </ItemGroup>
   <ItemGroup>
