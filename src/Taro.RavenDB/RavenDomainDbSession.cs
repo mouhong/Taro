@@ -19,6 +19,8 @@ namespace Taro.RavenDB
 
         public RavenDomainDbSession(IDocumentSession session)
         {
+            Require.NotNull(session, "session");
+
             _session = session;
             _serializer = new JsonEventSerializer();
         }

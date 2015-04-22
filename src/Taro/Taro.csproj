@@ -70,6 +70,8 @@
     <Compile Include="AggregateRoot.cs" />
     <Compile Include="DomainRepositoryBase.cs" />
     <Compile Include="IDomainRepository.cs" />
+    <Compile Include="Notification\HttpRemoteNewEventNotifier.cs" />
+    <Compile Include="Notification\INewEventNotifier.cs" />
     <Compile Include="Persistence\EventFetchResult.cs" />
     <Compile Include="Persistence\IDomainDbSession.cs" />
     <Compile Include="Persistence\IStoredEvent.cs" />
@@ -83,8 +85,7 @@
     <Compile Include="Transports\IHandlerActivator.cs" />
     <Compile Include="Transports\InProcess\InProcessEventTransport.cs" />
     <Compile Include="Transports\IEventTransport.cs" />
-    <Compile Include="Transports\IRelayWorker.cs" />
-    <Compile Include="Transports\RelayWorker.cs" />
+    <Compile Include="Workers\RelayWorker.cs" />
     <Compile Include="EventStream.cs" />
     <Compile Include="IEventSource.cs" />
     <Compile Include="IEvent.cs" />

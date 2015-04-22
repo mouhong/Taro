@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Taro.Notification;
 using Taro.Persistence;
-using Taro.Persistence.Serialization;
+using Taro.Transports;
 
-namespace Taro.Transports
+namespace Taro.Workers
 {
-    public class RelayWorker : IRelayWorker
+    public class RelayWorker : INewEventNotifier
     {
         private Task _task;
         private TaskCompletionSource<int> _stopPromise;
@@ -70,7 +68,7 @@ namespace Taro.Transports
                                     OnStopping();
                                 });
 
-            Signal();
+            Notify();
         }
 
         private void CheckAndPublishEvents()
@@ -132,7 +130,7 @@ namespace Taro.Transports
             }
         }
 
-        public void Signal()
+        public void Notify()
         {
             lock (_signalsLock)
             {

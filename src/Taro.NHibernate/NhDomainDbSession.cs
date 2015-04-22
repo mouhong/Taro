@@ -19,6 +19,8 @@ namespace Taro.NHibernate
 
         public NhDomainDbSession(ISession session)
         {
+            Require.NotNull(session, "session");
+
             _session = session;
             _serializer = new JsonEventSerializer();
         }

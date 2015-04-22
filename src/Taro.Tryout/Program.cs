@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Taro.Notification;
 using Taro.Persistence;
 using Taro.RavenDB;
 using Taro.Transports;
 using Taro.Transports.InProcess;
 using Taro.Tryout.Domain;
+using Taro.Workers;
 
 namespace Taro.Tryout
 {
@@ -31,7 +33,7 @@ namespace Taro.Tryout
 
     public static class AppConfig
     {
-        public static IRelayWorker RelayWorker;
+        public static RelayWorker RelayWorker;
 
         public static IEventTransport EventTransport;
 
