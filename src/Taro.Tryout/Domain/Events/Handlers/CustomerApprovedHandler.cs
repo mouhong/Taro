@@ -14,7 +14,7 @@ namespace Taro.Tryout.Domain.Events.Handlers
             {
                 var account = new CustomerAccount
                 {
-                    Id = theEvent.CustomerId,
+                    Id = "accounts/" + theEvent.CustomerId,
                     Balance = 100
                 };
 

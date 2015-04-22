@@ -62,9 +62,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Taro.Persistence.RavenDB\Taro.Persistence.RavenDB.csproj">
+    <ProjectReference Include="..\Taro.RavenDB\Taro.RavenDB.csproj">
       <Project>{f702c4f6-4da6-4be7-9eff-c54c7f6b0249}</Project>
-      <Name>Taro.Persistence.RavenDB</Name>
+      <Name>Taro.RavenDB</Name>
     </ProjectReference>
     <ProjectReference Include="..\Taro\Taro.csproj">
       <Project>{ae9619fc-7c91-4af8-8d6c-d5c94b99d3dc}</Project>

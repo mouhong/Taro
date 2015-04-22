@@ -69,12 +69,9 @@
     </Compile>
     <Compile Include="AggregateRoot.cs" />
     <Compile Include="DomainRepositoryBase.cs" />
-    <Compile Include="EventBus.cs" />
     <Compile Include="IDomainRepository.cs" />
-    <Compile Include="IEventBus.cs" />
-    <Compile Include="Persistence\ILocalEventStore.cs" />
-    <Compile Include="Persistence\ILocalTransactionContext.cs" />
-    <Compile Include="Persistence\ILocalTransactionContextFactory.cs" />
+    <Compile Include="Persistence\EventFetchResult.cs" />
+    <Compile Include="Persistence\IDomainDbSession.cs" />
     <Compile Include="Persistence\IStoredEvent.cs" />
     <Compile Include="Persistence\Serialization\IEventSerializer.cs" />
     <Compile Include="Persistence\Serialization\JsonEventSerializer.cs" />

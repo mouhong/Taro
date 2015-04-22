@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Taro.Persistence;
-using Taro.Persistence.Serialization;
 
-namespace Taro.Persistence.RavenDB
+namespace Taro.RavenDB.Persistence
 {
     public class StoredEvent : IStoredEvent
     {

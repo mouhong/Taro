@@ -1,11 +1,7 @@
 ﻿using Raven.Client.Indexes;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Taro.Persistence.RavenDB.Indexes
+namespace Taro.RavenDB.Persistence.Indexes
 {
     public class StoredEventIndex : AbstractIndexCreationTask<StoredEvent>
     {

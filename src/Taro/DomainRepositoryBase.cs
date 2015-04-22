@@ -9,58 +9,36 @@ namespace Taro
 {
     public abstract class DomainRepositoryBase : IDomainRepository
     {
-        protected IEventBus EventBus { get; private set; }
+        protected IDomainDbSession Session { get; private set; }
 
         protected IRelayWorker RelayWorker { get; private set; }
 
-        protected DomainRepositoryBase(IEventBus eventBus, IRelayWorker relayWorker)
+        protected DomainRepositoryBase(IDomainDbSession session, IRelayWorker relayWorker)
         {
-            Require.NotNull(eventBus, "eventBus");
+            Require.NotNull(session, "session");
             Require.NotNull(relayWorker, "relayWorker");
 
-            EventBus = eventBus;
+            Session = session;
             RelayWorker = relayWorker;
         }
-
-        public abstract T Find<T>(object id) where T : AggregateRoot;
 
         public virtual void Save<T>(T aggregate) where T : AggregateRoot
         {
             Require.NotNull(aggregate, "aggregate");
 
-            using (var context = CreateLocalTransactionContext())
-            {
-                SaveWithoutCommit(aggregate);
+            Session.SaveAggregate(aggregate);
 
-                var localTransactionContext = CreateLocalTransactionContext();
-                foreach (var evnt in ((IEventSource)aggregate).Events)
-                {
-                    EventBus.Publish(evnt, localTransactionContext);
-                }
+            var events = ((IEventSource)aggregate).Events;
+            Session.AddEvents(events);
 
-                context.Commit();
-            }
+            Session.Commit();
 
             RelayWorker.Signal();
         }
 
-        public virtual void Delete<T>(T aggregate) where T : AggregateRoot
+        public virtual void Dispose()
         {
-            Require.NotNull(aggregate, "aggregate");
-
-            using (var context = CreateLocalTransactionContext())
-            {
-                DeleteWithoutCommit(aggregate);
-                context.Commit();
-            }
+            Session.Dispose();
         }
-
-        protected abstract void SaveWithoutCommit<T>(T aggregate) where T : AggregateRoot;
-
-        protected abstract void DeleteWithoutCommit<T>(T aggregate) where T : AggregateRoot;
-
-        protected abstract ILocalTransactionContext CreateLocalTransactionContext();
-
-        public abstract void Dispose();
     }
 }

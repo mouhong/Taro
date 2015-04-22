@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Taro.Persistence;
 
-namespace Taro.Persistence.NHibernate
+namespace Taro.NHibernate.Persistence
 {
     public class StoredEvent : IStoredEvent
     {

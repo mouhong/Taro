@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Taro.Persistence;
 using Taro.Persistence.RavenDB;
+using Taro.RavenDB.Persistence;
 using Taro.Transports;
 using Taro.Transports.InProcess;
 using Taro.Tryout.Domain;
@@ -31,17 +32,13 @@ namespace Taro.Tryout
 
     public static class AppConfig
     {
-        public static IEventBus EventBus;
-
-        public static ILocalEventStore EventStore;
-
         public static IRelayWorker RelayWorker;
 
         public static IEventTransport EventTransport;
 
-        public static IDomainRepository CreateRepository()
+        public static IRavenDomainRepository CreateRepository()
         {
-            return new RavenDomainRepository(Database.Store.OpenSession(), EventBus, RelayWorker);
+            return new RavenDomainRepository(Database.Store.OpenSession(), RelayWorker);
         }
     }
 
@@ -51,6 +48,7 @@ namespace Taro.Tryout
         {
             AppStart();
 
+            CreateCustomer();
             ApproveCustomer("customers/1");
 
             Console.WriteLine("Press any key to continue...");
@@ -59,14 +57,11 @@ namespace Taro.Tryout
 
         static void AppStart()
         {
-            AppConfig.EventBus = new EventBus(new RavenLocalTransactionContextFactory(Database.Store));
-            AppConfig.EventStore = new RavenEventStore(Database.Store);
-
             var transport = new InProcessEventTransport();
             transport.Registry.RegisterHandlers(new[] { typeof(Program).Assembly });
 
             AppConfig.EventTransport = transport;
-            AppConfig.RelayWorker = new RelayWorker(AppConfig.EventStore, AppConfig.EventTransport);
+            AppConfig.RelayWorker = new RelayWorker(() => new RavenDomainDbSession(Database.Store.OpenSession()), AppConfig.EventTransport);
 
             AppConfig.RelayWorker.Start();
         }

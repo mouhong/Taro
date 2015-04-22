@@ -17,7 +17,7 @@ namespace Taro.Transports
         private ManualResetEventSlim _eventStoreNotEmptyEvent;
         private bool _stopRequested;
 
-        private ILocalEventStore _localEventStore;
+        private Func<IDomainDbSession> _dbSessionFactory;
         private IEventTransport _transport;
 
         private readonly object _startLock = new object();
@@ -34,14 +34,14 @@ namespace Taro.Transports
             get { return _batchSize; }
         }
 
-        public RelayWorker(ILocalEventStore localEventStore, IEventTransport transport)
-            : this(localEventStore, transport, -1)
+        public RelayWorker(Func<IDomainDbSession> dbSessionFactory, IEventTransport transport)
+            : this(dbSessionFactory, transport, -1)
         {
         }
 
-        public RelayWorker(ILocalEventStore localEventStore, IEventTransport transport, int batchSize)
+        public RelayWorker(Func<IDomainDbSession> dbSessionFactory, IEventTransport transport, int batchSize)
         {
-            _localEventStore = localEventStore;
+            _dbSessionFactory = dbSessionFactory;
             _transport = transport;
 
             if (batchSize > 0)
@@ -82,18 +82,22 @@ namespace Taro.Transports
                 while (true)
                 {
                     // TODO: Error handling
-                    var storedEvents = _localEventStore.NextBatch(BatchSize);
-
-                    foreach (var storedEvent in storedEvents)
+                    using (var session = _dbSessionFactory())
                     {
-                        var theEvent = _localEventStore.Unwrap(storedEvent);
-                        _transport.Send(theEvent);
-                        _localEventStore.Delete(storedEvent);
-                    }
+                        var result = session.FetchEvents(BatchSize);
 
-                    if (storedEvents.Count < BatchSize)
-                    {
-                        break;
+                        foreach (var storedEvent in result.Events)
+                        {
+                            var theEvent = session.UnwrapEvent(storedEvent);
+                            _transport.Send(theEvent);
+                            session.DeleteEvent(storedEvent);
+                            session.Commit();
+                        }
+
+                        if (!result.HasMore)
+                        {
+                            break;
+                        }
                     }
                 }
 
@@ -117,6 +121,8 @@ namespace Taro.Transports
 
                 lock (_signalsLock)
                 {
+                    Debug.WriteLine("[" + DateTime.Now + "] signals: " + _signals);
+
                     // After the decrement of _signals, if _signals == 0, it means that there's no new signal arriving after the worker is woke up.
                     if (_signals == 0)
                     {
@@ -134,6 +140,8 @@ namespace Taro.Transports
                 {
                     _signals++;
                 }
+
+                Debug.WriteLine("[" + DateTime.Now + "] signals: " + _signals);
             }
 
             _eventStoreNotEmptyEvent.Set();
