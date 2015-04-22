@@ -2,8 +2,8 @@
 using Raven.Client.Indexes;
 using Raven.Client.Linq;
 using System;
-using Taro.Notification;
 using Taro.Transports;
+using Taro.Workers;
 
 namespace Taro.RavenDB
 {
@@ -14,8 +14,8 @@ namespace Taro.RavenDB
             get { return (RavenDomainDbSession)base.Session; }
         }
 
-        public RavenDomainRepository(IDocumentSession session, INewEventNotifier newEventNotifier)
-            : base(new RavenDomainDbSession(session), newEventNotifier)
+        public RavenDomainRepository(IDocumentSession session, IRelayWorker relayWorker)
+            : base(new RavenDomainDbSession(session), relayWorker)
         {
         }
 

@@ -7,16 +7,26 @@ namespace Taro.Transports.InProcess
     {
         private IHandlerActivator _handlerActivator;
 
+        public IHandlerActivator HandlerActivator
+        {
+            get
+            {
+                if (_handlerActivator == null)
+                {
+                    _handlerActivator = new DefaultHandlerActivator();
+                }
+                return _handlerActivator;
+            }
+            set
+            {
+                _handlerActivator = value;
+            }
+        }
+        
         public HandlerRegistry Registry { get; private set; }
 
         public InProcessEventTransport()
-            : this(new DefaultHandlerActivator())
         {
-        }
-
-        public InProcessEventTransport(IHandlerActivator handlerActivator)
-        {
-            _handlerActivator = handlerActivator;
             Registry = new HandlerRegistry();
         }
 
@@ -61,7 +71,7 @@ namespace Taro.Transports.InProcess
 
                 try
                 {
-                    handler = _handlerActivator.CreateInstance(method.ReflectedType);
+                    handler = HandlerActivator.CreateInstance(method.ReflectedType);
                 }
                 catch (Exception ex)
                 {

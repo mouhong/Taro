@@ -2,20 +2,19 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Taro.Notification;
 using Taro.Persistence;
 using Taro.Transports;
 
 namespace Taro.Workers
 {
-    public class RelayWorker : INewEventNotifier
+    public class RelayWorker : IRelayWorker
     {
         private Task _task;
         private TaskCompletionSource<int> _stopPromise;
         private ManualResetEventSlim _eventStoreNotEmptyEvent;
         private bool _stopRequested;
 
-        private Func<IDomainDbSession> _dbSessionFactory;
+        private IDomainDbSessionFactory _dbSessionFactory;
         private IEventTransport _transport;
 
         private readonly object _startLock = new object();
@@ -32,12 +31,12 @@ namespace Taro.Workers
             get { return _batchSize; }
         }
 
-        public RelayWorker(Func<IDomainDbSession> dbSessionFactory, IEventTransport transport)
+        public RelayWorker(IDomainDbSessionFactory dbSessionFactory, IEventTransport transport)
             : this(dbSessionFactory, transport, -1)
         {
         }
 
-        public RelayWorker(Func<IDomainDbSession> dbSessionFactory, IEventTransport transport, int batchSize)
+        public RelayWorker(IDomainDbSessionFactory dbSessionFactory, IEventTransport transport, int batchSize)
         {
             _dbSessionFactory = dbSessionFactory;
             _transport = transport;
@@ -68,7 +67,7 @@ namespace Taro.Workers
                                     OnStopping();
                                 });
 
-            Notify();
+            Signal();
         }
 
         private void CheckAndPublishEvents()
@@ -80,7 +79,7 @@ namespace Taro.Workers
                 while (true)
                 {
                     // TODO: Error handling
-                    using (var session = _dbSessionFactory())
+                    using (var session = _dbSessionFactory.OpenSession())
                     {
                         var result = session.FetchEvents(BatchSize);
 
@@ -130,7 +129,7 @@ namespace Taro.Workers
             }
         }
 
-        public void Notify()
+        public void Signal()
         {
             lock (_signalsLock)
             {

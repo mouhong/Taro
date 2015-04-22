@@ -68,10 +68,20 @@
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AggregateRoot.cs" />
+    <Compile Include="Configuration\AppConfigurator.cs" />
+    <Compile Include="AppRuntime.cs" />
+    <Compile Include="Configuration\AppRuntimeExtensions.cs" />
+    <Compile Include="DefaultValuedDictionary.cs" />
     <Compile Include="DomainRepositoryBase.cs" />
     <Compile Include="IDomainRepository.cs" />
-    <Compile Include="Notification\HttpRemoteNewEventNotifier.cs" />
-    <Compile Include="Notification\INewEventNotifier.cs" />
+    <Compile Include="IDomainRepositoryFactory.cs" />
+    <Compile Include="IHideObjectMembers.cs" />
+    <Compile Include="Persistence\IDomainDbSessionFactory.cs" />
+    <Compile Include="Workers\Configuration\InProcessEventTransportConfigurator.cs" />
+    <Compile Include="Workers\Configuration\RelayWorkerConfiguration.cs" />
+    <Compile Include="Workers\Configuration\InProcessRelayWorkerConfigurator.cs" />
+    <Compile Include="Workers\RemoteRelayWorker.cs" />
+    <Compile Include="Workers\IRelayWorker.cs" />
     <Compile Include="Persistence\EventFetchResult.cs" />
     <Compile Include="Persistence\IDomainDbSession.cs" />
     <Compile Include="Persistence\IStoredEvent.cs" />
@@ -116,6 +126,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

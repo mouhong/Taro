@@ -10,7 +10,7 @@ namespace Taro.Tryout.Domain.Events.Handlers
     {
         public void Handle(CustomerApproved theEvent)
         {
-            using (var repo = AppConfig.CreateRepository())
+            using (var repo = AppRuntime.Instance.CreateDomainRepository<IRavenDomainRepository>())
             {
                 var account = new CustomerAccount
                 {

@@ -21,39 +21,33 @@ namespace Taro.Transports.InProcess
             return Enumerable.Empty<HandlerMethod>();
         }
 
-        public bool RegisterHandler(Type handlerType)
-        {
-            var isHandler = false;
-
-            foreach (var @interface in handlerType.GetInterfaces())
-            {
-                if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IHandles<>))
-                {
-                    var eventType = @interface.GetGenericArguments()[0];
-                    var handlerMethod = new HandlerMethod(handlerType.GetMethod("Handle", new[] { eventType }));
-
-                    if (_handleMethods.ContainsKey(eventType))
-                    {
-                        _handleMethods[eventType].Add(handlerMethod);
-                    }
-                    else
-                    {
-                        _handleMethods.Add(eventType, new List<HandlerMethod> { handlerMethod });
-                    }
-
-                    isHandler = true;
-                }
-            }
-
-            return isHandler;
-        }
-
         public void RegisterHandlers(IEnumerable<Type> handlerTypes)
         {
             foreach (var handlerType in handlerTypes)
             {
-                RegisterHandler(handlerType);
+                foreach (var theInterface in handlerType.GetInterfaces())
+                {
+                    if (theInterface.IsGenericType && theInterface.GetGenericTypeDefinition() == typeof(IHandles<>))
+                    {
+                        var eventType = theInterface.GetGenericArguments()[0];
+                        var handlerMethod = new HandlerMethod(handlerType.GetMethod("Handle", new[] { eventType }));
+
+                        if (_handleMethods.ContainsKey(eventType))
+                        {
+                            _handleMethods[eventType].Add(handlerMethod);
+                        }
+                        else
+                        {
+                            _handleMethods.Add(eventType, new List<HandlerMethod> { handlerMethod });
+                        }
+                    }
+                }
             }
+        }
+
+        public void RegisterHandlers(params Assembly[] assemblies)
+        {
+            RegisterHandlers(assemblies as IEnumerable<Assembly>);
         }
 
         public void RegisterHandlers(IEnumerable<Assembly> assemblies)

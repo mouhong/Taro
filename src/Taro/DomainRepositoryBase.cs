@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Taro.Notification;
 using Taro.Persistence;
 using Taro.Transports;
+using Taro.Workers;
 
 namespace Taro
 {
@@ -12,15 +12,15 @@ namespace Taro
     {
         protected IDomainDbSession Session { get; private set; }
 
-        protected INewEventNotifier NewEventNotifier { get; private set; }
+        protected IRelayWorker RelayWorker { get; private set; }
 
-        protected DomainRepositoryBase(IDomainDbSession session, INewEventNotifier newEventNotifier)
+        protected DomainRepositoryBase(IDomainDbSession session, IRelayWorker relayWorker)
         {
             Require.NotNull(session, "session");
-            Require.NotNull(newEventNotifier, "newEventNotifier");
+            Require.NotNull(relayWorker, "relayWorker");
 
             Session = session;
-            NewEventNotifier = newEventNotifier;
+            RelayWorker = relayWorker;
         }
 
         public virtual void Save<T>(T aggregate) where T : AggregateRoot
@@ -34,7 +34,7 @@ namespace Taro
 
             Session.Commit();
 
-            NewEventNotifier.Notify();
+            RelayWorker.Signal();
         }
 
         public virtual void Dispose()

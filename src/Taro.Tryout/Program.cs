@@ -4,11 +4,12 @@ using Raven.Client.Indexes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Taro.Notification;
 using Taro.Persistence;
 using Taro.RavenDB;
+using Taro.RavenDB.Indexes;
 using Taro.Transports;
 using Taro.Transports.InProcess;
 using Taro.Tryout.Domain;
@@ -32,23 +33,17 @@ namespace Taro.Tryout
         }
     }
 
-    public static class AppConfig
-    {
-        public static RelayWorker RelayWorker;
-
-        public static IEventTransport EventTransport;
-
-        public static IRavenDomainRepository CreateRepository()
-        {
-            return new RavenDomainRepository(Database.Store.OpenSession(), RelayWorker);
-        }
-    }
-
     class Program
     {
         static void Main(string[] args)
         {
-            AppStart();
+            AppRuntime.Instance
+                      .Configure(cfg =>
+                      {
+                          cfg.UseRavenDB(Database.Store);
+                          cfg.RunRelayWorkerInCurrentProcess();
+                      })
+                      .Start();
 
             CreateCustomer();
             ApproveCustomer("customers/1");
@@ -59,17 +54,12 @@ namespace Taro.Tryout
 
         static void AppStart()
         {
-            IndexCreation.CreateIndexes(typeof(Program).Assembly, Database.Store);
+            Database.Store.ExecuteIndex(new StoredEventIndex());
 
             Database.Store.Conventions.JsonContractResolver = new Taro.RavenDB.Serialization.AggregateRootContractResolver();
 
             var transport = new InProcessEventTransport();
             transport.Registry.RegisterHandlers(new[] { typeof(Program).Assembly });
-
-            AppConfig.EventTransport = transport;
-            AppConfig.RelayWorker = new RelayWorker(() => new RavenDomainDbSession(Database.Store.OpenSession()), AppConfig.EventTransport);
-
-            AppConfig.RelayWorker.Start();
         }
 
         static void CreateCustomer()
@@ -81,7 +71,7 @@ namespace Taro.Tryout
                 Email = "mouhong@gmail.com"
             };
 
-            using (var repo = AppConfig.CreateRepository())
+            using (var repo = AppRuntime.Instance.CreateDomainRepository<IRavenDomainRepository>())
             {
                 repo.Save(customer);
             }
@@ -89,7 +79,7 @@ namespace Taro.Tryout
 
         static void ApproveCustomer(string customerId)
         {
-            using (var repo = AppConfig.CreateRepository())
+            using (var repo = AppRuntime.Instance.CreateDomainRepository<IRavenDomainRepository>())
             {
                 var customer = repo.Find<Customer>(customerId);
                 customer.Approve();

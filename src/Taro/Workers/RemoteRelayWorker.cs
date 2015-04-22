@@ -5,14 +5,14 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Taro.Notification
+namespace Taro.Workers
 {
-    public class HttpRemoteNewEventNotifier : INewEventNotifier
+    public class RemoteRelayWorker : IRelayWorker
     {
         private string _serverUrl;
         private string _notificationApiUrl;
 
-        public HttpRemoteNewEventNotifier(string serverUrl)
+        public RemoteRelayWorker(string serverUrl)
         {
             Require.NotNullOrWhitespace(serverUrl, "serverUrl");
 
@@ -20,7 +20,11 @@ namespace Taro.Notification
             _notificationApiUrl = _serverUrl + "/notification";
         }
 
-        public void Notify()
+        public void Start()
+        {
+        }
+
+        public void Signal()
         {
             var request = WebRequest.Create(_notificationApiUrl);
             request.Method = "POST";
@@ -29,6 +33,11 @@ namespace Taro.Notification
             {
                 // TODO: Logging
             });
+        }
+
+        public Task Stop()
+        {
+            return Task.FromResult<int>(0);
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using NHibernate;
 using NHibernate.Linq;
 using System.Linq;
-using Taro.Notification;
 using Taro.Transports;
+using Taro.Workers;
 
 namespace Taro.NHibernate
 {
@@ -13,7 +13,7 @@ namespace Taro.NHibernate
             get { return (NhDomainDbSession)base.Session; }
         }
 
-        public NhDomainRepository(ISession session, INewEventNotifier newEventNotifier)
+        public NhDomainRepository(ISession session, IRelayWorker newEventNotifier)
             : base(new NhDomainDbSession(session), newEventNotifier)
         {
         }
