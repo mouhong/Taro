@@ -53,9 +53,9 @@
     </Compile>
     <Compile Include="INhDomainRepository.cs" />
     <Compile Include="NhDomainRepository.cs" />
-    <Compile Include="Persistence\NhDomainDbSession.cs" />
+    <Compile Include="NhDomainDbSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Persistence\StoredEvent.cs" />
+    <Compile Include="StoredEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

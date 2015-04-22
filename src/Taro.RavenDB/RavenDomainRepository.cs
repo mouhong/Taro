@@ -2,10 +2,9 @@
 using Raven.Client.Indexes;
 using Raven.Client.Linq;
 using System;
-using Taro.RavenDB.Persistence;
 using Taro.Transports;
 
-namespace Taro.Persistence.RavenDB
+namespace Taro.RavenDB
 {
     public class RavenDomainRepository : DomainRepositoryBase, IRavenDomainRepository
     {

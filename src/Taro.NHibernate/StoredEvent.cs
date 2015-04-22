@@ -1,7 +1,7 @@
 ﻿using System;
 using Taro.Persistence;
 
-namespace Taro.NHibernate.Persistence
+namespace Taro.NHibernate
 {
     public class StoredEvent : IStoredEvent
     {

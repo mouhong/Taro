@@ -56,11 +56,11 @@
     <Compile Include="..\Taro\Require.cs">
       <Link>Require.cs</Link>
     </Compile>
-    <Compile Include="Persistence\Indexes\StoredEventIndex.cs" />
+    <Compile Include="Indexes\StoredEventIndex.cs" />
     <Compile Include="IRavenDomainRepository.cs" />
     <Compile Include="RavenDomainRepository.cs" />
-    <Compile Include="Persistence\RavenDomainDbSession.cs" />
-    <Compile Include="Persistence\StoredEvent.cs" />
+    <Compile Include="RavenDomainDbSession.cs" />
+    <Compile Include="StoredEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

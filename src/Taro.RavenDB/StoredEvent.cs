@@ -1,7 +1,7 @@
 ﻿using System;
 using Taro.Persistence;
 
-namespace Taro.RavenDB.Persistence
+namespace Taro.RavenDB
 {
     public class StoredEvent : IStoredEvent
     {

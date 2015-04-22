@@ -1,7 +1,7 @@
 ﻿using Raven.Client.Indexes;
 using System.Linq;
 
-namespace Taro.RavenDB.Persistence.Indexes
+namespace Taro.RavenDB.Indexes
 {
     public class StoredEventIndex : AbstractIndexCreationTask<StoredEvent>
     {

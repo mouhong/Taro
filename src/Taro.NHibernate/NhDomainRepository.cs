@@ -1,7 +1,6 @@
 ﻿using NHibernate;
 using NHibernate.Linq;
 using System.Linq;
-using Taro.NHibernate.Persistence;
 using Taro.Transports;
 
 namespace Taro.NHibernate

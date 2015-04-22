@@ -5,7 +5,7 @@ using System.Linq;
 using Taro.Persistence;
 using Taro.Persistence.Serialization;
 
-namespace Taro.NHibernate.Persistence
+namespace Taro.NHibernate
 {
     public class NhDomainDbSession : IDomainDbSession
     {

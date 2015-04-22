@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Taro.Persistence;
 using Taro.Persistence.Serialization;
-using Taro.RavenDB.Persistence.Indexes;
+using Taro.RavenDB.Indexes;
 
-namespace Taro.RavenDB.Persistence
+namespace Taro.RavenDB
 {
     public class RavenDomainDbSession : IDomainDbSession
     {
