@@ -26,7 +26,7 @@ AppRuntime.Instance.Configure(cfg =>
 .Start(); // Start Taro
 ```
 
-### 2. Define a domain event ###
+### 2. Define domain events ###
 
 ```csharp
 public class OrderApproved : Event
@@ -35,7 +35,7 @@ public class OrderApproved : Event
 }
 ```
 
-Domain events are POCOs inherit from `Taro.Event`.
+Domain events are POCOs inheriting from `Taro.Event`.
 
 ### 3. Publish events in AggregateRoot ###
 
@@ -56,7 +56,7 @@ public class Order : AggregateRoot
 }
 ```
 
-Aggregate roots are domain models inherit from `Taro.AggregateRoot`. Only aggregate roots are allowed to append domain events (using the `AppendEvent` method). You might wondering why not using `PublishEvent` but `AppendEvent`. This is because domain events will be queued until the db transaction commit.
+Aggregate roots are domain models inheriting from `Taro.AggregateRoot`. Only aggregate roots are allowed to append domain events (using the `AppendEvent` method). You might wondering why not using `PublishEvent` but `AppendEvent`. This is because domain events will be queued until the db transaction commit.
 
 ### 4. Handle events ###
 
