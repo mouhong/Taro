@@ -68,15 +68,13 @@
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AggregateRoot.cs" />
+    <Compile Include="ObjectContainer.cs" />
     <Compile Include="Configuration\AppConfigurator.cs" />
     <Compile Include="AppRuntime.cs" />
-    <Compile Include="Configuration\AppRuntimeExtensions.cs" />
     <Compile Include="DefaultValuedDictionary.cs" />
     <Compile Include="DomainRepositoryBase.cs" />
     <Compile Include="IDomainRepository.cs" />
-    <Compile Include="IDomainRepositoryFactory.cs" />
-    <Compile Include="IHideObjectMembers.cs" />
-    <Compile Include="Persistence\IDomainDbSessionFactory.cs" />
+    <Compile Include="Configuration\HideObjectMembers.cs" />
     <Compile Include="Workers\Configuration\InProcessEventTransportConfigurator.cs" />
     <Compile Include="Workers\Configuration\RelayWorkerConfiguration.cs" />
     <Compile Include="Workers\Configuration\InProcessRelayWorkerConfigurator.cs" />

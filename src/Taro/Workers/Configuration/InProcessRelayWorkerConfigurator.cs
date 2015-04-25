@@ -10,7 +10,7 @@ using Taro.Configuration;
 
 namespace Taro.Workers.Configuration
 {
-    public class InProcessRelayWorkerConfigurator : IHideObjectMembers
+    public class InProcessRelayWorkerConfigurator : HideObjectMembers
     {
         private AppRuntime _appRuntime;
 
@@ -23,7 +23,7 @@ namespace Taro.Workers.Configuration
         {
             var transport = new InProcessEventTransport();
             configure(new InProcessEventTransportConfigurator(transport));
-            _appRuntime.SetItem<IEventTransport>(transport);
+            _appRuntime.Container.Register<IEventTransport>(transport);
         }
     }
 }

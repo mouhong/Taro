@@ -1,9 +1,4 @@
 ﻿using Raven.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Taro.Configuration;
 using Taro.Persistence;
 using Taro.RavenDB;
@@ -20,9 +15,8 @@ namespace Taro
             documentStore.Conventions.JsonContractResolver = new Taro.RavenDB.Serialization.AggregateRootContractResolver();
 
             var runtime = configurator.AppRuntime;
-
-            runtime.SetItem<IDomainDbSessionFactory>(new RavenDomainDbSessionFactory(documentStore));
-            runtime.SetItem<IDomainRepositoryFactory>(new RavenDomainRepositoryFactory(documentStore, runtime.GetItem<IRelayWorker>));
+            runtime.Container.Register<IDomainDbSession>(_ => new RavenDomainDbSession(documentStore.OpenSession()));
+            runtime.Container.Register<IDomainRepository>(_ => new RavenDomainRepository(_.Resolve<IDomainDbSession>(), _.Resolve<IRelayWorker>()));
         }
     }
 }

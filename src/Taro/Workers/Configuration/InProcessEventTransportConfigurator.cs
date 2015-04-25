@@ -4,12 +4,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Taro.Configuration;
 using Taro.Transports;
 using Taro.Transports.InProcess;
 
 namespace Taro.Workers.Configuration
 {
-    public class InProcessEventTransportConfigurator : IHideObjectMembers
+    public class InProcessEventTransportConfigurator : HideObjectMembers
     {
         private InProcessEventTransport _transport;
 

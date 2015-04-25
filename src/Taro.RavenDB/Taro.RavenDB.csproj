@@ -59,10 +59,8 @@
     <Compile Include="Indexes\StoredEventIndex.cs" />
     <Compile Include="IRavenDomainRepository.cs" />
     <Compile Include="Configuration\RavenConfiguration.cs" />
-    <Compile Include="RavenDomainDbSessionFactory.cs" />
     <Compile Include="RavenDomainRepository.cs" />
     <Compile Include="RavenDomainDbSession.cs" />
-    <Compile Include="RavenDomainRepositoryFactory.cs" />
     <Compile Include="Serialization\AggregateRootContractResolver.cs" />
     <Compile Include="StoredEvent.cs" />
   </ItemGroup>

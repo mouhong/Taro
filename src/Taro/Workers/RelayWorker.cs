@@ -14,7 +14,7 @@ namespace Taro.Workers
         private ManualResetEventSlim _eventStoreNotEmptyEvent;
         private bool _stopRequested;
 
-        private IDomainDbSessionFactory _dbSessionFactory;
+        private Func<IDomainDbSession> _openDbSession;
         private IEventTransport _transport;
 
         private readonly object _startLock = new object();
@@ -31,14 +31,17 @@ namespace Taro.Workers
             get { return _batchSize; }
         }
 
-        public RelayWorker(IDomainDbSessionFactory dbSessionFactory, IEventTransport transport)
-            : this(dbSessionFactory, transport, -1)
+        public RelayWorker(Func<IDomainDbSession> openDbSession, IEventTransport transport)
+            : this(openDbSession, transport, -1)
         {
         }
 
-        public RelayWorker(IDomainDbSessionFactory dbSessionFactory, IEventTransport transport, int batchSize)
+        public RelayWorker(Func<IDomainDbSession> openDbSession, IEventTransport transport, int batchSize)
         {
-            _dbSessionFactory = dbSessionFactory;
+            Require.NotNull(openDbSession, "openDbSession");
+            Require.NotNull(transport, "transport");
+
+            _openDbSession = openDbSession;
             _transport = transport;
 
             if (batchSize > 0)
@@ -79,7 +82,7 @@ namespace Taro.Workers
                 while (true)
                 {
                     // TODO: Error handling
-                    using (var session = _dbSessionFactory.OpenSession())
+                    using (var session = _openDbSession())
                     {
                         var result = session.FetchEvents(BatchSize);
 

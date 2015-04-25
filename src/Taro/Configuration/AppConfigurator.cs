@@ -1,6 +1,9 @@
-﻿namespace Taro.Configuration
+﻿using System;
+using System.ComponentModel;
+
+namespace Taro.Configuration
 {
-    public class AppConfigurator : IHideObjectMembers
+    public class AppConfigurator : HideObjectMembers
     {
         public AppRuntime AppRuntime { get; private set; }
 

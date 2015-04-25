@@ -1,6 +1,7 @@
 ﻿using NHibernate;
 using NHibernate.Linq;
 using System.Linq;
+using Taro.Persistence;
 using Taro.Transports;
 using Taro.Workers;
 
@@ -13,8 +14,9 @@ namespace Taro.NHibernate
             get { return (NhDomainDbSession)base.Session; }
         }
 
-        public NhDomainRepository(ISession session, IRelayWorker newEventNotifier)
-            : base(new NhDomainDbSession(session), newEventNotifier)
+        // Note: Pass in IDomainDbSession instead of NhDomainDbSession to make it IoC container friendly
+        public NhDomainRepository(IDomainDbSession session, IRelayWorker relayWorker)
+            : base(session, relayWorker)
         {
         }
 

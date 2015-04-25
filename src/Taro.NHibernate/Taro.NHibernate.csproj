@@ -53,10 +53,8 @@
     </Compile>
     <Compile Include="Configuration\NHibernateConfiguration.cs" />
     <Compile Include="INhDomainRepository.cs" />
-    <Compile Include="NhDomainDbSessionFactory.cs" />
     <Compile Include="NhDomainRepository.cs" />
     <Compile Include="NhDomainDbSession.cs" />
-    <Compile Include="NhDomainRepositoryFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StoredEvent.cs" />
   </ItemGroup>

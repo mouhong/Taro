@@ -22,22 +22,16 @@ namespace Taro
 
         public static void RunRelayWorkerInCurrentProcess(this AppConfigurator configurator, Action<InProcessRelayWorkerConfigurator> configure)
         {
-            var runtime = configurator.AppRuntime;
-
-            var domainDbSessionFactory = runtime.GetItem<IDomainDbSessionFactory>();
-            if (domainDbSessionFactory == null)
-                throw new Exception("Please configure domain db session factory first.");
-
             var config = new InProcessRelayWorkerConfigurator(configurator.AppRuntime);
             configure(config);
-            
-            var relayWorker = new RelayWorker(domainDbSessionFactory, runtime.GetItem<IEventTransport>());
-            runtime.SetItem<IRelayWorker>(relayWorker);
+
+            var container = configurator.AppRuntime.Container;
+            container.Register<IRelayWorker>(new RelayWorker(() => container.Resolve<IDomainDbSession>(), container.Resolve<IEventTransport>()));
         }
 
         public static void UseRemoteRelayWorker(this AppConfigurator configurator, string serverUrl)
         {
-            configurator.AppRuntime.SetItem<IRelayWorker>(new RemoteRelayWorker(serverUrl));
+            configurator.AppRuntime.Container.Register<IRelayWorker>(new RemoteRelayWorker(serverUrl));
         }
     }
 }

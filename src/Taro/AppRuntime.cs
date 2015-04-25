@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Taro.Configuration;
 using Taro.Persistence;
@@ -8,64 +9,52 @@ using Taro.Workers;
 
 namespace Taro
 {
-    public class AppRuntime : IHideObjectMembers
+    public class AppRuntime : HideObjectMembers
     {
         public static AppRuntime Instance = new AppRuntime();
 
-        private bool _configured;
-
-        public IDictionary<string, object> Items { get; private set; }
+        public ObjectContainer Container { get; private set; }
 
         public AppRuntime()
         {
-            Items = new DefaultValuedDictionary<string, object>();
+            Container = new ObjectContainer();
         }
 
         public T CreateDomainRepository<T>() where T : IDomainRepository
         {
-            return (T)this.GetItem<IDomainRepositoryFactory>().CreateDomainRepository();
+            return (T)Container.Resolve<IDomainRepository>();
         }
 
         public AppRuntime Configure(Action<AppConfigurator> configure)
         {
             configure(new AppConfigurator(this));
-            _configured = true;
             return this;
         }
 
         public void Validate()
         {
-            if (this.GetItem<IRelayWorker>() == null)
-                throw new Exception("Rely worker is not configured.");
+            if (!Container.HasRegistrationFor<IRelayWorker>())
+                throw new Exception("Rely worker is not registered.");
 
-            if (this.GetItem<IDomainRepositoryFactory>() == null)
-                throw new Exception("Domain repository factory is not configured.");
+            if (!Container.HasRegistrationFor<IDomainRepository>())
+                throw new Exception("Domain repository is not registered.");
         }
 
         public void Start()
         {
-            if (!_configured)
-                throw new Exception("Configure before start the runtime.");
-
             Validate();
-            
-            this.GetItem<IRelayWorker>().Start();
+            Container.Resolve<IRelayWorker>().Start();
         }
 
         public Task Stop()
         {
-            if (!_configured)
+            var relayWorker = Container.Resolve<IRelayWorker>();
+            if (relayWorker != null)
             {
-                return Task.FromResult<int>(0);
+                return relayWorker.Stop();
             }
 
-            var relayWorker = this.GetItem<IRelayWorker>();
-            if (relayWorker == null)
-            {
-                return Task.FromResult<int>(0);
-            }
-
-            return relayWorker.Stop();
+            return Task.FromResult(0);
         }
     }
 }

@@ -1,19 +1,10 @@
 ﻿using Raven.Client;
 using Raven.Client.Document;
-using Raven.Client.Indexes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Taro.Persistence;
-using Taro.RavenDB;
 using Taro.RavenDB.Indexes;
-using Taro.Transports;
 using Taro.Transports.InProcess;
 using Taro.Tryout.Domain;
-using Taro.Workers;
 
 namespace Taro.Tryout
 {

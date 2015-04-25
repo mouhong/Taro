@@ -2,7 +2,7 @@
 using Raven.Client.Indexes;
 using Raven.Client.Linq;
 using System;
-using Taro.Transports;
+using Taro.Persistence;
 using Taro.Workers;
 
 namespace Taro.RavenDB
@@ -14,8 +14,9 @@ namespace Taro.RavenDB
             get { return (RavenDomainDbSession)base.Session; }
         }
 
-        public RavenDomainRepository(IDocumentSession session, IRelayWorker relayWorker)
-            : base(new RavenDomainDbSession(session), relayWorker)
+        // Note: Pass in IDomainDbSession instead of RavenDomainDbSession to make it IoC container friendly
+        public RavenDomainRepository(IDomainDbSession session, IRelayWorker relayWorker)
+            : base(session, relayWorker)
         {
         }
 
