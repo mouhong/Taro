@@ -8,6 +8,6 @@ namespace Taro.Workers
 
         void Signal();
 
-        Task Stop();
+        void Stop(bool waitUntilStopped = true);
     }
 }

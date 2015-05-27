@@ -7,17 +7,16 @@ using Taro.Transports;
 
 namespace Taro.Workers
 {
-    public class RelayWorker : IRelayWorker
+    public sealed class RelayWorker : IRelayWorker
     {
         private Task _task;
-        private TaskCompletionSource<int> _stopPromise;
         private ManualResetEventSlim _eventStoreNotEmptyEvent;
         private bool _stopRequested;
 
         private Func<IDomainDbSession> _openDbSession;
         private IEventTransport _transport;
 
-        private readonly object _startLock = new object();
+        private readonly object _startStopLock = new object();
 
         private int _signals;
         private readonly object _signalsLock = new object();
@@ -52,25 +51,20 @@ namespace Taro.Workers
 
         public void Start()
         {
-            lock (_startLock)
+            lock (_startStopLock)
             {
                 if (Started)
                 {
                     return;
                 }
 
+                _eventStoreNotEmptyEvent = new ManualResetEventSlim(false);
+                _task = Task.Factory.StartNew(CheckAndPublishEvents, TaskCreationOptions.LongRunning);
+
                 Started = true;
+
+                Signal();
             }
-
-            _stopPromise = new TaskCompletionSource<int>();
-            _eventStoreNotEmptyEvent = new ManualResetEventSlim(false);
-            _task = Task.Factory.StartNew(CheckAndPublishEvents)
-                                .ContinueWith(it =>
-                                {
-                                    OnStopping();
-                                });
-
-            Signal();
         }
 
         private void CheckAndPublishEvents()
@@ -134,6 +128,18 @@ namespace Taro.Workers
 
         public void Signal()
         {
+            var started = Started;
+            if (!started)
+                throw new InvalidOperationException("Relay worker is not yet started. Start it before sending signals.");
+
+            // It's possible that the relay worker is stopped here by some other thread.
+            // In this case, the rest code in this method will fail.
+            // But this is rare because Stop is supposed to be called only once when the process is shutdown.
+            // So here we ignore this rare case to make signaling simpler.
+
+            // But we still check and throw exception if the relay server is not started at the beginning of this method,
+            // in case the programmer forget to start the relay server.
+
             lock (_signalsLock)
             {
                 if (_signals < 2)
@@ -147,23 +153,36 @@ namespace Taro.Workers
             _eventStoreNotEmptyEvent.Set();
         }
 
-        public Task Stop()
+        public void Stop(bool waitUntilStopped = true)
         {
-            _stopRequested = true;
-            _eventStoreNotEmptyEvent.Set();
+            lock (_startStopLock)
+            {
+                if (!Started)
+                {
+                    return;
+                }
 
-            return _stopPromise.Task;
+                _stopRequested = true;
+                _eventStoreNotEmptyEvent.Set();
+
+                if (waitUntilStopped)
+                {
+                    _task.Wait();
+                }
+
+                Cleanup();
+            }
         }
 
-        private void OnStopping()
+        private void Cleanup()
         {
             Debug.WriteLine("[" + DateTime.Now + "] RelayWorker stopping.");
 
             _stopRequested = false;
             _eventStoreNotEmptyEvent.Dispose();
             _eventStoreNotEmptyEvent = null;
+            _task.Dispose();
             _task = null;
-            _stopPromise.SetResult(0);
 
             Started = false;
         }

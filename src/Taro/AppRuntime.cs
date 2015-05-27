@@ -46,15 +46,13 @@ namespace Taro
             Container.Resolve<IRelayWorker>().Start();
         }
 
-        public Task Stop()
+        public void Stop(bool waitUntilStopped = true)
         {
             var relayWorker = Container.Resolve<IRelayWorker>();
             if (relayWorker != null)
             {
-                return relayWorker.Stop();
+                relayWorker.Stop(waitUntilStopped);
             }
-
-            return Task.FromResult(0);
         }
     }
 }

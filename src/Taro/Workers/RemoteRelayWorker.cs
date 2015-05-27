@@ -35,9 +35,8 @@ namespace Taro.Workers
             });
         }
 
-        public Task Stop()
+        public void Stop(bool waitUntilStopped = true)
         {
-            return Task.FromResult<int>(0);
         }
     }
 }
