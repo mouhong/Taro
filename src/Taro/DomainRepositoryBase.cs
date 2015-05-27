@@ -37,9 +37,18 @@ namespace Taro
             RelayWorker.Signal();
         }
 
-        public virtual void Dispose()
+        public void Dispose()
         {
-            Session.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Session.Dispose();
+            }
         }
     }
 }
