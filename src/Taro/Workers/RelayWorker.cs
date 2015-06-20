@@ -69,7 +69,7 @@ namespace Taro.Workers
 
         private void CheckAndPublishEvents()
         {
-            while (!_stopRequested)
+            while (Volatile.Read(ref _stopRequested) == false)
             {
                 _eventStoreNotEmptyEvent.Wait();
 
