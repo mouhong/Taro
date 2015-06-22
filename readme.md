@@ -2,17 +2,95 @@
 
 ### Bring domain events to your application
 
-## Why I build this?
+## What it is
 
-I had been working on a legacy web application. When I took over the project, I think I need to make some changes to make the codebase more maintainable. Making big changes is risky, so I decided to improve it in small steps.
+Event-driven architecture is an attractive concept. Many existing frameworks have already been built base on this concept. But I think they are too heavy weight for small applications. Here "small applications" refers to the applications which have rather complex business logic but do not have heavy load (so they are often hosted in only one or two servers).
 
-The first thing I want to change is introducing Domain Events, which is an attractive concept. Cos it's not a large application and we have only one server, so I think the best starting point could be building a Poor Man's event driven framework myself, and that's the first version of Taro.
+To embrace the event-driven architecture without using heavy weight frameworks. I used to create a simple alternative like this:
 
-But there're several design issues in the first version, mostly on the transaction related staff. So here comes the next version of Taro. It's still a Poor Man's event driven framework for small web applications, for which introducing heavy weight frameworks is a burden.
+```csharp
+// The event handler
+public class OrderApprovedNotifier : IHandles<OrderApproved>
+{
+    public void Handle(OrderApproved theEvent)
+    {
+        // Send an email to customer
+    }
+}
+
+// The order
+public class Order
+{
+    public void Approve()
+    {
+		// This will publish events immediately, causing event handlers to run
+        Event.Publish(new OrderApproved 
+		{
+    		OrderId = this.Id
+		});
+    }
+}
+
+// The mvc controller
+
+var order = unitOfWork.Get<Order>(orderId);
+// This will cause event handlers to run immediately
+order.Approve();
+// This may fail
+unitOfWork.Save(order);
+
+```
+
+This solution is problematic. When calling `order.Approve()`, the `OrderApprovedNotifier` will be called immediately, then an email will be send to the customer. This is done before calling `unitOfWork.Save(order)`!! What if `unitOfWork.Save(order)` fails? The customer receives an email saying the order is approved while the approve operation is actually failed. So we need to delay the event handlers until the order is successfully saved. So we can come up with a better one:
+
+```csharp
+public class Order : AggregateRoot
+{
+    public void Approve()
+    {
+		// Append the event to a queue instead of publishing it immediately
+  		Event.Append(new OrderApproved
+		{
+			OrderId = this.Id
+		});
+    }
+}
+
+public class UnitOfWork
+{
+    public void Save(AggregateRoot root)
+	{
+		// Save order to database first
+        db.Save(root);
+
+		// If the order is successfully saved, 
+		// publish the events associated with it.
+		foreach (var eachEvent in root.GetEvents())
+		{
+			Event.Publish(eachEvent);
+		}
+	}
+}
+
+```
+
+This time we ensure the events are published after the order is successfully saved. If `unitOfWork.Save(order)` fails, events will not be published, and the customer won't get the confusing email. That's good. 
+
+However, event publishing may fail. The order may be successfully saved, but the events may not be successfully published. Failing to get the notification email is actually acceptable, but what if the event handler is executing some important business logic? So we need to ensure that, if the `order` is successfully saved, all events should be published (at least once).
+
+2PC is a solution to this problem. But it's expensive, and it's not supported by all data stores. So I come up with another solution:
+
+- Temporarily save events in the same data store where domain objects are saved in a local transaction
+- Publish events in background when the transaction is successfully committed
+- A signal will be send to the background worker when events are saved, so event handlers can be invoked near realtime
+
+Because events and domain objects are saved in the same data store, 2PC can be avoid. And because they are saved in one transaction, it's impossible to lose events.
+
+Taro is an event driven framework built with the last solution. I see Taro as a Poor Man's framework because it's targeting small applications.
 
 ## How to use
 
-### 1. Configuration ##
+### 1. Configure Taro in app start ##
 
 ```csharp
 AppRuntime.Instance.Configure(cfg =>
@@ -56,12 +134,12 @@ public class Order : AggregateRoot
 }
 ```
 
-Aggregate roots are domain models inheriting from `Taro.AggregateRoot`. Only aggregate roots are allowed to append domain events (using the `AppendEvent` method). You might wondering why not using `PublishEvent` but `AppendEvent`. This is because domain events will be queued until the db transaction commit.
+Aggregate roots are domain objects inheriting from `Taro.AggregateRoot`. Only aggregate roots are allowed to append domain events (using the `AppendEvent` method). I use `AppendEvent` instead of `PublishEvent` to emphasize that the event is queued instead of being published immediately.
 
 ### 4. Handle events ###
 
 ```csharp
-public class OrderApproved_NotifyCustomer : IHandles<OrderApproved>
+public class OrderApprovedNotifier : IHandles<OrderApproved>
 {
     public void Handle(OrderApproved theEvent)
     {
@@ -72,7 +150,7 @@ public class OrderApproved_NotifyCustomer : IHandles<OrderApproved>
 
 ### 5. Save aggregates ###
 
-Taro does not have an abstraction on data access. So if using the Taro.RavenDB package, you should use `Taro.IRavenDomainRepository` provied by the Taro.RavenDB package to save aggregates. Repository implementation has already been registerted when calling `cfg.UseRavenDB()` in the configuration step. Following code illustrates how to save the `Order` aggregate:
+Taro does not have an abstraction on data access. If you are using the Taro.RavenDB package, you should use `Taro.IRavenDomainRepository` to save aggregates. This is because you might want to use RavenDB specific data access methods which are difficult to abstract. Following code illustrates how to save the `Order` aggregate:
 
 ```csharp
 using (var repository = AppRuntime.Instance.CreateDomainRepository<IRavenDomainRepository>())
@@ -84,12 +162,8 @@ using (var repository = AppRuntime.Instance.CreateDomainRepository<IRavenDomainR
 }
 ```
 
-Note that every call to `Save` commits the transaction. There's no way to save two aggregates in one transaction. This is by design because Event Driven Architecture is the core of Taro (even thought Taro is just a Poor Man's implementation).
+Note that every call to `Save` commits the transaction. There's no way to save two aggregates in one transaction. This is by design because Taro is designed to be an event-driven framework (event thought it's just a poor man's implementation).
 
-Events are published in the background, so you shouldn't assume events are all published when the `Save` method returns. Before being published, events will be saved in the same database where Orders are saved. They are also saved in the same transaction, so events won't be published if the `Save` method failed.
+Events are published in the background, so you shouldn't assume events are all published when the `Save` method returns.
 
-Events will be delivered 'at least once'. So it's possible that an event is published more than once. So you are required to apply 'Idempotency' to your event handlers.
-
-## How it works ##
-
-When calling `Save` method in domain repositories, the aggregate and the pending events are saved inside a db transaction, so events are guaranteed to be saved as long as the aggregate is saved successfully. Then a signal is sent to the `IRelayWorker`, which is responsible to 'relay' the events to the underlying transport. If the application crashed after the db commit but before the relay worker signaling. The relay worker will check all pending events in the database and publish them on the next startup.
+Events will be delivered 'at least once'. It's possible that an event is published more than once. So you are required to apply 'Idempotency' to your event handlers.
