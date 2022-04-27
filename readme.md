@@ -23,11 +23,11 @@ public class Order
 {
     public void Approve()
     {
-		// This will publish events immediately, causing event handlers to run
+        // This will publish events immediately, causing event handlers to run
         Event.Publish(new OrderApproved 
-		{
-    		OrderId = this.Id
-		});
+        {
+            OrderId = this.Id
+        });
     }
 }
 
@@ -48,28 +48,28 @@ public class Order : AggregateRoot
 {
     public void Approve()
     {
-		// Append the event to a queue instead of publishing it immediately
-  		Event.Append(new OrderApproved
-		{
-			OrderId = this.Id
-		});
+        // Append the event to a queue instead of publishing it immediately
+        Event.Append(new OrderApproved
+        {
+            OrderId = this.Id
+        });
     }
 }
 
 public class UnitOfWork
 {
     public void Save(AggregateRoot root)
-	{
-		// Save order to database first
+    {
+        // Save order to database first
         db.Save(root);
 
-		// If the order is successfully saved, 
-		// publish the events associated with it.
-		foreach (var eachEvent in root.GetEvents())
-		{
-			Event.Publish(eachEvent);
-		}
-	}
+        // If the order is successfully saved, 
+        // publish the events associated with it.
+        foreach (var eachEvent in root.GetEvents())
+        {
+            Event.Publish(eachEvent);
+        }
+    }
 }
 
 ```
